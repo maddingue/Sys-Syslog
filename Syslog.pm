@@ -306,7 +306,11 @@ sub syslog {
     if($current_proto eq 'native') {
         $buf = $message;
 
-    } else {
+    }
+    elsif ($current_proto eq 'eventlog') {
+        $buf = $message;
+    }
+    else {
         my $whoami = $ident;
         $whoami .= "[$$]" if $options{pid};
 
@@ -344,7 +348,7 @@ sub syslog {
 	$failed = undef if ($current_proto && $failed && $current_proto eq $failed);
 
 	if ($syslog_send) {
-            if ($syslog_send->($buf, $numpri)) {
+            if ($syslog_send->($buf, $numpri, $numfac)) {
 		$transmit_ok++;
 		return 1;
 	    }
@@ -403,20 +407,18 @@ sub _syslog_send_socket {
 
 sub _syslog_send_native {
     my ($buf, $numpri) = @_;
-    eval { syslog_xs($numpri, $buf) };
-    return $@ ? 0 : 1;
+    syslog_xs($numpri, $buf);
+    return 1;
 }
 
 sub _syslog_send_eventlog {
-    my ($buf) = @_;
+    my ($buf, $numpri, $numfac) = @_;
 
-    $syslog_xobj->Report({
-        EventType   => $type, 
-        Category    => "...", 
+    return $syslog_xobj->Report({
+        EventType   => $priority2eventtype[$numpri], 
+        Category    => $numfac, 
         Data        => $buf, 
     });
-
-    return 
 }
 
 
@@ -464,7 +466,7 @@ sub connect_log {
     $transmit_ok = 0;
     if ($connected) {
 	$current_proto = $proto;
-        my($old) = select(SYSLOG); $| = 1; select($old);
+        my ($old) = select(SYSLOG); $| = 1; select($old);
     } else {
 	@fallbackMethods = ();
         $err_sub->(join "\n\t- ", "no connection to syslog available", @errs);
@@ -504,6 +506,7 @@ sub connect_tcp {
 	push @$errs, "tcp socket: $!";
 	return 0;
     }
+
     setsockopt(SYSLOG, SOL_SOCKET, SO_KEEPALIVE, 1);
     setsockopt(SYSLOG, &IPPROTO_TCP, &TCP_NODELAY, 1);
     if (!connect(SYSLOG, $addr)) {
@@ -606,6 +609,7 @@ sub connect_unix {
         push @$errs, "unix stream socket: $!";
 	return 0;
     }
+
     if (!connect(SYSLOG, $addr)) {
         if (!socket(SYSLOG, AF_UNIX, SOCK_DGRAM, 0)) {
 	    push @$errs, "unix dgram socket: $!";
@@ -645,7 +649,7 @@ sub connect_native {
 sub connect_eventlog {
     my ($errs) = @_;
 
-    $syslog_xobj = Win32::EventLog->new();
+    $syslog_xobj = Win32::EventLog->new();  # XXX missing SOURCE, maybe SERVER
     $syslog_send = \&_syslog_send_eventlog;
 
     return 1;
@@ -681,8 +685,12 @@ sub disconnect_log {
     $connected = 0;
     $syslog_send = undef;
 
-    if($current_proto eq 'native') {
-        eval { closelo_xs() };
+    if ($current_proto eq 'native') {
+        closelog_xs();
+        return 1;
+    }
+    elsif ($current_proto eq 'eventlog') {
+        $syslog_xobj->Close();
         return 1;
     }
 
@@ -1157,7 +1165,7 @@ B<(F)> You gave C<setlogsock()> an invalid value for C<$sock_type>.
 
 =item C<eventlog passed to setlogsock, but operating system isn't Win32-compatible>
 
-B<(W)> You asked C<setlogsock()> to use the Win32 event logguer but the 
+B<(W)> You asked C<setlogsock()> to use the Win32 event logger but the 
 operating system running the program isn't Win32 or does not provides Win32
 facilities.
 
