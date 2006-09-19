@@ -3,6 +3,7 @@ Revision history for Sys-Syslog
 0.19 -- 2006.09.xx -- Sebastien Aperghis-Tramoni (SAPER)
         [BUGFIX] CPAN-RT#21333: Makefile.PL now creates a typemap for Perl 5.6.1.
         [BUGFIX] CPAN-RT#21516: disconnect_log() now correctly calls closelog_xs().
+        [TESTS] t/syslog.t now generates a more useful test output.
         [EG] Added example script eg/syslog.pl
 
 0.18 -- 2006.08.28 -- Sebastien Aperghis-Tramoni (SAPER)
