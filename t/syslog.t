@@ -110,51 +110,51 @@ for my $sock_type (qw(native stream unix inet tcp udp)) {
         # setlogsock() called with an arrayref
         $r = eval { setlogsock([$sock_type]) } || 0;
         skip "can't use '$sock_type' socket", 20 unless $r;
-        is( $@, '', "setlogsock() called with ['$sock_type']" );
-        ok( $r, "setlogsock() should return true: '$r'" );
+        is( $@, '', "[$sock_type] setlogsock() called with ['$sock_type']" );
+        ok( $r, "[$sock_type] setlogsock() should return true: '$r'" );
 
         # setlogsock() called with a single argument
         $r = eval { setlogsock($sock_type) } || 0;
         skip "can't use '$sock_type' socket", 18 unless $r;
-        is( $@, '', "setlogsock() called with '$sock_type'" );
-        ok( $r, "setlogsock() should return true: '$r'" );
+        is( $@, '', "[$sock_type] setlogsock() called with '$sock_type'" );
+        ok( $r, "[$sock_type] setlogsock() should return true: '$r'" );
 
         # openlog() without option NDELAY
         $r = eval { openlog('perl', '', 'local0') } || 0;
         skip "can't connect to syslog", 16 if $@ =~ /^no connection to syslog available/;
-        is( $@, '', "openlog() called with facility 'local0' and without option 'ndelay'" );
-        ok( $r, "openlog() should return true: '$r'" );
+        is( $@, '', "[$sock_type] openlog() called with facility 'local0' and without option 'ndelay'" );
+        ok( $r, "[$sock_type] openlog() should return true: '$r'" );
 
         # openlog() with the option NDELAY
         $r = eval { openlog('perl', 'ndelay', 'local0') } || 0;
         skip "can't connect to syslog", 14 if $@ =~ /^no connection to syslog available/;
-        is( $@, '', "openlog() called with facility 'local0' with option 'ndelay'" );
-        ok( $r, "openlog() should return true: '$r'" );
+        is( $@, '', "[$sock_type] openlog() called with facility 'local0' with option 'ndelay'" );
+        ok( $r, "[$sock_type] openlog() should return true: '$r'" );
 
         # syslog() with negative level, should fail
         $r = eval { syslog(-1, "$test_string by connecting to a $sock_type socket") } || 0;
-        like( $@, '/^syslog: invalid level\/facility: /', "syslog() called with level -1" );
-        ok( !$r, "syslog() should return false: '$r'" );
+        like( $@, '/^syslog: invalid level\/facility: /', "[$sock_type] syslog() called with level -1" );
+        ok( !$r, "[$sock_type] syslog() should return false: '$r'" );
 
         # syslog() with levels "info" and "notice" (as a strings), should fail
         $r = eval { syslog('info,notice', "$test_string by connecting to a $sock_type socket") } || 0;
-        like( $@, '/^syslog: too many levels given: notice/', "syslog() called with level 'info,notice'" );
-        ok( !$r, "syslog() should return false: '$r'" );
+        like( $@, '/^syslog: too many levels given: notice/', "[$sock_type] syslog() called with level 'info,notice'" );
+        ok( !$r, "[$sock_type] syslog() should return false: '$r'" );
 
         # syslog() with facilities "local0" and "local1" (as a strings), should fail
         $r = eval { syslog('local0,local1', "$test_string by connecting to a $sock_type socket") } || 0;
-        like( $@, '/^syslog: too many facilities given: local1/', "syslog() called with level 'info,notice'" );
-        ok( !$r, "syslog() should return false: '$r'" );
+        like( $@, '/^syslog: too many facilities given: local1/', "[$sock_type] syslog() called with level 'info,notice'" );
+        ok( !$r, "[$sock_type] syslog() should return false: '$r'" );
 
         # syslog() with level "info" (as a string), should pass
         $r = eval { syslog('info', "$test_string by connecting to a $sock_type socket (errno=%m)") } || 0;
-        is( $@, '', "syslog() called with level 'info' (string)" );
-        ok( $r, "syslog() should return true: '$r'" );
+        is( $@, '', "[$sock_type] syslog() called with level 'info' (string)" );
+        ok( $r, "[$sock_type] syslog() should return true: '$r'" );
 
         # syslog() with level "info" (as a macro), should pass
         $r = eval { syslog(LOG_INFO(), "$test_string by connecting to a $sock_type socket (errno=%m)") } || 0;
-        is( $@, '', "syslog() called with level 'info' (macro)" );
-        ok( $r, "syslog() should return true: '$r'" );
+        is( $@, '', "[$sock_type] syslog() called with level 'info' (macro)" );
+        ok( $r, "[$sock_type] syslog() should return true: '$r'" );
 
         # syslog() with facility "kern" (as a string), should fail
         #$r = eval { syslog('kern', "$test_string by connecting to a $sock_type socket") } || 0;
@@ -170,8 +170,8 @@ for my $sock_type (qw(native stream unix inet tcp udp)) {
             skip "skipping closelog() tests for 'console'", 2 if $sock_type eq 'console';
             # closelog()
             $r = eval { closelog() } || 0;
-            is( $@, '', "closelog()" );
-            ok( $r, "closelog() should return true: '$r'" );
+            is( $@, '', "[$sock_type] closelog()" );
+            ok( $r, "[$sock_type] closelog() should return true: '$r'" );
         }
     }
 }
