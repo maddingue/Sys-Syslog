@@ -2,6 +2,7 @@ package Sys::Syslog;
 use strict;
 use warnings::register;
 use Carp;
+use Fcntl qw(O_WRONLY);
 use File::Basename;
 use POSIX qw(strftime setlocale LC_TIME);
 use Socket ':all';
@@ -9,7 +10,7 @@ require 5.006;
 require Exporter;
 
 {   no strict 'vars';
-    $VERSION = '0.18';
+    $VERSION = '0.19';
     @ISA = qw(Exporter);
 
     %EXPORT_TAGS = (
@@ -577,7 +578,7 @@ sub connect_stream {
 	push @$errs, "stream $syslog_path is not writable";
 	return 0;
     }
-    if (!open(SYSLOG, ">" . $syslog_path)) {
+    if (!sysopen(SYSLOG, $syslog_path, 0400, O_WRONLY)) {
 	push @$errs, "stream can't open $syslog_path: $!";
 	return 0;
     }
@@ -707,7 +708,7 @@ Sys::Syslog - Perl interface to the UNIX syslog(3) calls
 
 =head1 VERSION
 
-Version 0.18
+Version 0.19
 
 =head1 SYNOPSIS
 
@@ -727,7 +728,8 @@ C<Sys::Syslog> is an interface to the UNIX C<syslog(3)> program.
 Call C<syslog()> with a string priority and a list of C<printf()> args
 just like C<syslog(3)>.
 
-You can find a kind of FAQ in L<"THE RULES OF SYS::SYSLOG">. 
+You can find a kind of FAQ in L<"THE RULES OF SYS::SYSLOG">.  Please read 
+it before coding, and again before asking questions. 
 
 
 =head1 EXPORTS
@@ -1223,6 +1225,8 @@ was unable to find an appropriate an appropriate device.
 
 =head1 SEE ALSO
 
+=head2 Manual Pages
+
 L<syslog(3)>
 
 SUSv3 issue 6, IEEE Std 1003.1, 2004 edition, 
@@ -1246,11 +1250,15 @@ L<http://h30097.www3.hp.com/docs/base_doc/DOCUMENTATION/V51_HTML/MAN/MAN3/0193__
 Stratus VOS 15.1, 
 L<http://stratadoc.stratus.com/vos/15.1.1/r502-01/wwhelp/wwhimpl/js/html/wwhelp.htm?context=r502-01&file=ch5r502-01bi.html>
 
+=head2 RFCs
+
 I<RFC 3164 - The BSD syslog Protocol>, L<http://www.faqs.org/rfcs/rfc3164.html>
 -- Please note that this is an informational RFC, and therefore does not 
 specify a standard of any kind.
 
 I<RFC 3195 - Reliable Delivery for syslog>, L<http://www.faqs.org/rfcs/rfc3195.html>
+
+=head2 Articles
 
 I<Syslogging with Perl>, L<http://lexington.pm.org/meetings/022001.html>
 
