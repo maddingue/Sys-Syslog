@@ -103,9 +103,9 @@ SKIP: {
 }
 
 
-BEGIN { $tests += 20 * 6 }
+BEGIN { $tests += 20 * 7 }
 # try to open a syslog using all the available connection methods
-for my $sock_type (qw(native stream unix inet tcp udp)) {
+for my $sock_type (qw(native eventlog stream unix inet tcp udp)) {
     SKIP: {
         # setlogsock() called with an arrayref
         $r = eval { setlogsock([$sock_type]) } || 0;
