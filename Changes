@@ -3,6 +3,7 @@ Revision history for Sys-Syslog
 0.19 -- 2006.09.xx -- Sebastien Aperghis-Tramoni (SAPER)
         [BUGFIX] CPAN-RT#21333: Makefile.PL now creates a typemap for Perl 5.6.1.
         [BUGFIX] CPAN-RT#21516: disconnect_log() now correctly calls closelog_xs().
+        [BUGFIX] CPAN-RT#21866: silence warnings in openlog().
         [TESTS] t/syslog.t now generates a more useful test output.
         [EG] Added example script eg/syslog.pl
 
@@ -18,7 +19,7 @@ Revision history for Sys-Syslog
         some dead code. 
         [CODE] Actually added the macros from Mac OS X that were announced in 
         the 0.14 version.
-        [DOC] CPAN-RT#20545: Rewrote the documentation about setlogksock().
+        [DOC] CPAN-RT#20545: Rewrote the documentation about setlogsock().
 
 0.16 -- 2006.06.20 -- Sebastien Aperghis-Tramoni (SAPER)
         [BUGFIX] Perl-RT#20557: Save errno before trying to connect.

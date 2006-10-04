@@ -170,6 +170,7 @@ sub AUTOLOAD {
 
 sub openlog {
     ($ident, my $logopt, $facility) = @_;
+    $logopt ||= '';
 
     for my $opt (split /\b/, $logopt) {
         $options{$opt} = 1 if exists $options{$opt}
