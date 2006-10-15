@@ -105,8 +105,12 @@ SKIP: {
 
 BEGIN { $tests += 20 * 7 }
 # try to open a syslog using all the available connection methods
-for my $sock_type (qw(native eventlog stream unix inet tcp udp)) {
+my @passed = ();
+for my $sock_type (qw(native eventlog unix stream inet tcp udp)) {
     SKIP: {
+        skip "the 'unix' mechanism works, so the tests will likely fail with the 'stream' mechanism", 20 
+            if $sock_type eq 'stream' and grep {/unix/} @passed;
+
         # setlogsock() called with an arrayref
         $r = eval { setlogsock([$sock_type]) } || 0;
         skip "can't use '$sock_type' socket", 20 unless $r;
@@ -156,15 +160,7 @@ for my $sock_type (qw(native eventlog stream unix inet tcp udp)) {
         is( $@, '', "[$sock_type] syslog() called with level 'info' (macro)" );
         ok( $r, "[$sock_type] syslog() should return true: '$r'" );
 
-        # syslog() with facility "kern" (as a string), should fail
-        #$r = eval { syslog('kern', "$test_string by connecting to a $sock_type socket") } || 0;
-        #like( $@, '/^syslog: invalid level/facility: kern/', "syslog() called with facility 'kern'" );
-        #ok( !$r, "syslog() should return false: '$r'" );
-
-        # syslog() with facility "kern" (as a macro), should fail
-        #$r = eval { syslog(LOG_KERN, "$test_string by connecting to a $sock_type socket") } || 0;
-        #like( $@, '/^syslog: invalid level/facility: 0/', "syslog() called with facility 'kern'" );
-        #ok( !$r, "syslog() should return false: '$r'" );
+        push @passed, $sock_type;
 
         SKIP: {
             skip "skipping closelog() tests for 'console'", 2 if $sock_type eq 'console';
