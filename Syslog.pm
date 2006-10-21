@@ -117,32 +117,32 @@ if (not $@) {
         EVENTLOG_INFORMATION_TYPE(), # LOG_DEBUG
     );
 
-    $facility2category[ LOG_KERN      ] = 0x01;   # or map to 0X0FF System ?
-    $facility2category[ LOG_USER      ] = 0x02;   # or map to 0XFFF Application ?
-    $facility2category[ LOG_MAIL      ] = 0x03;
-    $facility2category[ LOG_DAEMON    ] = 0x04;
-    $facility2category[ LOG_AUTH      ] = 0x05;
-    $facility2category[ LOG_SYSLOG    ] = 0x06;
-    $facility2category[ LOG_LPR       ] = 0x07;
-    $facility2category[ LOG_NEWS      ] = 0x08;
-    $facility2category[ LOG_UUCP      ] = 0x09;
-    $facility2category[ LOG_CRON      ] = 0x0A;
-    $facility2category[ LOG_AUTHPRIV  ] = 0x0B;
-    $facility2category[ LOG_FTP       ] = 0x0C;
-    $facility2category[ LOG_LOCAL0    ] = 0x10;
-    $facility2category[ LOG_LOCAL1    ] = 0x11;
-    $facility2category[ LOG_LOCAL2    ] = 0x12;
-    $facility2category[ LOG_LOCAL3    ] = 0x13;
-    $facility2category[ LOG_LOCAL4    ] = 0x14;
-    $facility2category[ LOG_LOCAL5    ] = 0x15;
-    $facility2category[ LOG_LOCAL6    ] = 0x16;
-    $facility2category[ LOG_LOCAL7    ] = 0x17;
+    $facility2category[ LOG_KERN()    ] = 0x01;   # or map to 0X0FF System ?
+    $facility2category[ LOG_USER()    ] = 0x02;   # or map to 0XFFF Application ?
+    $facility2category[ LOG_MAIL()    ] = 0x03;
+    $facility2category[ LOG_DAEMON()  ] = 0x04;
+    $facility2category[ LOG_AUTH()    ] = 0x05;
+    $facility2category[ LOG_SYSLOG()  ] = 0x06;
+    $facility2category[ LOG_LPR()     ] = 0x07;
+    $facility2category[ LOG_NEWS()    ] = 0x08;
+    $facility2category[ LOG_UUCP()    ] = 0x09;
+    $facility2category[ LOG_CRON()    ] = 0x0A;
+    $facility2category[ LOG_AUTHPRIV()] = 0x0B;
+    $facility2category[ LOG_FTP()     ] = 0x0C;
+    $facility2category[ LOG_LOCAL0()  ] = 0x10;
+    $facility2category[ LOG_LOCAL1()  ] = 0x11;
+    $facility2category[ LOG_LOCAL2()  ] = 0x12;
+    $facility2category[ LOG_LOCAL3()  ] = 0x13;
+    $facility2category[ LOG_LOCAL4()  ] = 0x14;
+    $facility2category[ LOG_LOCAL5()  ] = 0x15;
+    $facility2category[ LOG_LOCAL6()  ] = 0x16;
+    $facility2category[ LOG_LOCAL7()  ] = 0x17;
     eval {
-        $facility2category[ LOG_NETINFO   ] = 0x20;
-        $facility2category[ LOG_REMOTEAUTH] = 0x21;
-        $facility2category[ LOG_RAS       ] = 0x22;
-        $facility2category[ LOG_INSTALL   ] = 0x23;
-        $facility2category[ LOG_LAUNCHD   ] = 0x24;
+        $facility2category[ LOG_NETINFO()   ] = 0x20;
+        $facility2category[ LOG_REMOTEAUTH()] = 0x21;
+        $facility2category[ LOG_RAS()       ] = 0x22;
+        $facility2category[ LOG_INSTALL()   ] = 0x23;
+        $facility2category[ LOG_LAUNCHD()   ] = 0x24;
     }
 }
 
