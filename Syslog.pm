@@ -1315,6 +1315,9 @@ E<lt>F<Nick.Williams@morganstanley.com>E<gt>.
 XS code for using native C functions borrowed from C<L<Unix::Syslog>>, 
 written by Marcus Harnisch E<lt>F<marcus.harnisch@gmx.net>E<gt>.
 
+Yves Orton suggested and helped for making C<Sys::Syslog> use the native 
+event logger under Win32 systems.
+
 Extracted from core distribution for publishing on the CPAN by 
 SE<eacute>bastien Aperghis-Tramoni E<lt>sebastien@aperghis.netE<gt>.
 
