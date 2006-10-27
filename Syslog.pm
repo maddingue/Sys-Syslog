@@ -972,6 +972,11 @@ For example Solaris and IRIX system may prefer C<"stream"> instead of C<"unix">.
 C<"console"> - send messages directly to the console, as for the C<"cons"> 
 option of C<openlog()>.
 
+=item *
+
+C<"eventlog"> - send messages to the Win32 events logger (Win32 only; 
+added in C<Sys::Syslog> 0.19).
+
 =back
 
 A reference to an array can also be passed as the first parameter.
