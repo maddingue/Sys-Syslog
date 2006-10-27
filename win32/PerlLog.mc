@@ -38,8 +38,9 @@ FacilityNames = (
     Launchd     = 0x24:FACILITY_LAUNCHD
 )
 
-LanguageNames = ( English = 0x01:MSG00001 )
-LanguageNames = ( French  = 0x02:MSG00002 )
+LanguageNames = ( English = 0x0409:MSG00409 )
+LanguageNames = ( French  = 0x040C:MSG0040C )
+LanguageNames = ( German  = 0x0407:MSG00407 )
 
 
 ; // The following are message definitions.
