@@ -1,12 +1,26 @@
 use strict;
 use ExtUtils::MakeMaker;
 eval 'use ExtUtils::MakeMaker::Coverage';
+use File::Copy;
+use File::Path;
+use File::Spec;
 require 5.006;
 
 if ($] < 5.008) {
     open(TYPEMAP, ">typemap") or die "fatal: can't write typemap: $!";
     print TYPEMAP "const char *\t\tT_PV\n";
     close(TYPEMAP);
+}
+
+my (@extra_params, @extra_prereqs);
+if ($^O =~ /win32/i) {
+    push @extra_params, MYEXTLIB => 'win32\\PerlLog.RES';
+    push @extra_prereqs, "Win32::TieRegistry" => 0, "Win32::EventLog" => 0;
+    mkpath("lib/Sys/Syslog")
+        or die "Failed to create 'lib/Sys/Syslog':$!"
+        if !-d "lib/Sys/Syslog";
+    copy("win32/Win32.pm","lib/Sys/Syslog/Win32.pm")
+        or die "Failed to copy Win32.pm into place:$!";
 }
 
 WriteMakefile(
@@ -20,10 +34,12 @@ WriteMakefile(
     PREREQ_PM       => {
         'Test::More' => 0,
         'XSLoader'   => 0,
+        @extra_prereqs,
     },
     dist            => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean           => { FILES => 'Sys-Syslog-*' }, 
     realclean       => { FILES => 'const-c.inc const-xs.inc macros.all' },
+    @extra_params
 );
 
 my $_PATH_LOG;
@@ -82,10 +98,8 @@ if(eval {require ExtUtils::Constant; 1}) {
     close(MACROS);
 
 } else {
-    require File::Copy;
-    require File::Spec;
     foreach my $file ('const-c.inc', 'const-xs.inc') {
         my $fallback = File::Spec->catfile('fallback', $file);
-        File::Copy::copy($fallback, $file) or die "Can't copy $fallback to $ $!";
+        copy($fallback, $file) or die "Can't copy $fallback to $file: $!";
     }
 }
