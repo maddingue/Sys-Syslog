@@ -19,13 +19,21 @@ use warnings qw(closure deprecated exiting glob io misc numeric once overflow
                 pack portable recursion redefine regexp severe signal substr
                 syntax taint uninitialized unpack untie utf8 void);
 
-# check that the module is at least available
-plan skip_all => "Sys::Syslog was not build" 
-  unless $Config{'extensions'} =~ /\bSyslog\b/;
+my $is_Win32 = $^O =~ /win32/i;
 
-# we also need Socket
-plan skip_all => "Socket was not build" 
-  unless $Config{'extensions'} =~ /\bSocket\b/;
+if ($is_Win32) {
+    eval "use Win32::EventLog";
+    plan skip_all => "Win32::EventLog is not available" if $@;
+}
+else {
+    # check that the module is at least available
+    plan skip_all => "Sys::Syslog was not build" 
+      unless $Config{'extensions'} =~ /\bSyslog\b/;
+
+    # we also need Socket
+    plan skip_all => "Socket was not build" 
+      unless $Config{'extensions'} =~ /\bSocket\b/;
+}
 
 my $tests;
 plan tests => $tests;
@@ -174,35 +182,39 @@ for my $sock_type (qw(native eventlog unix stream inet tcp udp)) {
 
 
 BEGIN { $tests += 10 }
-# setlogsock() with "stream" and an undef path
-$r = eval { setlogsock("stream", undef ) } || '';
-is( $@, '', "setlogsock() called, with 'stream' and an undef path" );
-ok( $r, "setlogsock() should return true: '$r'" );
-
-# setlogsock() with "stream" and an empty path
-$r = eval { setlogsock("stream", '' ) } || '';
-is( $@, '', "setlogsock() called, with 'stream' and an empty path" );
-ok( !$r, "setlogsock() should return false: '$r'" );
-
-# setlogsock() with "stream" and /dev/null
-$r = eval { setlogsock("stream", '/dev/null' ) } || '';
-is( $@, '', "setlogsock() called, with 'stream' and '/dev/null'" );
-ok( $r, "setlogsock() should return true: '$r'" );
-
-# setlogsock() with "stream" and a non-existing file
-$r = eval { setlogsock("stream", 'test.log' ) } || '';
-is( $@, '', "setlogsock() called, with 'stream' and 'test.log' (file does not exist)" );
-ok( !$r, "setlogsock() should return false: '$r'" );
-
-# setlogsock() with "stream" and a local file
 SKIP: {
-    my $logfile = "test.log";
-    open(LOG, ">$logfile") or skip "can't create file '$logfile': $!", 2;
-    close(LOG);
-    $r = eval { setlogsock("stream", $logfile ) } || '';
-    is( $@, '', "setlogsock() called, with 'stream' and '$logfile' (file exists)" );
+    skip "not testing setlogsock('stream') on Win32", 10 is $is_Win32;
+
+    # setlogsock() with "stream" and an undef path
+    $r = eval { setlogsock("stream", undef ) } || '';
+    is( $@, '', "setlogsock() called, with 'stream' and an undef path" );
     ok( $r, "setlogsock() should return true: '$r'" );
-    unlink($logfile);
+
+    # setlogsock() with "stream" and an empty path
+    $r = eval { setlogsock("stream", '' ) } || '';
+    is( $@, '', "setlogsock() called, with 'stream' and an empty path" );
+    ok( !$r, "setlogsock() should return false: '$r'" );
+
+    # setlogsock() with "stream" and /dev/null
+    $r = eval { setlogsock("stream", '/dev/null' ) } || '';
+    is( $@, '', "setlogsock() called, with 'stream' and '/dev/null'" );
+    ok( $r, "setlogsock() should return true: '$r'" );
+
+    # setlogsock() with "stream" and a non-existing file
+    $r = eval { setlogsock("stream", 'test.log' ) } || '';
+    is( $@, '', "setlogsock() called, with 'stream' and 'test.log' (file does not exist)" );
+    ok( !$r, "setlogsock() should return false: '$r'" );
+
+    # setlogsock() with "stream" and a local file
+    SKIP: {
+        my $logfile = "test.log";
+        open(LOG, ">$logfile") or skip "can't create file '$logfile': $!", 2;
+        close(LOG);
+        $r = eval { setlogsock("stream", $logfile ) } || '';
+        is( $@, '', "setlogsock() called, with 'stream' and '$logfile' (file exists)" );
+        ok( $r, "setlogsock() should return true: '$r'" );
+        unlink($logfile);
+    }
 }
 
 
