@@ -38,7 +38,7 @@ WriteMakefile(
     },
     dist            => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean           => { FILES => 'Sys-Syslog-*' }, 
-    realclean       => { FILES => 'const-c.inc const-xs.inc macros.all' },
+    realclean       => { FILES => 'const-c.inc const-xs.inc macros.all PerlLog.h *.bak *.bin *.rc' },
     @extra_params
 );
 
