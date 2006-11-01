@@ -83,8 +83,6 @@ my $current_proto = undef;      # current mechanism used to transmit messages
 my $ident = '';                 # identifiant prepended to each message
 my $facility = '';              # current facility
 my $maskpri = LOG_UPTO(&LOG_DEBUG);     # current log mask
-my @priority2eventtype = ();    # translate syslog(3) levels to EventLog types
-my @facility2category = ();     # translate syslog(3) facilities to EventLog categories
 
 my %options = (
     ndelay  => 0, 
@@ -101,49 +99,13 @@ if ($^O =~ /^(freebsd|linux)$/) {
 }
 
 # use EventLog on Win32
-eval "use Win32::EventLog";
+my $is_Win32 = $^O =~ /Win32/i;
+eval "use Sys::Syslog::Win32";
 
 if (not $@) {
     unshift @connectMethods, 'eventlog';
-
-    @priority2eventtype = (
-        EVENTLOG_ERROR_TYPE(),       # LOG_EMERG
-        EVENTLOG_ERROR_TYPE(),       # LOG_ALERT
-        EVENTLOG_ERROR_TYPE(),       # LOG_CRIT
-        EVENTLOG_ERROR_TYPE(),       # LOG_ERR
-        EVENTLOG_WARNING_TYPE(),     # LOG_WARNING
-        EVENTLOG_WARNING_TYPE(),     # LOG_NOTICE
-        EVENTLOG_INFORMATION_TYPE(), # LOG_INFO
-        EVENTLOG_INFORMATION_TYPE(), # LOG_DEBUG
-    );
-
-    $facility2category[ LOG_KERN()    ] = 0x01;   # or map to 0X0FF System ?
-    $facility2category[ LOG_USER()    ] = 0x02;   # or map to 0XFFF Application ?
-    $facility2category[ LOG_MAIL()    ] = 0x03;
-    $facility2category[ LOG_DAEMON()  ] = 0x04;
-    $facility2category[ LOG_AUTH()    ] = 0x05;
-    $facility2category[ LOG_SYSLOG()  ] = 0x06;
-    $facility2category[ LOG_LPR()     ] = 0x07;
-    $facility2category[ LOG_NEWS()    ] = 0x08;
-    $facility2category[ LOG_UUCP()    ] = 0x09;
-    $facility2category[ LOG_CRON()    ] = 0x0A;
-    $facility2category[ LOG_AUTHPRIV()] = 0x0B;
-    $facility2category[ LOG_FTP()     ] = 0x0C;
-    $facility2category[ LOG_LOCAL0()  ] = 0x10;
-    $facility2category[ LOG_LOCAL1()  ] = 0x11;
-    $facility2category[ LOG_LOCAL2()  ] = 0x12;
-    $facility2category[ LOG_LOCAL3()  ] = 0x13;
-    $facility2category[ LOG_LOCAL4()  ] = 0x14;
-    $facility2category[ LOG_LOCAL5()  ] = 0x15;
-    $facility2category[ LOG_LOCAL6()  ] = 0x16;
-    $facility2category[ LOG_LOCAL7()  ] = 0x17;
-    eval {
-        $facility2category[ LOG_NETINFO()   ] = 0x20;
-        $facility2category[ LOG_REMOTEAUTH()] = 0x21;
-        $facility2category[ LOG_RAS()       ] = 0x22;
-        $facility2category[ LOG_INSTALL()   ] = 0x23;
-        $facility2category[ LOG_LAUNCHD()   ] = 0x24;
-    }
+} elsif ($is_Win32) {
+    warn $@;
 }
 
 my @defaultMethods = @connectMethods;
@@ -219,7 +181,7 @@ sub setlogsock {
 	    }
 
             warnings::warnif "stream passed to setlogsock, but could not find any device"
-		unless defined $syslog_path
+                and return undef unless defined $syslog_path
         }
 
 	if (not -w $syslog_path) {
@@ -440,18 +402,6 @@ sub _syslog_send_native {
     my ($buf, $numpri) = @_;
     syslog_xs($numpri, $buf);
     return 1;
-}
-
-sub _syslog_send_eventlog {
-    my ($buf, $numpri, $numfac) = @_;
-
-    return $syslog_xobj->Report({
-        EventType   => $priority2eventtype[$numpri], 
-        EventID     => $numpri, 
-        Category    => $facility2category[$numfac], 
-        Data        => $buf, 
-        Strings     => "$buf\0", 
-    });
 }
 
 
@@ -682,8 +632,8 @@ sub connect_native {
 sub connect_eventlog {
     my ($errs) = @_;
 
-    $syslog_xobj = Win32::EventLog->new();  # XXX missing SOURCE, maybe SERVER
-    $syslog_send = \&_syslog_send_eventlog;
+    $syslog_xobj = Sys::Syslog::Win32::install();
+    $syslog_send = \&Sys::Syslog::Win32::_syslog_send;
 
     return 1;
 }
@@ -698,7 +648,7 @@ sub connect_console {
     return 1;
 }
 
-# to test if the connection is still good, we need to check if any
+# To test if the connection is still good, we need to check if any
 # errors are present on the connection. The errors will not be raised
 # by a write. Instead, sockets are made readable and the next read
 # would cause the error to be returned. Unfortunately the syslog 
@@ -707,7 +657,9 @@ sub connect_console {
 sub connection_ok {
     return 1 if defined $current_proto and (
         $current_proto eq 'native' or $current_proto eq 'console'
+        or $current_proto eq 'eventlog'
     );
+
     my $rin = '';
     vec($rin, fileno(SYSLOG), 1) = 1;
     my $ret = select $rin, undef, $rin, 0;
