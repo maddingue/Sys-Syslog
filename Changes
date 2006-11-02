@@ -8,6 +8,7 @@ Revision history for Sys-Syslog
         "stream" mechanism which occured on Debian and Cygwin.
         [FEATURE] Added Win32 event log support thanks to Yves Orton.
         [TESTS] t/syslog.t now generates a more detailled TAP output.
+        [TESTS] Merged change #29176: suppress taint mode from t/constants.t
         [EG] Added example script eg/syslog.pl
 
 0.18 -- 2006.08.28 -- Sebastien Aperghis-Tramoni (SAPER)
