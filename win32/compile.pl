@@ -11,6 +11,16 @@ my $name = shift || 'PerlLog';
 system("mc.exe -d $name.mc");
 system("rc $name.rc");
 
+# uuencode the resource file
+open(my $rsrc, '<', "$name.RES")
+    or die "fatal: Can't read resource file '$name.RES': $!";
+my $uudata = pack "u", do { local $/; <$rsrc> };
+close($rsrc);
+open(my $uufh, '>', "$name\_RES.uu")
+    or die "fatal: Can't write file '$name.RES': $!";
+print $uufh $uudata;
+close($uufh);
+
 # parse the generated header to extract the constants
 open(my $header, '<', "$name.h")
     or die "fatal: Can't read header file '$name.h': $!";
@@ -54,10 +64,10 @@ close $out;
 
 my $libpath = File::Spec->catdir(File::Spec->updir, qw(lib Sys Syslog));
 mkpath $libpath
-    or die "fatal: Can't create lib directory '$path': $!"
-    if !-d $path;
+    or die "fatal: Can't create lib directory '$libpath': $!"
+    if !-d $libpath;
 copy "Win32.pm", File::Spec->catfile($libpath, "Win32.pm")
-    or die "fatal: Can't copy file 'Win32.pm' into directory '$libdir': $!";
+    or die "fatal: Can't copy file 'Win32.pm' into directory '$libpath': $!";
 
 __END__
 package Sys::Syslog::Win32;
