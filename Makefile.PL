@@ -13,14 +13,29 @@ if ($] < 5.008) {
 }
 
 my (@extra_params, @extra_prereqs);
-if ($^O =~ /win32/i) {
-    push @extra_params, MYEXTLIB => 'win32\\PerlLog.RES';
+if ($^O =~ /Win32/i) {
+    my $name = "PerlLog";
+    push @extra_params, MYEXTLIB => "win32\\$name.RES";
     push @extra_prereqs, "Win32::TieRegistry" => 0, "Win32::EventLog" => 0;
+
     mkpath("lib/Sys/Syslog")
-        or die "Failed to create 'lib/Sys/Syslog':$!"
+        or die "fatal: Failed to create 'lib/Sys/Syslog': $!"
         if !-d "lib/Sys/Syslog";
-    copy("win32/Win32.pm","lib/Sys/Syslog/Win32.pm")
-        or die "Failed to copy Win32.pm into place:$!";
+
+    copy("win32/Win32.pm" => "lib/Sys/Syslog/Win32.pm")
+        or die "fatal: Failed to copy Win32.pm into place: $!";
+
+    # recreate the resource file from its uuencoded form if it's not here
+    if (! -f File::Spec->catfile("win32", "$name.RES")) {
+        open(my $uufh, '<', File::Spec->catfile("win32", "$name\_RES.uu"))
+        or die "fatal: Can't read file '$name\_RES.uu': $!";
+        my $uudata = do { local $/; <$uufh> };
+        close($uufh);
+        open(my $rsrc, '>', File::Spec->catfile("win32", "$name.RES"))
+        or die "fatal: Can't write resource file '$name.RES': $!";
+        print $rsrc pack "u", $uudata;
+        close($rsrc);
+    }
 }
 
 WriteMakefile(
@@ -93,13 +108,13 @@ if(eval {require ExtUtils::Constant; 1}) {
         NAMES => \@names,
     );
 
-    open(MACROS, '>macros.all') or warn "can't write 'macros.all': $!\n";
+    open(MACROS, '>macros.all') or warn "warning: Can't write 'macros.all': $!\n";
     print MACROS join $/, grep {!ref} @names;
     close(MACROS);
 
 } else {
     foreach my $file ('const-c.inc', 'const-xs.inc') {
         my $fallback = File::Spec->catfile('fallback', $file);
-        copy($fallback, $file) or die "Can't copy $fallback to $file: $!";
+        copy($fallback, $file) or die "fatal: Can't copy $fallback to $file: $!";
     }
 }
