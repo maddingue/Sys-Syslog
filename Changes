@@ -1,11 +1,12 @@
 Revision history for Sys-Syslog
 
-0.19 -- 2006.10.xx -- Sebastien Aperghis-Tramoni (SAPER)
+0.19 -- 2006.11.xx -- Sebastien Aperghis-Tramoni (SAPER)
         [BUGFIX] CPAN-RT#21333: Makefile.PL now creates a typemap for Perl 5.6.1
         [BUGFIX] CPAN-RT#21516: disconnect_log() now correctly calls closelog_xs().
         [BUGFIX] CPAN-RT#21866: silence warnings in openlog().
         [BUGFIX] CPAN-RT#20635: fix tests to avoid problems related to the 
         "stream" mechanism which occured on Debian and Cygwin.
+        [FEATURE] Added Win32 event log support thanks to Yves Orton.
         [TESTS] t/syslog.t now generates a more detailled TAP output.
         [EG] Added example script eg/syslog.pl
 
