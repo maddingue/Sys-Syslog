@@ -73,6 +73,7 @@ __END__
 package Sys::Syslog::Win32;
 use strict;
 use warnings;
+use File::Basename;
 
 # === WARNING === WARNING === WARNING === WARNING === WARNING === WARNING ===
 #
