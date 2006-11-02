@@ -183,7 +183,7 @@ for my $sock_type (qw(native eventlog unix stream inet tcp udp)) {
 
 BEGIN { $tests += 10 }
 SKIP: {
-    skip "not testing setlogsock('stream') on Win32", 10 is $is_Win32;
+    skip "not testing setlogsock('stream') on Win32", 10 if $is_Win32;
 
     # setlogsock() with "stream" and an undef path
     $r = eval { setlogsock("stream", undef ) } || '';
