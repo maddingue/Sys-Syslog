@@ -17,7 +17,7 @@ open(my $rsrc, '<', "$name.RES")
 my $uudata = pack "u", do { local $/; <$rsrc> };
 close($rsrc);
 open(my $uufh, '>', "$name\_RES.uu")
-    or die "fatal: Can't write file '$name.RES': $!";
+    or die "fatal: Can't write file '$name\_RES.uu': $!";
 print $uufh $uudata;
 close($uufh);
 
