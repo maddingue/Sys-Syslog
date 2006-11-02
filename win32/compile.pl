@@ -73,7 +73,7 @@ __END__
 package Sys::Syslog::Win32;
 use strict;
 use warnings;
-use File::Basename;
+use File::Spec;
 
 # === WARNING === WARNING === WARNING === WARNING === WARNING === WARNING ===
 #
@@ -130,14 +130,18 @@ my @priority2eventtype = (
 );
 
 
-# install()
-# -------
+# _install()
+# --------
 # Used to set up a connection to the eventlog.
 # 
-sub install {
+sub _install {
     return $logger if $logger;
 
-    $Source ||= basename($Source);
+    # can't just use basename($0) here because Win32 path often are a 
+    # a mix of / and \, and File::Basename::fileparse() can't handle that, 
+    # while File::Spec::splitpath() can.. Go figure..
+    my (undef, undef, $basename) = File::Spec->splitpath($0);
+    ($Source) ||= $basename;
 
     #$Registry->Delimiter("/"); # is this needed?
     my $root = 'LMachine/SYSTEM/CurrentControlSet/Services/Eventlog/Application/';
@@ -196,6 +200,28 @@ sub _syslog_send {
 
     return $logger->Report($opts);
 }
+
+
+=head1 NAME
+
+Sys::Syslog::Win32 - Win32 support for Sys::Syslog
+
+=head1 DESCRIPTION
+
+...
+
+=head1 AUTHORS
+
+...
+
+=head1 COPYRIGHT
+
+...
+
+=cut
+
+
+
 
 1;
 

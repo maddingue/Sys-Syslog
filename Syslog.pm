@@ -632,7 +632,7 @@ sub connect_native {
 sub connect_eventlog {
     my ($errs) = @_;
 
-    $syslog_xobj = Sys::Syslog::Win32::install();
+    $syslog_xobj = Sys::Syslog::Win32::_install();
     $syslog_send = \&Sys::Syslog::Win32::_syslog_send;
 
     return 1;
