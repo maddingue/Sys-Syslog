@@ -15,10 +15,10 @@ if ($] < 5.008) {
 my (@extra_params, @extra_prereqs);
 if ($^O =~ /Win32/i) {
     my $name = "PerlLog";
-    push @extra_params, MYEXTLIB => "win32\\$name.RES";
+    push @extra_params, MYEXTLIB => File::Spec->catfile("win32", "$name.RES");
     push @extra_prereqs, "Win32::TieRegistry" => 0, "Win32::EventLog" => 0;
 
-    mkpath("lib/Sys/Syslog")
+    mkpath(File::Spec->catdir("lib", "Sys", "Syslog"))
         or die "fatal: Failed to create 'lib/Sys/Syslog': $!"
         if !-d "lib/Sys/Syslog";
 
