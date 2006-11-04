@@ -8,7 +8,7 @@ use File::Path;
 my $name = shift || 'PerlLog';
 
 # compile the message text files
-system("mc.exe -d $name.mc");
+system("mc -d $name.mc");
 system("rc $name.rc");
 
 # uuencode the resource file
@@ -130,6 +130,7 @@ my @priority2eventtype = (
 );
 
 
+# 
 # _install()
 # --------
 # Used to set up a connection to the eventlog.
@@ -177,6 +178,7 @@ sub _install {
 }
 
 
+# 
 # _syslog_send()
 # ------------
 # Used to convert syslog messages into eventlog messages
@@ -208,20 +210,25 @@ Sys::Syslog::Win32 - Win32 support for Sys::Syslog
 
 =head1 DESCRIPTION
 
-...
+This module is a backend plugin for C<Sys::Syslog>, for supporting the Win32 
+event log. It is not expected to be directly used by any module other than 
+C<Sys::Syslog> therefore it's API may change at any time and no warranty is 
+made with regards to backward compatibility. You Have Been Warned. 
+
+=head1 SEE ALSO
+
+L<Sys::Syslog>
 
 =head1 AUTHORS
 
-...
+SE<eacute>bastien Aperghis-Tramoni and Yves Orton
 
-=head1 COPYRIGHT
+=head1 LICENSE
 
-...
+This program is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
 
 =cut
-
-
-
 
 1;
 
