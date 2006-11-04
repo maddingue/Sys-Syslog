@@ -20,3 +20,4 @@ win32/compile.pl
 win32/PerlLog.mc
 win32/PerlLog.RES
 win32/PerlLog_RES.uu
+win32/Win32.pm
