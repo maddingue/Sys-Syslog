@@ -19,7 +19,8 @@ use warnings qw(closure deprecated exiting glob io misc numeric once overflow
                 pack portable recursion redefine regexp severe signal substr
                 syntax taint uninitialized unpack untie utf8 void);
 
-my $is_Win32 = $^O =~ /win32/i;
+my $is_Win32  = $^O =~ /win32/i;
+my $is_Cygwin = $^O =~ /cygwin/i;
 
 if ($is_Win32) {
     eval "use Win32::EventLog";
@@ -185,7 +186,9 @@ for my $sock_type (qw(native eventlog unix stream inet tcp udp)) {
 
 BEGIN { $tests += 10 }
 SKIP: {
-    skip "not testing setlogsock('stream') on Win32", 10 if $is_Win32;
+    skip "not testing setlogsock('stream') on Win32 and Cygwin", 10 if $is_Win32 or $is_Cygwin;
+    skip "the 'unix' mechanism works, so the tests will likely fail with the 'stream' mechanism", 10 
+        if grep {/unix/} @passed;
 
     # setlogsock() with "stream" and an undef path
     $r = eval { setlogsock("stream", undef ) } || '';
