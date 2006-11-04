@@ -185,6 +185,8 @@ sub _install {
 # 
 sub _syslog_send {
     my ($buf, $numpri, $numfac) = @_;
+    $numpri ||= EVENTLOG_INFORMATION_TYPE();
+    $numfac ||= Sys::Syslog::LOG_USER();
     my $name = $id2name{$numfac};
 
     my $opts = {
@@ -231,4 +233,3 @@ under the same terms as Perl itself.
 =cut
 
 1;
-
