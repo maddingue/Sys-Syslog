@@ -159,12 +159,14 @@ for my $sock_type (qw(native eventlog unix stream inet tcp udp)) {
         ok( !$r, "[$sock_type] syslog() should return false: '$r'" );
 
         # syslog() with level "info" (as a string), should pass
-        $r = eval { syslog('info', "$test_string by connecting to a $sock_type socket (errno=%m)") } || 0;
+        $r = eval { syslog('info', "$test_string by connecting to a $sock_type socket") } || 0;
         is( $@, '', "[$sock_type] syslog() called with level 'info' (string)" );
         ok( $r, "[$sock_type] syslog() should return true: '$r'" );
 
         # syslog() with level "info" (as a macro), should pass
-        $r = eval { syslog(LOG_INFO(), "$test_string by connecting to a $sock_type socket (errno=%m)") } || 0;
+        { local $! = 1;
+          $r = eval { syslog(LOG_INFO(), "$test_string by connecting to a $sock_type socket, setting a fake errno: %m") } || 0;
+        }
         is( $@, '', "[$sock_type] syslog() called with level 'info' (macro)" );
         ok( $r, "[$sock_type] syslog() should return true: '$r'" );
 
