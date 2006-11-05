@@ -1,4 +1,5 @@
 use strict;
+use Config;
 use ExtUtils::MakeMaker;
 eval 'use ExtUtils::MakeMaker::Coverage';
 use File::Copy;
