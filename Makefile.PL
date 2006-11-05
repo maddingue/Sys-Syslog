@@ -29,13 +29,17 @@ if ($^O =~ /Win32/i or $^O =~ /Cygwin/i) {
 
     # recreate the resource file from its uuencoded form if it's not here
     if (! -f File::Spec->catfile("win32", "$name.RES")) {
+        # read the uuencoded data
         open(my $uufh, '<', File::Spec->catfile("win32", "$name\_RES.uu"))
-        or die "fatal: Can't read file '$name\_RES.uu': $!";
+            or die "fatal: Can't read file '$name\_RES.uu': $!";
         my $uudata = do { local $/; <$uufh> };
         close($uufh);
+
+        # write the resource file
         open(my $rsrc, '>', File::Spec->catfile("win32", "$name.RES"))
-        or die "fatal: Can't write resource file '$name.RES': $!";
-        print $rsrc pack "u", $uudata;
+            or die "fatal: Can't write resource file '$name.RES': $!";
+        binmode($rsrc);
+        print $rsrc unpack "u", $uudata;
         close($rsrc);
     }
 }
