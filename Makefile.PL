@@ -13,9 +13,10 @@ if ($] < 5.008) {
 }
 
 my (@extra_params, @extra_prereqs);
-if ($^O =~ /Win32/i) {
+if ($^O =~ /Win32/i or $^O =~ /Cygwin/i) {
     my $name = "PerlLog";
-    push @extra_params, MYEXTLIB => File::Spec->catfile("win32", "$name.RES");
+    push @extra_params, MYEXTLIB => File::Spec->catfile("win32", "$name.RES")
+        unless $Config{cc} eq "gcc";
     push @extra_prereqs, "Win32::TieRegistry" => 0, "Win32::EventLog" => 0;
 
     mkpath(File::Spec->catdir("lib", "Sys", "Syslog"))
