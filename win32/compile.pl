@@ -7,23 +7,49 @@ use File::Path;
 
 my $name = shift || 'PerlLog';
 
+# get the version from the message file
+open(my $msgfh, '<', "$name.mc") or die "fatal: Can't read file '$name.mc': $!\n";
+my $top = <$msgfh>;
+close($msgfh);
+
+my $version;
+if ($top =~ /Sys::Syslog Message File (\d+\.\d+\.\d+)/) {
+    $version = $1;
+    $version =~ s/\./_/g;
+}
+else {
+    die "error: File '$name.mc' doesn't fo"
+}
+
 # compile the message text files
 system("mc -d $name.mc");
 system("rc $name.rc");
+system("link /nodefaultlib /INCREMENTAL:NO /release /nologo -base:0x60000000"
+      ." -machine:i386 -dll -noentry -out:$name\_$version.dll $name.res"); 
 
 # uuencode the resource file
-open(my $rsrc, '<', "$name.RES")
-    or die "fatal: Can't read resource file '$name.RES': $!";
+open(my $rsrc, '<', "$name.RES") or die "fatal: Can't read resource file '$name.RES': $!";
+binmode($rsrc);
 my $uudata = pack "u", do { local $/; <$rsrc> };
 close($rsrc);
+
 open(my $uufh, '>', "$name\_RES.uu")
     or die "fatal: Can't write file '$name\_RES.uu': $!";
 print $uufh $uudata;
 close($uufh);
 
+# uuencode the DLL
+open(my $dll, '<', "$name.dll") or die "fatal: Can't read DLL '$name.dll': $!";
+binmode($dll);
+$uudata = pack "u", do { local $/; <$dll> };
+close($dll);
+
+open($uufh, '>', "$name\_dll.uu") or die "fatal: Can't write file '$name\_dll.uu': $!";
+print $uufh $uudata;
+close($uufh);
+
 # parse the generated header to extract the constants
-open(my $header, '<', "$name.h")
-    or die "fatal: Can't read header file '$name.h': $!";
+open(my $header, '<', "$name.h") or die "fatal: Can't read header file '$name.h': $!";
 my %vals;    
 my $max = 0;
 
@@ -61,13 +87,6 @@ $template =~ s/__MAX__/'$max'/g;
 $template =~ s/__TIME__/localtime()/ge;
 print $out $template;
 close $out;
-
-my $libpath = File::Spec->catdir(File::Spec->updir, qw(lib Sys Syslog));
-mkpath $libpath
-    or die "fatal: Can't create lib directory '$libpath': $!"
-    if !-d $libpath;
-copy "Win32.pm", File::Spec->catfile($libpath, "Win32.pm")
-    or die "fatal: Can't copy file 'Win32.pm' into directory '$libpath': $!";
 
 __END__
 package Sys::Syslog::Win32;
