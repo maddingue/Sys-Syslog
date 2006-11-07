@@ -13,35 +13,48 @@ if ($] < 5.008) {
     close(TYPEMAP);
 }
 
+# create lib/ dir and sub-dirs
+#my $libdir = File::Spec->catdir(qw(lib Sys Syslog));
+#mkpath($libdir) or die "fatal: Failed to create '$libdir': $!"
+#    if ! -d "lib/Sys/Syslog";
+#copy("Syslog.pm" => $libdir)
+#    or die "fatal: Can't copy file 'Syslog.pm' into $libdir: $!";
+my %virtual_path = ( 'Syslog.pm' => '$(INST_LIBDIR)/Syslog.pm' );
+
 my (@extra_params, @extra_prereqs);
-if ($^O =~ /Win32/i or $^O =~ /Cygwin/i) {
+my $use_eventlog = $^O =~ /Win32/i 
+                or ( $^O =~ /Cygwin/i and eval "use Win32::EventLog; 1" );
+
+if ($use_eventlog) {
     my $name = "PerlLog";
-    push @extra_params, MYEXTLIB => File::Spec->catfile("win32", "$name.RES")
-        unless $Config{cc} eq "gcc";
+
     push @extra_prereqs, "Win32::TieRegistry" => 0, "Win32::EventLog" => 0;
 
-    mkpath(File::Spec->catdir("lib", "Sys", "Syslog"))
-        or die "fatal: Failed to create 'lib/Sys/Syslog': $!"
-        if !-d "lib/Sys/Syslog";
+    $virtual_path{'win32/Win32.pm'  } = '$(INST_LIBDIR)/Syslog/Win32.pm';
+    $virtual_path{'win32PerlLog.dll'} = '$(INST_ARCHLIBDIR)/Syslog/PerlLog.dll';
 
-    copy("win32/Win32.pm" => "lib/Sys/Syslog/Win32.pm")
-        or die "fatal: Failed to copy Win32.pm into place: $!";
-
-    # recreate the resource file from its uuencoded form if it's not here
-    if (! -f File::Spec->catfile("win32", "$name.RES")) {
+    # recreate the DLL from its uuencoded form if it's not here
+    if (! -f File::Spec->catfile("win32", "$name.dll")) {
         # read the uuencoded data
-        open(my $uufh, '<', File::Spec->catfile("win32", "$name\_RES.uu"))
+        open(my $uufh, '<', File::Spec->catfile("win32", "$name\_dll.uu"))
             or die "fatal: Can't read file '$name\_RES.uu': $!";
         my $uudata = do { local $/; <$uufh> };
         close($uufh);
 
-        # write the resource file
-        open(my $rsrc, '>', File::Spec->catfile("win32", "$name.RES"))
-            or die "fatal: Can't write resource file '$name.RES': $!";
-        binmode($rsrc);
-        print $rsrc unpack "u", $uudata;
-        close($rsrc);
+        # write the DLL
+        open(my $dll, '>', File::Spec->catfile("win32", "$name.dll"))
+            or die "fatal: Can't write DLL '$name.dll': $!";
+        binmode($dll);
+        print $dll unpack "u", $uudata;
+        close($dll);
     }
+
+    # copy files from win32/ to the local hierarchy
+    #copy(File::Spec->catfile("win32", "Win32.pm") => $libdir)
+    #    or die "fatal: Can't copy file 'Win32.pm' into $libdir: $!";
+    #my $archlibdir = File::Spec->catdir(qw(lib auto Sys Syslog));
+    #copy(File::Spec->catfile("win32", "$name.dll") => $archlibdir)
+    #    or die "fatal: Can't copy file '$name.dll' into $archlibdir: $!";
 }
 
 WriteMakefile(
@@ -52,6 +65,7 @@ WriteMakefile(
     INSTALLDIRS     => 'perl',
     MAN3PODS        => {}, 	# Pods will be built by installman.
     XSPROTOARG      => '-noprototypes',
+    PM              => \%virtual_path, 
     PREREQ_PM       => {
         'Test::More' => 0,
         'XSLoader'   => 0,
