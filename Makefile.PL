@@ -37,7 +37,7 @@ if ($use_eventlog) {
     if (! -f File::Spec->catfile("win32", "$name.dll")) {
         # read the uuencoded data
         open(my $uufh, '<', File::Spec->catfile("win32", "$name\_dll.uu"))
-            or die "fatal: Can't read file '$name\_RES.uu': $!";
+            or die "fatal: Can't read file '$name\_dll.uu': $!";
         my $uudata = do { local $/; <$uufh> };
         close($uufh);
 
