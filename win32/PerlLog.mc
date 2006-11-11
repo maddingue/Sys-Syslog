@@ -1,3 +1,5 @@
+; // Sys::Syslog Message File 1.0.0
+
 MessageIdTypedef = DWORD
 
 SeverityNames = (
