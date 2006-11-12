@@ -12,20 +12,15 @@ open(my $msgfh, '<', "$name.mc") or die "fatal: Can't read file '$name.mc': $!\n
 my $top = <$msgfh>;
 close($msgfh);
 
-my $version;
-if ($top =~ /Sys::Syslog Message File (\d+\.\d+\.\d+)/) {
-    $version = $1;
-    $version =~ s/\./_/g;
-}
-else {
-    die "error: File '$name.mc' doesn't fo"
-}
+my ($version) = $top =~ /Sys::Syslog Message File (\d+\.\d+\.\d+)/
+        || die "error: File '$name.mc' doesn't have a version number\n";
 
 # compile the message text files
 system("mc -d $name.mc");
 system("rc $name.rc");
-system("link /nodefaultlib /INCREMENTAL:NO /release /nologo -base:0x60000000"
-      ." -machine:i386 -dll -noentry -out:$name\_$version.dll $name.res"); 
+system(qq{ link -nodefaultlib -incremental:no -release /nologo -base:0x60000000 }
+      .qq{ -comment:"Perl Syslog Message File v$version" }
+      .qq{ -machine:i386 -dll -noentry -out:$name.dll $name.res }); 
 
 # uuencode the resource file
 open(my $rsrc, '<', "$name.RES") or die "fatal: Can't read resource file '$name.RES': $!";
@@ -33,8 +28,7 @@ binmode($rsrc);
 my $uudata = pack "u", do { local $/; <$rsrc> };
 close($rsrc);
 
-open(my $uufh, '>', "$name\_RES.uu")
-    or die "fatal: Can't write file '$name\_RES.uu': $!";
+open(my $uufh, '>', "$name\_RES.uu") or die "fatal: Can't write file '$name\_RES.uu': $!";
 print $uufh $uudata;
 close($uufh);
 
