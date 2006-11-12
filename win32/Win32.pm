@@ -35,7 +35,10 @@ use Win32::TieRegistry 0.20 (
         KEY_WRITE
         KEY_ALL_ACCESS
     ),
-);    
+);
+
+my $is_Cygwin = $^O =~ /Cygwin/i;
+my $is_Win32  = $^O =~ /Win32/i;
 
 my %const = (
     CAT_KERN => 1,
@@ -151,10 +154,19 @@ sub _install {
 
     #$Registry->Delimiter("/"); # is this needed?
     my $root = 'LMachine/SYSTEM/CurrentControlSet/Services/Eventlog/Application/';
-    my $dll  = 'Sys/Syslog/Syslog.dll';
+    my $dll  = 'Sys/Syslog/PerlLog.dll';
+
+    # find the resource DLL, which should be along Syslog.dll
     my ($file) = grep { -e $_ }  map { ("$_/$dll" => "$_/auto/$dll") }  @INC;
+
+    # on Cygwin, convert the Unix path into absolute Windows path
+    if ($is_Cygwin) {
+        local $ENV{PATH} = '';
+        chomp($file = `/usr/bin/cygpath --absolute --windows "\Q$file\E"`);
+    }
+
     $file =~ s![\\/]+!\\!g;     # must be backslashes!
-    die "No Dll found!" if !$file;
+    die "fatal: Can't find resource DLL for Sys::Syslog\n" if !$file;
 
     if (!$Registry->{$root.$Source}) {
         $Registry->{$root.$Source} = {
@@ -170,14 +182,13 @@ sub _install {
     }
 
     Carp::confess("Registry has the wrong value for '$Source', possibly mismatched dll!")
-        if $Registry->{$root.$Source.'/CategoryMessageFile'}[0] 
-        ne $file;
+        if $Registry->{$root.$Source.'/CategoryMessageFile'}[0] ne $file;
 
     # we really should do something useful with this but for now
     # we set it to "" to prevent Win32::EventLog from warning
     my $host = "";
 
-    $logger= Win32::EventLog->new($Source, $host) 
+    $logger = Win32::EventLog->new($Source, $host) 
         or Carp::confess("Failed to connect to the '$Source' event log");
 
     return $logger;
