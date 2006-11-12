@@ -22,7 +22,7 @@ if ($] < 5.008) {
 my %virtual_path = ( 'Syslog.pm' => '$(INST_LIBDIR)/Syslog.pm' );
 
 my (@extra_params, @extra_prereqs);
-my $use_eventlog = $^O =~ /Win32/i 
+my $use_eventlog = $^O =~ /Win32/i;
 $use_eventlog  ||= $^O =~ /Cygwin/i and eval "use Win32::EventLog; 1";
 
 if ($use_eventlog) {
