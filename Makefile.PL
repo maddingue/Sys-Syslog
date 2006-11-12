@@ -26,12 +26,13 @@ my $use_eventlog = $^O =~ /Win32/i
                 or ( $^O =~ /Cygwin/i and eval "use Win32::EventLog; 1" );
 
 if ($use_eventlog) {
+    print " * Win32::EventLog detected.\n";
     my $name = "PerlLog";
 
     push @extra_prereqs, "Win32::TieRegistry" => 0, "Win32::EventLog" => 0;
 
-    $virtual_path{'win32/Win32.pm'  } = '$(INST_LIBDIR)/Syslog/Win32.pm';
-    $virtual_path{'win32PerlLog.dll'} = '$(INST_ARCHLIBDIR)/Syslog/PerlLog.dll';
+    $virtual_path{'win32/Win32.pm'   } = '$(INST_LIBDIR)/Syslog/Win32.pm';
+    $virtual_path{'win32/PerlLog.dll'} = '$(INST_ARCHAUTODIR)/Syslog/PerlLog.dll';
 
     # recreate the DLL from its uuencoded form if it's not here
     if (! -f File::Spec->catfile("win32", "$name.dll")) {
