@@ -173,8 +173,9 @@ sub _install {
         if $Registry->{$root.$Source.'/CategoryMessageFile'}[0] 
         ne $file;
 
-    my $host=""; # we really should do something useful with this
-                 # but we set it to "" to prevent Win32::EventLog from warning..
+    # we really should do something useful with this but for now
+    # we set it to "" to prevent Win32::EventLog from warning
+    my $host = "";
 
     $logger= Win32::EventLog->new($Source, $host) 
         or Carp::confess("Failed to connect to the '$Source' event log");
