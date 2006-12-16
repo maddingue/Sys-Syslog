@@ -662,7 +662,7 @@ sub connection_ok {
 
     my $rin = '';
     vec($rin, fileno(SYSLOG), 1) = 1;
-    my $ret = select $rin, undef, $rin, 0;
+    my $ret = select $rin, undef, $rin, 0.25;
     return ($ret ? 0 : 1);
 }
 
