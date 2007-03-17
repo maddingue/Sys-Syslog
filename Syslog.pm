@@ -670,11 +670,11 @@ sub disconnect_log {
     $connected = 0;
     $syslog_send = undef;
 
-    if ($current_proto eq 'native') {
+    if (defined $current_proto and $current_proto eq 'native') {
         closelog_xs();
         return 1;
     }
-    elsif ($current_proto eq 'eventlog') {
+    elsif (defined $current_proto and $current_proto eq 'eventlog') {
         $syslog_xobj->Close();
         return 1;
     }
