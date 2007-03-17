@@ -289,7 +289,7 @@ sub syslog {
     if ($mask =~ /%m/) {
         # escape percent signs for sprintf()
         $error =~ s/%/%%/g if @_;
-	# replace %m with $err, if preceded by an even number of percent signs
+        # replace %m with $error, if preceded by an even number of percent signs
         $mask =~ s/(?<!%)((?:%%)*)%m/$1$error/g;
     }
 
