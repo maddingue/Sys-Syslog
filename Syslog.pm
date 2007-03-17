@@ -74,6 +74,7 @@ our $host;                      # host to send syslog messages to
 # 
 # Global variables
 # 
+use vars qw($facility);
 my $connected = 0;              # flag to indicate if we're connected or not
 my $syslog_send;                # coderef of the function used to send messages
 my $syslog_path = undef;        # syslog path for "stream" and "unix" mechanisms
@@ -81,7 +82,7 @@ my $syslog_xobj = undef;        # if defined, holds the external object used to 
 my $transmit_ok = 0;            # flag to indicate if the last message was transmited
 my $current_proto = undef;      # current mechanism used to transmit messages
 my $ident = '';                 # identifiant prepended to each message
-my $facility = '';              # current facility
+$facility = '';                 # current facility
 my $maskpri = LOG_UPTO(&LOG_DEBUG);     # current log mask
 
 my %options = (
@@ -132,7 +133,11 @@ sub AUTOLOAD {
 
 sub openlog {
     ($ident, my $logopt, $facility) = @_;
-    $logopt ||= '';
+
+    # default values
+    $ident    ||= basename($0) || getlogin() || getpwuid($<) || 'syslog';
+    $logopt   ||= '';
+    $facility ||= LOG_USER();
 
     for my $opt (split /\b/, $logopt) {
         $options{$opt} = 1 if exists $options{$opt}
@@ -248,7 +253,11 @@ sub syslog {
     my $fail_time = undef;
     my $error = $!;
 
-    my $facility = $facility;	# may need to change temporarily.
+    # if $ident is undefined, it means openlog() wasn't previously called
+    # so do it now in order to have sensible defaults
+    openlog() unless $ident;
+
+    local $facility = $facility;    # may need to change temporarily.
 
     croak "syslog: expecting argument \$priority" unless defined $priority;
     croak "syslog: expecting argument \$format"   unless defined $mask;
@@ -280,9 +289,6 @@ sub syslog {
 	$facility = 'user' unless $facility;
 	$numfac = xlate($facility);
     }
-
-    # if no identifiant, set up a default one
-    $ident ||= basename($0) || getlogin() || getpwuid($<) || 'syslog';
 
     connect_log() unless $connected;
 
