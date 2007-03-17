@@ -39,7 +39,10 @@ else {
 my $tests;
 plan tests => $tests;
 
-BEGIN { $tests = 1 }
+# any remaining warning should be severly punished
+BEGIN { eval "use Test::NoWarnings"; $tests = $@ ? 0 : 1; }
+
+BEGIN { $tests += 1 }
 # ok, now loads them
 eval 'use Socket';
 use_ok('Sys::Syslog', ':standard', ':extended', ':macros');
