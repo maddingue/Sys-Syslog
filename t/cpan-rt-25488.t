@@ -5,6 +5,7 @@ use Test::More;
 # any remaining warning should be severly punished
 eval "use Test::NoWarnings";
 my $tests = $@ ? 0 : 1;
+plan skip_all => "Test::NoWarnings not available" if !$tests;
 plan tests => $tests;
 
 # ----------
