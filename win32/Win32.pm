@@ -162,7 +162,7 @@ sub _install {
     # on Cygwin, convert the Unix path into absolute Windows path
     if ($is_Cygwin) {
         local $ENV{PATH} = '';
-        chomp($file = `/usr/bin/cygpath --absolute --windows "\Q$file\E"`);
+        chomp($file = `/usr/bin/cygpath --absolute --windows "$file"`);
     }
 
     $file =~ s![\\/]+!\\!g;     # must be backslashes!
@@ -216,7 +216,10 @@ sub _syslog_send {
 
     if ($Sys::Syslog::DEBUG) {
         require Data::Dumper;
-        warn Data::Dumper->Dump([$name,$opts], [qw(name opts)]);
+        warn Data::Dumper->Dump(
+            [$numpri, $numfac, $name, $opts], 
+            [qw(numpri numfac name opts)]
+        );
     }
 
     return $logger->Report($opts);
