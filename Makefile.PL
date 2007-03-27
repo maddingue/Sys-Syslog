@@ -13,12 +13,7 @@ if ($] < 5.008) {
     close(TYPEMAP);
 }
 
-# create lib/ dir and sub-dirs
-#my $libdir = File::Spec->catdir(qw(lib Sys Syslog));
-#mkpath($libdir) or die "fatal: Failed to create '$libdir': $!"
-#    if ! -d "lib/Sys/Syslog";
-#copy("Syslog.pm" => $libdir)
-#    or die "fatal: Can't copy file 'Syslog.pm' into $libdir: $!";
+# virtual paths given to EU::MM
 my %virtual_path = ( 'Syslog.pm' => '$(INST_LIBDIR)/Syslog.pm' );
 
 my (@extra_params, @extra_prereqs);
@@ -49,13 +44,6 @@ if ($use_eventlog) {
         print $dll unpack "u", $uudata;
         close($dll);
     }
-
-    # copy files from win32/ to the local hierarchy
-    #copy(File::Spec->catfile("win32", "Win32.pm") => $libdir)
-    #    or die "fatal: Can't copy file 'Win32.pm' into $libdir: $!";
-    #my $archlibdir = File::Spec->catdir(qw(lib auto Sys Syslog));
-    #copy(File::Spec->catfile("win32", "$name.dll") => $archlibdir)
-    #    or die "fatal: Can't copy file '$name.dll' into $archlibdir: $!";
 }
 
 WriteMakefile(
