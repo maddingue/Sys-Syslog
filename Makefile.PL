@@ -16,6 +16,7 @@ if ($] < 5.008) {
 # virtual paths given to EU::MM
 my %virtual_path = ( 'Syslog.pm' => '$(INST_LIBDIR)/Syslog.pm' );
 
+# detect when to use Win32::EvenLog
 my (@extra_params, @extra_prereqs);
 my $use_eventlog = $^O =~ /Win32/i;
 $use_eventlog  ||= $^O =~ /Cygwin/i and eval "use Win32::EventLog; 1";
@@ -45,6 +46,10 @@ if ($use_eventlog) {
         close($dll);
     }
 }
+
+# detect when being built in Perl core
+push @extra_params, DEFINE => '-DUSE_PPPORT_H'
+    if grep { $_ eq 'PERL_CORE=1' } @ARGV;
 
 WriteMakefile(
     NAME            => 'Sys::Syslog',
