@@ -69,7 +69,7 @@ require Exporter;
 # 
 # Public variables
 # 
-our $host;                      # host to send syslog messages to
+use vars qw($host);             # host to send syslog messages to
 
 # 
 # Global variables
