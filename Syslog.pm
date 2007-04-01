@@ -69,7 +69,7 @@ require Exporter;
 # 
 # Public variables
 # 
-use vars qw($host);             # host to send syslog messages to
+use vars qw($host);             # host to send syslog messages to (see notes at end)
 
 # 
 # Global variables
@@ -1337,3 +1337,56 @@ This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
 
 =cut
+
+=begin comment
+
+Notes for the future maintainer (even if it's still me..)
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Using Google Code Search, I search who on Earth was relying on $host being 
+public. It found 5 hits: 
+
+* First was inside Indigo Star Perl2exe documentation. Just an old version 
+of Sys::Syslog. 
+
+
+* One real hit was inside DalWeathDB, a weather related program. It simply 
+does a 
+
+    $Sys::Syslog::host = '127.0.0.1';
+
+- L<http://www.gallistel.net/nparker/weather/code/>
+
+
+* Two hits were in TPC, a fax server thingy. It does a 
+
+    $Sys::Syslog::host = $TPC::LOGHOST;
+
+but also has this strange piece of code:
+
+    # work around perl5.003 bug
+    sub Sys::Syslog::hostname {}
+
+I don't know what bug the author referred to.
+
+- L<http://www.tpc.int/>
+- L<ftp://ftp.tpc.int/tpc/server/UNIX/>
+- L<ftp://ftp-usa.tpc.int/pub/tpc/server/UNIX/>
+
+
+* Last hit was in Filefix, which seems to be a FIDOnet mail program (!).
+This one does not use $host, but has the following piece of code:
+
+    sub Sys::Syslog::hostname
+    {
+        use Sys::Hostname;
+        return hostname;
+    }
+
+I guess this was a more elaborate form of the previous bit, maybe because 
+of a bug in SYs::Syslog back then?
+
+- L<ftp://ftp.kiae.su/pub/unix/fido/>
+
+=end
+
