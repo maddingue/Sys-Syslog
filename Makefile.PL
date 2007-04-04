@@ -48,8 +48,14 @@ if ($use_eventlog) {
 }
 
 # detect when being built in Perl core
-push @extra_params, DEFINE => '-DUSE_PPPORT_H'
-    if grep { $_ eq 'PERL_CORE=1' } @ARGV;
+if (grep { $_ eq 'PERL_CORE=1' } @ARGV) {
+    push @extra_params, 
+        MAN3PODS    => {};      # Pods will be built by installman.
+}
+else {
+    push @extra_params, 
+        DEFINE      => '-DUSE_PPPORT_H';
+}
 
 WriteMakefile(
     NAME            => 'Sys::Syslog',
@@ -57,7 +63,6 @@ WriteMakefile(
     VERSION_FROM    => 'Syslog.pm', 
     ABSTRACT_FROM   => 'Syslog.pm', 
     INSTALLDIRS     => 'perl',
-    MAN3PODS        => {}, 	# Pods will be built by installman.
     XSPROTOARG      => '-noprototypes',
     PM              => \%virtual_path, 
     PREREQ_PM       => {
