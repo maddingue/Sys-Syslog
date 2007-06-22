@@ -189,14 +189,24 @@ for my $sock_type (qw(native eventlog unix stream inet tcp udp)) {
 
 BEGIN { $tests += 10 }
 SKIP: {
-    skip "not testing setlogsock('stream') on Win32 and Cygwin", 10 if $is_Win32 or $is_Cygwin;
+    skip "not testing setlogsock('stream') on Win32", 10 if $is_Win32;
     skip "the 'unix' mechanism works, so the tests will likely fail with the 'stream' mechanism", 10 
         if grep {/unix/} @passed;
 
     # setlogsock() with "stream" and an undef path
     $r = eval { setlogsock("stream", undef ) } || '';
     is( $@, '', "setlogsock() called, with 'stream' and an undef path" );
-    ok( $r, "setlogsock() should return true: '$r'" );
+    if ($is_Cygwin) {
+        if (-x "/usr/sbin/syslog-ng") {
+            ok( $r, "setlogsock() on Cygwin with syslog-ng should return true: '$r'" );
+        }
+        else {
+            nok( $r, "setlogsock() on Cygwin without syslog-ng should return false: '$r'" );
+        }
+    }
+    else  {
+        ok( $r, "setlogsock() should return true: '$r'" );
+    }
 
     # setlogsock() with "stream" and an empty path
     $r = eval { setlogsock("stream", '' ) } || '';
