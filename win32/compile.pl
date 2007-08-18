@@ -241,7 +241,7 @@ Sys::Syslog::Win32 - Win32 support for Sys::Syslog
 
 =head1 DESCRIPTION
 
-This module is a backend plugin for C<Sys::Syslog>, for supporting the Win32 
+This module is a back-end plugin for C<Sys::Syslog>, for supporting the Win32 
 event log. It is not expected to be directly used by any module other than 
 C<Sys::Syslog> therefore it's API may change at any time and no warranty is 
 made with regards to backward compatibility. You Have Been Warned. 
