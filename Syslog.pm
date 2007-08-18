@@ -23,14 +23,19 @@ require Exporter;
                 LOG_INFO LOG_NOTICE LOG_WARNING
             ), 
 
-            # facilities
+            # standard facilities
             qw(
-                LOG_AUTH LOG_AUTHPRIV LOG_CRON LOG_DAEMON LOG_FTP
-                LOG_INSTALL LOG_KERN LOG_LAUNCHD LOG_LFMT LOG_LOCAL0 
-                LOG_LOCAL1 LOG_LOCAL2 LOG_LOCAL3 LOG_LOCAL4 LOG_LOCAL5 
-                LOG_LOCAL6 LOG_LOCAL7 LOG_LPR LOG_MAIL LOG_NETINFO 
-                LOG_NEWS LOG_RAS LOG_REMOTEAUTH LOG_SYSLOG LOG_USER LOG_UUCP 
-            ), 
+                LOG_AUTH LOG_AUTHPRIV LOG_CRON LOG_DAEMON LOG_FTP LOG_KERN
+                LOG_LOCAL0 LOG_LOCAL1 LOG_LOCAL2 LOG_LOCAL3 LOG_LOCAL4
+                LOG_LOCAL5 LOG_LOCAL6 LOG_LOCAL7 LOG_LPR LOG_MAIL LOG_NEWS
+                LOG_SYSLOG LOG_USER LOG_UUCP
+            ),
+            # Mac OS X specific facilities
+            qw( LOG_INSTALL LOG_LAUNCHD LOG_NETINFO LOG_RAS LOG_REMOTEAUTH ),
+            # modern BSD specific facilities
+            qw( LOG_CONSOLE LOG_NTP LOG_SECURITY ),
+            # IRIX specific facilities
+            qw( LOG_AUDIT LOG_LFMT ),
 
             # options
             qw(
@@ -1042,11 +1047,19 @@ Log to UDP port on C<$remotehost> instead of logging locally:
 
 =item *
 
+C<LOG_AUDIT> - audit daemon (IRIX); falls back to C<LOG_AUTH>
+
+=item *
+
 C<LOG_AUTH> - security/authorization messages
 
 =item *
 
 C<LOG_AUTHPRIV> - security/authorization messages (private)
+
+=item *
+
+C<LOG_CONSOLE> - C</dev/console> output (FreeBSD); falls back to C<LOG_USER>
 
 =item *
 
@@ -1066,11 +1079,16 @@ C<LOG_KERN> - kernel messages
 
 =item *
 
-C<LOG_INSTALL> - installer subsystem
+C<LOG_INSTALL> - installer subsystem (Mac OS X); falls back to C<LOG_USER>
 
 =item *
 
-C<LOG_LAUNCHD> - launchd - general bootstrap daemon (Mac OS X)
+C<LOG_LAUNCHD> - launchd - general bootstrap daemon (Mac OS X);
+falls back to C<LOG_DAEMON>
+
+=item *
+
+C<LOG_LFMT> - logalert facility; falls back to C<LOG_USER>
 
 =item *
 
@@ -1086,7 +1104,7 @@ C<LOG_MAIL> - mail subsystem
 
 =item *
 
-C<LOG_NETINFO> - NetInfo subsystem (Mac OS X)
+C<LOG_NETINFO> - NetInfo subsystem (Mac OS X); falls back to C<LOG_DAEMON>
 
 =item *
 
@@ -1094,11 +1112,22 @@ C<LOG_NEWS> - USENET news subsystem
 
 =item *
 
-C<LOG_RAS> - Remote Access Service (VPN / PPP) (Mac OS X)
+C<LOG_NTP> - NTP subsystem (FreeBSD, NetBSD); falls back to C<LOG_DAEMON>
 
 =item *
 
-C<LOG_REMOTEAUTH> - remote authentication/authorization (Mac OS X)
+C<LOG_RAS> - Remote Access Service (VPN / PPP) (Mac OS X);
+falls back to C<LOG_AUTH>
+
+=item *
+
+C<LOG_REMOTEAUTH> - remote authentication/authorization (Mac OS X);
+falls back to C<LOG_AUTH>
+
+=item *
+
+C<LOG_SECURITY> - security subsystems (firewalling, etc.) (FreeBSD);
+falls back to C<LOG_AUTH>
 
 =item *
 
