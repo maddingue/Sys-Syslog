@@ -185,8 +185,10 @@ sub setlogsock {
 		}
 	    }
 
-            warnings::warnif "stream passed to setlogsock, but could not find any device"
-                and return undef unless defined $syslog_path
+            if (not defined $syslog_path) {
+                warnings::warnif "stream passed to setlogsock, but could not find any device";
+                return undef
+            }
         }
 
 	if (not -w $syslog_path) {
