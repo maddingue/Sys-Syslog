@@ -76,18 +76,22 @@ WriteMakefile(
     @extra_params
 );
 
+
+# find a default value for _PATH_LOG
 my $_PATH_LOG;
 
 if (-S "/dev/log" and -w "/dev/log") {
     # Most unixes have a unix domain socket /dev/log.
     $_PATH_LOG = "/dev/log";
-} elsif (-c "/dev/conslog" and -w "/dev/conslog") {
+}
+elsif (-c "/dev/conslog" and -w "/dev/conslog") {
     # SunOS 5.8 has a worldwritable /dev/conslog STREAMS log driver.
     # The /dev/log STREAMS log driver on this platform has permissions
     # and ownership `crw-r----- root sys'.  /dev/conslog has more liberal
     # permissions.
     $_PATH_LOG = "/dev/conslog";
-} else {
+}
+else {
     $_PATH_LOG = "";
 }
 
