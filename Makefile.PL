@@ -95,47 +95,61 @@ else {
     $_PATH_LOG = "";
 }
 
+
+# if possible, generate the code that handles the constants with 
+# ExtUtils::Constant, otherwise use cached copy in fallback/
 if(eval {require ExtUtils::Constant; 1}) {
-    my @names = (
-            # levels
-            qw(
-                LOG_ALERT LOG_CRIT LOG_DEBUG LOG_EMERG LOG_ERR 
-                LOG_INFO LOG_NOTICE LOG_WARNING
-            ), 
+    my @levels = qw(
+        LOG_ALERT LOG_CRIT LOG_DEBUG LOG_EMERG LOG_ERR 
+        LOG_INFO LOG_NOTICE LOG_WARNING
+    );
 
-            # facilities
-            qw(
-                LOG_AUTH LOG_AUTHPRIV LOG_CRON LOG_DAEMON LOG_FTP
-                LOG_INSTALL LOG_KERN LOG_LAUNCHD LOG_LFMT LOG_LOCAL0 
-                LOG_LOCAL1 LOG_LOCAL2 LOG_LOCAL3 LOG_LOCAL4 LOG_LOCAL5 
-                LOG_LOCAL6 LOG_LOCAL7 LOG_LPR LOG_MAIL LOG_NETINFO 
-                LOG_NEWS LOG_RAS LOG_REMOTEAUTH LOG_SYSLOG LOG_USER LOG_UUCP 
-            ), 
+    my @facilities = (
+        # standard facilities
+        qw(
+            LOG_AUTH LOG_AUTHPRIV LOG_CRON LOG_DAEMON LOG_FTP LOG_KERN
+            LOG_LOCAL0 LOG_LOCAL1 LOG_LOCAL2 LOG_LOCAL3 LOG_LOCAL4
+            LOG_LOCAL5 LOG_LOCAL6 LOG_LOCAL7 LOG_LPR LOG_MAIL LOG_NEWS
+            LOG_SYSLOG LOG_USER LOG_UUCP
+        ),
+        # Mac OS X specific facilities
+        { name => "LOG_INSTALL",    type => "IV", default => [ "IV", "LOG_USER"  ] },
+        { name => "LOG_LAUNCHD",    type => "IV", default => [ "IV", "LOG_DAEMON"] },
+        { name => "LOG_NETINFO",    type => "IV", default => [ "IV", "LOG_DAEMON"] },
+        { name => "LOG_RAS",        type => "IV", default => [ "IV", "LOG_AUTH"  ] },
+        { name => "LOG_REMOTEAUTH", type => "IV", default => [ "IV", "LOG_AUTH"  ] },
+        # modern BSD specific facilities
+        { name => "LOG_CONSOLE",    type => "IV", default => [ "IV", "LOG_USER"  ] },
+        { name => "LOG_NTP",        type => "IV", default => [ "IV", "LOG_DAEMON"] },
+        { name => "LOG_SECURITY",   type => "IV", default => [ "IV", "LOG_AUTH"  ] },
+        # IRIX specific facilities
+        { name => "LOG_AUDIT",      type => "IV", default => [ "IV", "LOG_AUTH"  ] },
+        { name => "LOG_LFMT",       type => "IV", default => [ "IV", "LOG_USER"  ] },
+    );
 
-            # options
-            qw(
-                LOG_CONS LOG_PID LOG_NDELAY LOG_NOWAIT LOG_ODELAY LOG_PERROR 
-            ), 
+    my @options = qw(
+        LOG_CONS LOG_PID LOG_NDELAY LOG_NOWAIT LOG_ODELAY LOG_PERROR 
+    );
 
-            # others macros
-            qw(
-                LOG_FACMASK LOG_NFACILITIES LOG_PRIMASK 
-            ), 
-
-           { name => "_PATH_LOG", type => "PV", default => [ "PV", qq("$_PATH_LOG") ] },
+    my @others_macros = (
+        qw(LOG_FACMASK),
+        { name => "_PATH_LOG", type => "PV", default => [ "PV", qq("$_PATH_LOG") ] },
+        { name => "LOG_PRIMASK",     type => "IV", default => [ "IV", 7] },
+        { name => "LOG_NFACILITIES", type => "IV", default => [ "IV", scalar @facilities] },
     );
 
     ExtUtils::Constant::WriteConstants(
         ($] > 5.009002 ? (PROXYSUBS => 1) : ()),
         NAME => 'Sys::Syslog',
-        NAMES => \@names,
+        NAMES => [ @levels, @facilities, @options, @others_macros ],
     );
 
+    my @names = map { ref $_ ? $_->{name} : $_ } @levels, @facilities, @options, @others_macros;
     open(MACROS, '>macros.all') or warn "warning: Can't write 'macros.all': $!\n";
-    print MACROS join $/, grep {!ref} @names;
+    print MACROS join $/, @names;
     close(MACROS);
-
-} else {
+}
+else {
     foreach my $file ('const-c.inc', 'const-xs.inc') {
         my $fallback = File::Spec->catfile('fallback', $file);
         copy($fallback, $file) or die "fatal: Can't copy $fallback to $file: $!";

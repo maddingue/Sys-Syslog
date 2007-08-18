@@ -1,6 +1,6 @@
 Revision history for Sys-Syslog
 
-0.19 -- 2007.03.xx -- Sebastien Aperghis-Tramoni (SAPER)
+0.19 -- 2007.08.xx -- Sebastien Aperghis-Tramoni (SAPER)
         [BUGFIX] CPAN-RT#20635: Fix tests to avoid problems related to the 
         "stream" mechanism which occured on Debian and Cygwin.
         [BUGFIX] CPAN-RT#20780: Facility could not be temporarily changed.
@@ -9,6 +9,8 @@ Revision history for Sys-Syslog
         [BUGFIX] CPAN-RT#21866: Silence warnings in openlog().
         [BUGFIX] CPAN-RT#25488: Silence warnings in disconnect_log().
         via syslog().
+        [BUGFIX] Rewrote the constants generation code in order to provide 
+        fallback value for non-standard macros.
         [FEATURE] Added Win32 event log support thanks to Yves Orton.
         [CODE] Merged changes from Jerry D. Hedden to use ppport.h only when not
         built from core distribution (blead@30657).
