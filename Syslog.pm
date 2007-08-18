@@ -1388,4 +1388,4 @@ of a bug in Sys::Syslog back then?
 
 - L<ftp://ftp.kiae.su/pub/unix/fido/>
 
-=end
+=end comment
