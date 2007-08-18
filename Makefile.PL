@@ -144,7 +144,7 @@ if(eval {require ExtUtils::Constant; 1}) {
         NAMES => [ @levels, @facilities, @options, @others_macros ],
     );
 
-    my @names = map { ref $_ ? $_->{name} : $_ } @levels, @facilities, @options, @others_macros;
+    my @names = map { ref $_ ? $_->{name} : $_ } @levels, @facilities, @options;
     open(MACROS, '>macros.all') or warn "warning: Can't write 'macros.all': $!\n";
     print MACROS join $/, @names;
     close(MACROS);
