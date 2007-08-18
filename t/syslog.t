@@ -201,7 +201,7 @@ SKIP: {
             ok( $r, "setlogsock() on Cygwin with syslog-ng should return true: '$r'" );
         }
         else {
-            nok( $r, "setlogsock() on Cygwin without syslog-ng should return false: '$r'" );
+            ok( !$r, "setlogsock() on Cygwin without syslog-ng should return false: '$r'" );
         }
     }
     else  {
