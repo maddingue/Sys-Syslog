@@ -1,6 +1,8 @@
 package Sys::Syslog::Win32;
 use strict;
 use warnings;
+use Carp;
+use File::Spec;
 
 # === WARNING === WARNING === WARNING === WARNING === WARNING === WARNING ===
 #
