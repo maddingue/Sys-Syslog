@@ -504,7 +504,7 @@ sub connect_tcp {
     }
 
     setsockopt(SYSLOG, SOL_SOCKET, SO_KEEPALIVE, 1);
-    setsockopt(SYSLOG, &IPPROTO_TCP, &TCP_NODELAY, 1);
+    setsockopt(SYSLOG, IPPROTO_TCP, TCP_NODELAY, 1);
     if (!connect(SYSLOG, $addr)) {
 	push @$errs, "tcp connect: $!";
 	return 0;
