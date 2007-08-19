@@ -1,4 +1,4 @@
-#!/usr/bin/perl -T
+#!perl -wT
 use strict;
 use Test::More;
 eval "use Test::Pod::Coverage 1.06";

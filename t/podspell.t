@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!perl -w
 use strict;
 use Test::More;
 plan skip_all => "Pod spelling: for developer interest only :)" unless -d 'releases';
