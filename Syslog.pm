@@ -986,10 +986,10 @@ Closes the log file and returns true on success.
 =head1 THE RULES OF SYS::SYSLOG
 
 I<The First Rule of Sys::Syslog is:>
-You do not call C<syslog> before C<openlog>.
+You do not call C<setlogsock>.
 
 I<The Second Rule of Sys::Syslog is:>
-You B<do not> call C<syslog> before C<openlog>.
+You B<do not> call C<setlogsock>.
 
 I<The Third Rule of Sys::Syslog is:>
 The program crashes, C<die>s, calls C<closelog>, the log is over.
@@ -1001,7 +1001,7 @@ I<The Fifth Rule of Sys::Syslog is:>
 One log at a time.
 
 I<The Sixth Rule of Sys::Syslog is:>
-No C<setlogsock>.
+No C<syslog> before C<openlog>.
 
 I<The Seventh Rule of Sys::Syslog is:>
 Logs will go on as long as they have to. 
