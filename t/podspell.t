@@ -38,6 +38,7 @@ tcp
 UDP
 udp
 UUCP
+NTP
 FDDI
 Firewire
 HDLC
@@ -46,6 +47,8 @@ IrDA
 LocalTalk
 PPP
 unix
+FreeBSD
+NetBSD
 Solaris
 IRIX
 endianness
@@ -66,3 +69,4 @@ Harnisch
 NetInfo
 VPN
 launchd
+logalert
