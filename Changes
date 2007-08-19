@@ -12,12 +12,15 @@ Revision history for Sys-Syslog
         [BUGFIX] Rewrote the constants generation code in order to provide 
         fallback value for non-standard macros.
         [FEATURE] Added Win32 event log support thanks to Yves Orton.
+        [FEATURE] Added new macros from modern BSD and IRIX.
+        [FEATURE] Each non-standard macro now fall backs to a standard macro.
         [CODE] Merged changes from Jerry D. Hedden to use ppport.h only when not
         built from core distribution (blead@30657).
         [TESTS] t/syslog.t now generates a more detailled TAP output.
         [TESTS] Merged change blead@29176: suppress taint mode from t/constants.t
         [TESTS] Added regression tests for CPAN-RT#21866 and #25488.
         [EG] Added example script eg/syslog.pl
+        [DOC] Added the Sys::Syslog Rules.
 
 0.18 -- 2006.08.28 -- Sebastien Aperghis-Tramoni (SAPER)
         [BUGFIX] Rewrote the way the default identifiant is constructed.
