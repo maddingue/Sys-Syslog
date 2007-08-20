@@ -32,17 +32,17 @@ if ($use_eventlog) {
     # recreate the DLL from its uuencoded form if it's not here
     if (! -f File::Spec->catfile("win32", "$name.dll")) {
         # read the uuencoded data
-        open(my $uufh, '<' . File::Spec->catfile("win32", "$name\_dll.uu"))
+        open(UU, '<' . File::Spec->catfile("win32", "$name\_dll.uu"))
             or die "fatal: Can't read file '$name\_dll.uu': $!";
-        my $uudata = do { local $/; <$uufh> };
-        close($uufh);
+        my $uudata = do { local $/; <UU> };
+        close(UU);
 
         # write the DLL
-        open(my $dll, '>' . File::Spec->catfile("win32", "$name.dll"))
+        open(DLL, '>' . File::Spec->catfile("win32", "$name.dll"))
             or die "fatal: Can't write DLL '$name.dll': $!";
-        binmode($dll);
-        print $dll unpack "u", $uudata;
-        close($dll);
+        binmode(DLL);
+        print DLL unpack "u", $uudata;
+        close(DLL);
     }
 }
 elsif ($^O =~ /Win32/) {
