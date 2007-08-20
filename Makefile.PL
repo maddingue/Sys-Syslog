@@ -18,8 +18,7 @@ my %virtual_path = ( 'Syslog.pm' => '$(INST_LIBDIR)/Syslog.pm' );
 
 # detect when to use Win32::EvenLog
 my (@extra_params, @extra_prereqs);
-my $use_eventlog = $^O =~ /Win32/i;
-$use_eventlog  ||= $^O =~ /Cygwin/i and eval "use Win32::EventLog; 1";
+my $use_eventlog = eval "use Win32::EventLog; 1";
 
 if ($use_eventlog) {
     print " * Win32::EventLog detected.\n";
@@ -45,6 +44,15 @@ if ($use_eventlog) {
         print $dll unpack "u", $uudata;
         close($dll);
     }
+}
+elsif ($^O =~ /Win32/) {
+    print <<"NOTICE"
+ *** You're running on a Win32 system,  but you lack the Win32::EventLog\a
+ *** module, part of the libwin32 distribution. Although Sys::Syslog can 
+ *** be used without Win32::EventLog, it won't be very useful except for 
+ *** sending remote syslog messages.  If you want to log messages on the 
+ *** local host as well, please install libwin32 then Sys::Syslog again.
+NOTICE
 }
 
 # detect when being built in Perl core
