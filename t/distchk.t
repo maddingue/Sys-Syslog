@@ -1,4 +1,4 @@
-#!perl -wT
+#!perl -w
 use strict;
 use Test::More;
 eval "use Test::Distribution not => [qw(versions podcover use)]";
