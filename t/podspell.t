@@ -14,6 +14,7 @@ SAPER
 Sébastien
 Aperghis
 Tramoni
+Aperghis-Tramoni
 Christiansen
 AnnoCPAN
 CPAN
@@ -61,8 +62,11 @@ Syslogging
 logmask
 AIX
 SUSv
+SUSv3
 Tru
+Tru64
 UX
+HP-UX
 VOS
 Kobes
 Harnisch
