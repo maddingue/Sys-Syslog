@@ -171,8 +171,13 @@ sub _install {
 
     # on Cygwin, convert the Unix path into absolute Windows path
     if ($is_Cygwin) {
-        local $ENV{PATH} = '';
-        chomp($file = `/usr/bin/cygpath --absolute --windows "$file"`);
+        if ($] > 5.009005) {
+            chomp($file = Cygwin::posix_to_win_path($file, 1));
+        }
+        else {
+            local $ENV{PATH} = '';
+            chomp($file = `/usr/bin/cygpath --absolute --windows "$file"`);
+        }
     }
 
     $file =~ s![\\/]+!\\!g;     # must be backslashes!
