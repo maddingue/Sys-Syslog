@@ -1,7 +1,7 @@
 #!perl -T
 
 BEGIN {
-    if( $ENV{PERL_CORE} ) {
+    if ($ENV{PERL_CORE}) {
         chdir 't';
         @INC = '../lib';
     }
@@ -22,19 +22,15 @@ use warnings qw(closure deprecated exiting glob io misc numeric once overflow
 my $is_Win32  = $^O =~ /win32/i;
 my $is_Cygwin = $^O =~ /cygwin/i;
 
-if ($is_Win32) {
-    eval "use Win32::EventLog";
-    plan skip_all => "Win32::EventLog is not available" if $@;
-}
-else {
-    # check that the module is at least available
+# if testing in core, check that the module is at least available
+if ($ENV{PERL_CORE}) {
     plan skip_all => "Sys::Syslog was not build" 
-      unless $Config{'extensions'} =~ /\bSyslog\b/;
-
-    # we also need Socket
-    plan skip_all => "Socket was not build" 
-      unless $Config{'extensions'} =~ /\bSocket\b/;
+        unless $Config{'extensions'} =~ /\bSyslog\b/;
 }
+
+# we also need Socket
+plan skip_all => "Socket was not build" 
+    unless $Config{'extensions'} =~ /\bSocket\b/;
 
 my $tests;
 plan tests => $tests;
