@@ -186,8 +186,8 @@ sub _install {
         $Registry->{$root.$Source} = {
             '/EventMessageFile'    => [ $file, REG_EXPAND_SZ ],
             '/CategoryMessageFile' => [ $file, REG_EXPAND_SZ ],
-            '/CategoryCount'       => [ '0x00000019', REG_DWORD ],
-            #'/TypesSupported'      => [ '0x00000019', REG_DWORD ],
+            '/CategoryCount'       => [ '0x0000001c', REG_DWORD ],
+            #'/TypesSupported'      => [ '0x0000001c', REG_DWORD ],
         };
 
         if ($Sys::SysLog::DEBUG) {
