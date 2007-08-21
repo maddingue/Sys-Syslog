@@ -1291,6 +1291,11 @@ I<RFC 3195 - Reliable Delivery for syslog>, L<http://www.faqs.org/rfcs/rfc3195.h
 
 I<Syslogging with Perl>, L<http://lexington.pm.org/meetings/022001.html>
 
+=head2 Event Log
+
+Windows Event Log,
+L<http://msdn.microsoft.com/library/default.asp?url=/library/en-us/wes/wes/windows_event_log.asp>
+
 
 =head1 AUTHORS
 
