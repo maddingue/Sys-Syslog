@@ -167,26 +167,27 @@ sub _install {
     my $dll  = 'Sys/Syslog/__NAME_VER__.dll';
 
     # find the resource DLL, which should be along Syslog.dll
-    my ($file) = grep { -e $_ }  map { ("$_/$dll" => "$_/auto/$dll") }  @INC;
+    my ($file) = grep { -f $_ }  map { ("$_/$dll" => "$_/auto/$dll") }  @INC;
+    $dll = $file if $file;
 
     # on Cygwin, convert the Unix path into absolute Windows path
     if ($is_Cygwin) {
         if ($] > 5.009005) {
-            chomp($file = Cygwin::posix_to_win_path($file, 1));
+            chomp($dll = Cygwin::posix_to_win_path($dll, 1));
         }
         else {
             local $ENV{PATH} = '';
-            chomp($file = `/usr/bin/cygpath --absolute --windows "$file"`);
+            chomp($dll = `/usr/bin/cygpath --absolute --windows "$dll"`);
         }
     }
 
-    $file =~ s![\\/]+!\\!g;     # must be backslashes!
-    die "fatal: Can't find resource DLL for Sys::Syslog\n" if !$file;
+    $dll =~ s![\\/]+!\\!g;     # must be backslashes!
+    die "fatal: Can't find resource DLL for Sys::Syslog\n" if !$dll;
 
     if (!$Registry->{$root.$Source}) {
         $Registry->{$root.$Source} = {
-            '/EventMessageFile'    => [ $file, REG_EXPAND_SZ ],
-            '/CategoryMessageFile' => [ $file, REG_EXPAND_SZ ],
+            '/EventMessageFile'    => [ $dll, REG_EXPAND_SZ ],
+            '/CategoryMessageFile' => [ $dll, REG_EXPAND_SZ ],
             '/CategoryCount'       => [ __MAX__, REG_DWORD ],
             #'/TypesSupported'      => [ __MAX__, REG_DWORD ],
         };
@@ -197,7 +198,7 @@ sub _install {
     }
 
     Carp::confess("Registry has the wrong value for '$Source', possibly mismatched dll!")
-        if $Registry->{$root.$Source.'/CategoryMessageFile'}[0] ne $file;
+        if $Registry->{$root.$Source.'/CategoryMessageFile'}[0] ne $dll;
 
     # we really should do something useful with this but for now
     # we set it to "" to prevent Win32::EventLog from warning
