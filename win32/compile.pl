@@ -13,7 +13,7 @@ my $top = <$msgfh>;
 close($msgfh);
 
 my ($version) = $top =~ /Sys::Syslog Message File (\d+\.\d+\.\d+)/
-        || die "error: File '$name.mc' doesn't have a version number\n";
+        or die "error: File '$name.mc' doesn't have a version number\n";
 
 # compile the message text files
 system("mc -d $name.mc");
@@ -77,11 +77,13 @@ my $template = join '', <DATA>;
 $template =~ s/__CONSTANT__/$hash/;
 $template =~ s/__F2C__/$f2c/;
 $template =~ s/__NAME_VER__/$name/;
+$template =~ s/__VER__/$version/;
 $max = sprintf "0x%08x", $max;
 $template =~ s/__MAX__/'$max'/g;
 $template =~ s/__TIME__/localtime()/ge;
 print $out $template;
 close $out;
+print "Updated Win32.pm and relevent message files\n";
 
 __END__
 package Sys::Syslog::Win32;
@@ -161,30 +163,36 @@ sub _install {
     # while File::Spec::splitpath() can.. Go figure..
     my (undef, undef, $basename) = File::Spec->splitpath($0);
     ($Source) ||= $basename;
+    
+    $Source.=" [SSW:__VER__]";
 
     #$Registry->Delimiter("/"); # is this needed?
     my $root = 'LMachine/SYSTEM/CurrentControlSet/Services/Eventlog/Application/';
     my $dll  = 'Sys/Syslog/__NAME_VER__.dll';
 
-    # find the resource DLL, which should be along Syslog.dll
-    my ($file) = grep { -f $_ }  map { ("$_/$dll" => "$_/auto/$dll") }  @INC;
-    $dll = $file if $file;
+    if (!$Registry->{$root.$Source} || 
+        !$Registry->{$root.$Source.'/CategoryMessageFile'}[0] ||
+        !-e $Registry->{$root.$Source.'/CategoryMessageFile'}[0] ) 
+    {
 
-    # on Cygwin, convert the Unix path into absolute Windows path
-    if ($is_Cygwin) {
-        if ($] > 5.009005) {
-            chomp($dll = Cygwin::posix_to_win_path($dll, 1));
+        # find the resource DLL, which should be along Syslog.dll
+        my ($file) = grep { -e $_ }  map { ("$_/$dll" => "$_/auto/$dll") }  @INC;
+        $dll = $file if $file;
+
+        # on Cygwin, convert the Unix path into absolute Windows path
+        if ($is_Cygwin) {
+            if ($] > 5.009005) {
+                chomp($file = Cygwin::posix_to_win_path($file, 1));
+            }
+            else {
+                local $ENV{PATH} = '';
+                chomp($dll = `/usr/bin/cygpath --absolute --windows "$dll"`);
+            }
         }
-        else {
-            local $ENV{PATH} = '';
-            chomp($dll = `/usr/bin/cygpath --absolute --windows "$dll"`);
-        }
-    }
 
-    $dll =~ s![\\/]+!\\!g;     # must be backslashes!
-    die "fatal: Can't find resource DLL for Sys::Syslog\n" if !$dll;
+        $dll =~ s![\\/]+!\\!g;     # must be backslashes!
+        die "fatal: Can't find resource DLL for Sys::Syslog\n" if !$dll;
 
-    if (!$Registry->{$root.$Source}) {
         $Registry->{$root.$Source} = {
             '/EventMessageFile'    => [ $dll, REG_EXPAND_SZ ],
             '/CategoryMessageFile' => [ $dll, REG_EXPAND_SZ ],
@@ -192,13 +200,11 @@ sub _install {
             #'/TypesSupported'      => [ __MAX__, REG_DWORD ],
         };
 
-        if ($Sys::SysLog::DEBUG) {
-            warn "Configured eventlog to use $dll for $Source\n";
-        }
+        warn "Configured eventlog to use $dll for $Source\n" if $Sys::SysLog::DEBUG;
     }
 
-    Carp::confess("Registry has the wrong value for '$Source', possibly mismatched dll!")
-        if $Registry->{$root.$Source.'/CategoryMessageFile'}[0] ne $dll;
+    #Carp::confess("Registry has the wrong value for '$Source', possibly mismatched dll!\nMine:$dll\nGot :$Registry->{$root.$Source.'/CategoryMessageFile'}[0]\n")
+    #    if $Registry->{$root.$Source.'/CategoryMessageFile'}[0] ne $dll;
 
     # we really should do something useful with this but for now
     # we set it to "" to prevent Win32::EventLog from warning
