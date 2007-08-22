@@ -206,7 +206,7 @@ sub _install {
             #'/TypesSupported'      => [ '0x0000001e', REG_DWORD ],
         };
 
-        warn "Configured eventlog to use $dll for $Source\n" if $Sys::SysLog::DEBUG;
+        warn "Configured eventlog to use $dll for $Source\n" if $Sys::Syslog::DEBUG;
     }
 
     #Carp::confess("Registry has the wrong value for '$Source', possibly mismatched dll!\nMine:$dll\nGot :$Registry->{$root.$Source.'/CategoryMessageFile'}[0]\n")
