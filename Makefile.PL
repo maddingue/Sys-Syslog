@@ -7,11 +7,16 @@ use File::Path;
 use File::Spec;
 require 5.006;
 
+
+# create a typemap for Perl 5.6
 if ($] < 5.008) {
     open(TYPEMAP, ">typemap") or die "fatal: can't write typemap: $!";
     print TYPEMAP "const char *\t\tT_PV\n";
     close(TYPEMAP);
 }
+
+# create a lib/ dir in order to avoid warnings in Test::Distribution
+mkdir "lib";
 
 # virtual paths given to EU::MM
 my %virtual_path = ( 'Syslog.pm' => '$(INST_LIBDIR)/Syslog.pm' );
@@ -80,7 +85,7 @@ WriteMakefile(
     },
     dist            => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean           => { FILES => 'Sys-Syslog-*' }, 
-    realclean       => { FILES => 'const-c.inc const-xs.inc macros.all PerlLog.h *.bak *.bin *.rc' },
+    realclean       => { FILES => 'lib const-c.inc const-xs.inc macros.all PerlLog.h *.bak *.bin *.rc' },
     @extra_params
 );
 
