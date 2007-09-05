@@ -16,6 +16,10 @@ Aperghis
 Tramoni
 Aperghis-Tramoni
 Christiansen
+Kobes
+Hedden
+Reini
+Harnisch
 AnnoCPAN
 CPAN
 README
@@ -68,8 +72,6 @@ Tru64
 UX
 HP-UX
 VOS
-Kobes
-Harnisch
 NetInfo
 VPN
 launchd
