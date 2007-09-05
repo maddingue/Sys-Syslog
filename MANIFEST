@@ -2,6 +2,7 @@ Changes
 Makefile.PL
 MANIFEST
 README
+README.win32
 Syslog.pm
 Syslog.xs
 fallback/const-c.inc
