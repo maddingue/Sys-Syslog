@@ -907,6 +907,11 @@ C<"native"> - use the native C functions from your C<syslog(3)> library
 
 =item *
 
+C<"eventlog"> - send messages to the Win32 events logger (Win32 only; 
+added in C<Sys::Syslog> 0.19).
+
+=item *
+
 C<"tcp"> - connect to a TCP socket, on the C<syslog/tcp> or C<syslogng/tcp> 
 service. 
 
@@ -937,11 +942,6 @@ For example Solaris and IRIX system may prefer C<"stream"> instead of C<"unix">.
 C<"console"> - send messages directly to the console, as for the C<"cons"> 
 option of C<openlog()>.
 
-=item *
-
-C<"eventlog"> - send messages to the Win32 events logger (Win32 only; 
-added in C<Sys::Syslog> 0.19).
-
 =back
 
 A reference to an array can also be passed as the first parameter.
@@ -949,6 +949,8 @@ When this calling method is used, the array should contain a list of
 mechanisms which are attempted in order.
 
 The default is to try C<native>, C<tcp>, C<udp>, C<unix>, C<stream>, C<console>.
+Under Win32 systems, C<eventlog> will be added as the first mechanism to try 
+if C<Win32::EventLog> is available.
 
 Giving an invalid value for C<$sock_type> will C<croak>.
 
@@ -1268,7 +1270,7 @@ IRIX 6.4 documentation on syslog,
 L<http://techpubs.sgi.com/library/tpl/cgi-bin/getdoc.cgi?coll=0640&db=man&fname=3c+syslog>
 
 AIX 5L 5.3 documentation on syslog, 
-L<http://publib.boulder.ibm.com/infocenter/pseries/v5r3/index.jsp?topic=/com.ibm.aix.doc/libs/basetrf2/syslog.htm>
+L<http://publib.boulder.ibm.com/infocenter/pseries/v5r3/index.jsp?topic=/com.ibm.aix.basetechref/doc/basetrf2/syslog.htm>
 
 HP-UX 11i documentation on syslog, 
 L<http://docs.hp.com/en/B9106-90010/syslog.3C.html>
@@ -1430,4 +1432,17 @@ of a bug in Sys::Syslog back then?
 
 - L<ftp://ftp.kiae.su/pub/unix/fido/>
 
+
+Links
+-----
+II12021: SYSLOGD HOWTO TCPIPINFO (z/OS, OS/390, MVS)
+- L<http://www-1.ibm.com/support/docview.wss?uid=isg1II12021>
+
+Getting the most out of the Event Viewer
+- L<http://www.codeproject.com/dotnet/evtvwr.asp?print=true>
+
+Log events to the Windows NT Event Log with JNI
+- L<http://www.javaworld.com/javaworld/jw-09-2001/jw-0928-ntmessages.html>
+
 =end comment
+
