@@ -24,6 +24,7 @@ Revision history for Sys-Syslog
         [TESTS] Merged change blead@29176: suppress taint mode from t/constants.t
         [TESTS] Added regression tests for CPAN-RT#21866 and #25488.
         [EG] Added example script eg/syslog.pl
+        [DOC] CPAN-RT#26097: man pages were not installed.
         [DOC] Added the Sys::Syslog Rules.
 
 0.18 -- 2006.08.28 -- Sebastien Aperghis-Tramoni (SAPER)
