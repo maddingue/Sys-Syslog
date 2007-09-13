@@ -5,7 +5,7 @@ eval 'use ExtUtils::MakeMaker::Coverage';
 use File::Copy;
 use File::Path;
 use File::Spec;
-require 5.006;
+require 5.005;
 
 
 # create a typemap for Perl 5.6

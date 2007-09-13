@@ -6,7 +6,7 @@ use Fcntl qw(O_WRONLY);
 use File::Basename;
 use POSIX qw(strftime setlocale LC_TIME);
 use Socket ':all';
-require 5.006;
+require 5.005;
 require Exporter;
 
 {   no strict 'vars';
@@ -508,7 +508,10 @@ sub connect_tcp {
     }
 
     setsockopt(SYSLOG, SOL_SOCKET, SO_KEEPALIVE, 1);
-    setsockopt(SYSLOG, IPPROTO_TCP, TCP_NODELAY, 1);
+    if (eval { IPPROTO_TCP() }) {
+        # These constants don't exist in 5.005. They were added in 1999
+        setsockopt(SYSLOG, IPPROTO_TCP(), TCP_NODELAY(), 1);
+    }
     if (!connect(SYSLOG, $addr)) {
 	push @$errs, "tcp connect: $!";
 	return 0;
