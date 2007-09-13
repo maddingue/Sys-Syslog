@@ -220,6 +220,7 @@ sub setlogsock {
             @connectMethods = qw(eventlog);
         } else {
             warnings::warnif "eventlog passed to setlogsock, but operating system isn't Win32-compatible"
+            return undef;
         }
 
     } elsif (lc $setsock eq 'tcp') {
