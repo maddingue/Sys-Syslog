@@ -16,7 +16,7 @@ if ($] < 5.008) {
 }
 
 # create a lib/ dir in order to avoid warnings in Test::Distribution
-mkdir "lib";
+mkdir "lib", 0755;
 
 # virtual paths given to EU::MM
 my %virtual_path = ( 'Syslog.pm' => '$(INST_LIBDIR)/Syslog.pm' );
