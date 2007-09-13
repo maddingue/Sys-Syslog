@@ -2,6 +2,7 @@ Revision history for Sys-Syslog
 
 0.21 -- 2007.09.xx -- Sebastien Aperghis-Tramoni (SAPER)
         [BUGFIX] setlogsock(eventlog) returned true even when it shouldn't have.
+        [FEATURE] Added "pipe" mechanism in order to support HP-UX named pipe.
         [CODE] Sys::Syslog works again on Perl 5.005, thanks to Nicholas Clark.
 
 0.20 -- 2007.09.05 -- Sebastien Aperghis-Tramoni (SAPER)

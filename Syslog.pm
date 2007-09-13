@@ -98,8 +98,8 @@ my %options = (
 );
 
 # Default is now to first use the native mechanism, so Perl programs 
-# behave like other normal C programs, then try other mechanisms.
-my @connectMethods = qw(native tcp udp unix stream console);
+# behave like other normal Unix programs, then try other mechanisms.
+my @connectMethods = qw(native tcp udp unix pipe stream console);
 if ($^O =~ /^(freebsd|linux)$/) {
     @connectMethods = grep { $_ ne 'udp' } @connectMethods;
 }
@@ -212,6 +212,20 @@ sub setlogsock {
 	    return undef;
         }
 
+    } elsif (lc $setsock eq 'pipe') {
+        for my $path ($syslog_path, &_PATH_LOG, "/dev/log") {
+            next unless defined $path and length $path and -w $path;
+            $syslog_path = $path;
+            last
+        }
+
+        if (not $syslog_path) {
+            warnings::warnif "pipe passed to setlogsock, but path not available";
+            return undef
+        }
+
+        @connectMethods = qw(pipe);
+
     } elsif (lc $setsock eq 'native') {
         @connectMethods = qw(native);
 
@@ -246,7 +260,8 @@ sub setlogsock {
 	@connectMethods = qw(console);
 
     } else {
-        croak "Invalid argument passed to setlogsock; must be 'stream', 'unix', 'native', 'eventlog', 'tcp', 'udp' or 'inet'"
+        croak "Invalid argument passed to setlogsock; must be 'stream', 'pipe', ",
+              "'unix', 'native', 'eventlog', 'tcp', 'udp' or 'inet'"
     }
 
     return 1;
@@ -407,6 +422,11 @@ sub _syslog_send_stream {
     # Solaris 8 but not Solaris 7.
     # To be correct, it should use a STREAMS API, but perl doesn't have one.
     return syswrite(SYSLOG, $buf, length($buf));
+}
+
+sub _syslog_send_pipe {
+    my ($buf) = @_;
+    return print SYSLOG $buf;
 }
 
 sub _syslog_send_socket {
@@ -585,6 +605,24 @@ sub connect_stream {
 	return 0;
     }
     $syslog_send = \&_syslog_send_stream;
+    return 1;
+}
+
+sub connect_pipe {
+    my ($errs) = @_;
+
+    $syslog_path ||= &_PATH_LOG || "/dev/log";
+
+    if (not -w $syslog_path) {
+        push @$errs, "$syslog_path is not writable";
+        return 0;
+    }
+
+    if (not open(SYSLOG, ">$syslog_path")) {
+        push @$errs, "can't write to $syslog_path: $!";
+        return 0;
+    }
+
     return 1;
 }
 
@@ -943,6 +981,13 @@ writable.
 C<"stream"> - connect to the stream indicated by the pathname provided as 
 the optional second parameter, or, if omitted, to F</dev/conslog>. 
 For example Solaris and IRIX system may prefer C<"stream"> instead of C<"unix">. 
+
+=item *
+
+C<"pipe"> - connect to the named pipe indicated by the pathname provided as 
+the optional second parameter, or, if omitted, to the value returned by 
+the C<_PATH_LOG> macro (if your system defines it), or F</dev/log>
+(added in C<Sys::Syslog> 0.21).
 
 =item *
 
