@@ -1,5 +1,8 @@
 Revision history for Sys-Syslog
 
+0.21 -- 2007.09.xx -- Sebastien Aperghis-Tramoni (SAPER)
+        [BUGFIX] setlogsock(eventlog) returned true even when it shouldn't have.
+
 0.20 -- 2007.09.05 -- Sebastien Aperghis-Tramoni (SAPER)
         [DOC] Added README.win32 which was missing in MANIFEST.
 
