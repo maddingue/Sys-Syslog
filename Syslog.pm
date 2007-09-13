@@ -623,6 +623,8 @@ sub connect_pipe {
         return 0;
     }
 
+    $syslog_send = \&_syslog_send_pipe;
+
     return 1;
 }
 
