@@ -1387,7 +1387,7 @@ debug and polish C<Sys::Syslog> under Cygwin.
 
 Please report any bugs or feature requests to
 C<bug-sys-syslog (at) rt.cpan.org>, or through the web interface at
-L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Sys-Syslog>.
+L<http://rt.cpan.org/Public/Dist/Display.html?Name=Sys-Syslog>.
 I will be notified, and then you'll automatically be notified of progress on
 your bug as I make changes.
 
