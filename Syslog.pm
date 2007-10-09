@@ -106,13 +106,14 @@ if ($^O =~ /^(freebsd|linux)$/) {
 
 # use EventLog on Win32
 my $is_Win32 = $^O =~ /Win32/i;
-eval "use Sys::Syslog::Win32";
 
-if (not $@) {
+if (eval "use Sys::Syslog::Win32; 1") {
     unshift @connectMethods, 'eventlog';
 } elsif ($is_Win32) {
     warn $@;
 }
+
+$@ = "";
 
 my @defaultMethods = @connectMethods;
 my @fallbackMethods = ();
@@ -234,6 +235,7 @@ sub setlogsock {
             @connectMethods = qw(eventlog);
         } else {
             warnings::warnif "eventlog passed to setlogsock, but operating system isn't Win32-compatible";
+            $@ = "";
             return undef;
         }
 
@@ -454,7 +456,8 @@ sub xlate {
     $name = "Sys::Syslog::$name";
     # Can't have just eval { &$name } || -1 because some LOG_XXX may be zero.
     my $value = eval { no strict 'refs'; &$name };
-    defined $value ? $value : -1;
+    $@ = "";
+    return defined $value ? $value : -1;
 }
 
 
@@ -532,6 +535,7 @@ sub connect_tcp {
         # These constants don't exist in 5.005. They were added in 1999
         setsockopt(SYSLOG, IPPROTO_TCP(), TCP_NODELAY(), 1);
     }
+    $@ = "";
     if (!connect(SYSLOG, $addr)) {
 	push @$errs, "tcp connect: $!";
 	return 0;
