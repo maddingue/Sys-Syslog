@@ -234,7 +234,7 @@ sub setlogsock {
         if (eval "use Win32::EventLog; 1") {
             @connectMethods = qw(eventlog);
         } else {
-            warnings::warnif "eventlog passed to setlogsock, but operating system isn't Win32-compatible";
+            warnings::warnif "eventlog passed to setlogsock, but no Win32 API available";
             $@ = "";
             return undef;
         }
@@ -1007,8 +1007,8 @@ When this calling method is used, the array should contain a list of
 mechanisms which are attempted in order.
 
 The default is to try C<native>, C<tcp>, C<udp>, C<unix>, C<stream>, C<console>.
-Under Win32 systems, C<eventlog> will be added as the first mechanism to try 
-if C<Win32::EventLog> is available.
+Under systems with the Win32 API, C<eventlog> will be added as the first 
+mechanism to try if C<Win32::EventLog> is available.
 
 Giving an invalid value for C<$sock_type> will C<croak>.
 
@@ -1251,11 +1251,11 @@ C<LOG_DEBUG> - debug-level message
 
 B<(F)> You gave C<setlogsock()> an invalid value for C<$sock_type>. 
 
-=item C<eventlog passed to setlogsock, but operating system isn't Win32-compatible>
+=item C<eventlog passed to setlogsock, but no Win32 API available>
 
 B<(W)> You asked C<setlogsock()> to use the Win32 event logger but the 
 operating system running the program isn't Win32 or does not provides Win32
-facilities.
+compatible facilities.
 
 =item C<no connection to syslog available>
 
