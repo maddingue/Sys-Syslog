@@ -1,5 +1,9 @@
 Revision history for Sys-Syslog
 
+0.22 -- 2007.10.xx -- Sebastien Aperghis-Tramoni (SAPER)
+        [DOC] CPAN-RT#29451: Add Copyright notice. Thanks to Allison Randal
+        for her advice.
+
 0.21 -- 2007.09.14 -- Sebastien Aperghis-Tramoni (SAPER)
         [BUGFIX] setlogsock(eventlog) returned true even when it shouldn't have.
         [BUGFIX] CPAN-RT#24431: Added workaround for Mac OS X syslogd.
