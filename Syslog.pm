@@ -1433,6 +1433,11 @@ L<http://perldoc.perl.org/Sys/Syslog.html>
 =back
 
 
+=head1 COPYRIGHT
+
+Copyright (C) 1990-2007 by Larry Wall and others.
+
+
 =head1 LICENSE
 
 This program is free software; you can redistribute it and/or modify it
