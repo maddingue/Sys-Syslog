@@ -94,6 +94,7 @@ my %options = (
     ndelay  => 0, 
     nofatal => 0, 
     nowait  => 0, 
+    perror  => 0, 
     pid     => 0, 
 );
 
@@ -328,11 +329,11 @@ sub syslog {
     $message = @_ ? sprintf($mask, @_) : $mask;
 
     # See CPAN-RT#24431. Opened on Apple Radar as bug #4944407 on 2007.01.21
+    # Supposedly resolved on Leopard.
     chomp $message if $^O =~ /darwin/;
 
     if ($current_proto eq 'native') {
         $buf = $message;
-
     }
     elsif ($current_proto eq 'eventlog') {
         $buf = $message;
@@ -347,6 +348,15 @@ sub syslog {
         my $timestamp = strftime "%b %e %T", localtime;
         setlocale(LC_TIME, $oldlocale);
         $buf = "<$sum>$timestamp $whoami: $message\0";
+    }
+
+    # handle PERROR option
+    # "native" mechanism already handles it by itself
+    if ($options{perror} and $current_proto ne 'native') {
+        chomp $message;
+        my $whoami = $ident;
+        $whoami .= "[$$]" if $options{pid};
+        print STDERR "$whoami: $message\n";
     }
 
     # it's possible that we'll get an error from sending
@@ -855,6 +865,11 @@ be established.
 C<nowait> - Don't wait for child processes that may have been created 
 while logging the message.  (The GNU C library does not create a child
 process, so this option has no effect on Linux.)
+
+=item *
+
+C<perror> - Write the message to standard error output as well to the
+system log.
 
 =item *
 

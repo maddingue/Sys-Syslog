@@ -1,6 +1,7 @@
 Revision history for Sys-Syslog
 
 0.22 -- 2007.10.xx -- Sebastien Aperghis-Tramoni (SAPER)
+        [FEATURE] Added support for PERROR option.
         [DOC] CPAN-RT#29451: Add Copyright notice. Thanks to Allison Randal
         for her advice.
 
