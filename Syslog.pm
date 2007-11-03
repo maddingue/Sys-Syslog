@@ -652,7 +652,7 @@ sub connect_unix {
 	return 0;
     }
 
-    if (! -S $syslog_path) {
+    if (not (-S $syslog_path or -c _)) {
         push @$errs, "$syslog_path is not a socket";
 	return 0;
     }

@@ -2,6 +2,7 @@ Revision history for Sys-Syslog
 
 0.22 -- 2007.10.xx -- Sebastien Aperghis-Tramoni (SAPER)
         [FEATURE] Added support for PERROR option.
+        [FEATURE] Support for SYSLOG on z/OS, thanks to Chun Bing Ge.
         [DOC] CPAN-RT#29451: Add Copyright notice. Thanks to Allison Randal
         for her advice.
 
