@@ -1,10 +1,13 @@
 Revision history for Sys-Syslog
 
-0.22 -- 2007.10.xx -- Sebastien Aperghis-Tramoni (SAPER)
+0.22 -- 2007.11.xx -- Sebastien Aperghis-Tramoni (SAPER)
         [FEATURE] Added support for PERROR option.
         [FEATURE] Support for SYSLOG on z/OS, thanks to Chun Bing Ge.
+        [CODE] Prevent $@ from being visible outside the module, in trying 
+        to address the problem reported in CPAN-RT#29875.
         [DOC] CPAN-RT#29451: Add Copyright notice. Thanks to Allison Randal
         for her advice.
+        [DOC] New speaking about Win32 API instead of Win32 operating system.
 
 0.21 -- 2007.09.14 -- Sebastien Aperghis-Tramoni (SAPER)
         [BUGFIX] setlogsock(eventlog) returned true even when it shouldn't have.
