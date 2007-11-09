@@ -7,6 +7,7 @@ Syslog.pm
 Syslog.xs
 fallback/const-c.inc
 fallback/const-xs.inc
+fallback/syslog.h
 ppport.h
 eg/syslog.pl
 t/00-load.t
