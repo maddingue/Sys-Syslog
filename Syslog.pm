@@ -221,7 +221,7 @@ sub setlogsock {
 
     } elsif (lc $setsock eq 'pipe') {
         for my $path ($syslog_path, &_PATH_LOG, "/dev/log") {
-            next unless defined $path and length $path and -w $path;
+            next unless defined $path and length $path and -p $path and -w _;
             $syslog_path = $path;
             last
         }
