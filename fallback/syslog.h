@@ -70,10 +70,10 @@
 #define	LOG_CRON	(9<<3)	/* clock daemon */
 #define	LOG_AUTHPRIV	(10<<3)	/* security/authorization messages (private) */
 #define	LOG_FTP		(11<<3)	/* ftp daemon */
-#define LOG_NETINFO     (12<<3) /* NetInfo */
-#define LOG_REMOTEAUTH  (13<<3) /* remote authentication/authorization */
-#define LOG_INSTALL     (14<<3) /* installer subsystem */
-#define LOG_RAS         (15<<3) /* Remote Access Service (VPN / PPP) */
+#define	LOG_NETINFO     (12<<3) /* NetInfo */
+#define	LOG_REMOTEAUTH  (13<<3) /* remote authentication/authorization */
+#define	LOG_INSTALL     (14<<3) /* installer subsystem */
+#define	LOG_RAS         (15<<3) /* Remote Access Service (VPN / PPP) */
 #define	LOG_LOCAL0	(16<<3)	/* reserved for local use */
 #define	LOG_LOCAL1	(17<<3)	/* reserved for local use */
 #define	LOG_LOCAL2	(18<<3)	/* reserved for local use */
@@ -82,7 +82,7 @@
 #define	LOG_LOCAL5	(21<<3)	/* reserved for local use */
 #define	LOG_LOCAL6	(22<<3)	/* reserved for local use */
 #define	LOG_LOCAL7	(23<<3)	/* reserved for local use */
-#define LOG_LAUNCHD     (24<<3) /* launchd - general bootstrap daemon */
+#define	LOG_LAUNCHD     (24<<3) /* launchd - general bootstrap daemon */
 
 #define	LOG_NFACILITIES	25	/* current number of facilities */
 #define	LOG_FACMASK	0x03f8	/* mask to extract facility part */
