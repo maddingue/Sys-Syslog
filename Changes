@@ -1,6 +1,6 @@
 Revision history for Sys-Syslog
 
-0.23 -- 2007.11.xx -- Sebastien Aperghis-Tramoni (SAPER)
+0.23 -- 2007.11.12 -- Sebastien Aperghis-Tramoni (SAPER)
         [BUGFIX] Fixed a too liberal test in the "pipe" mechanism, thanks
         to Jan Dubois.
         [DIST] fallback/syslog.h was missing from MANIFEST (thanks to CPAN 
