@@ -1,5 +1,6 @@
-Changes
 Makefile.PL
+META.yml
+Changes
 MANIFEST
 README
 README.win32
