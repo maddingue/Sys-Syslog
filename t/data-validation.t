@@ -25,7 +25,8 @@ BEGIN {
 
 use File::Spec;
 use Test::More;
-use Sys::Syslog qw(:DEFAULT setlogsock);
+use Socket;
+use Sys::Syslog qw(:standard :extended :macros);
 
 
 # check than POE is available
@@ -39,6 +40,8 @@ plan tests => 1;
 
    $port    = 5140;
 my $proto   = "tcp";
+
+my $ident   = "pocosyslog";
 my $text    = "Close the world, txEn eht nepO.";
 
 
@@ -46,7 +49,6 @@ my $pid = fork();
 
 if ($pid) {
     # parent: setup a syslog server
-    diag "[POE spawn syslog]";
     POE::Component::Server::Syslog->spawn(
         Alias       => 'syslog',
         Type        => $proto, 
@@ -56,27 +58,50 @@ if ($pid) {
         ErrorState  => \&client_error,
     );
 
-    diag "[POE run]";
+    $SIG{CHLD} = sub { wait() };
+
     POE::Kernel->run;
 }
 else {
     # child: send a message to the syslog server setup in the parent
-    diag "(child started)";
     sleep 2;
-    diag "(openlog)";    openlog("pocosyslog", "ndelay,pid", "local0");
-    diag "(setlogsock)"; setlogsock($proto);
-    diag "(syslog)";     syslog(info => $text);
+    openlog($ident, "ndelay,pid", "local0");
+    setlogsock($proto);
+    syslog(info => $text);
     closelog();
-    diag "(child ending)";
+    exit
 }
 
 sub client_input {
     my $message = $_[&ARG0];
-    diag "[client_input] message = $message";
+    delete $message->{'time'};  # too hazardous to test
+
+    is_deeply(
+        $message,
+        {
+            host     => scalar gethostbyaddr(inet_aton('127.0.0.1'), AF_INET),
+            pri      => &LOG_LOCAL0 + &LOG_INFO,
+            facility => &LOG_LOCAL0 >> 3,
+            severity => &LOG_INFO,
+            msg      => "$ident\[$pid]: $text\n\0",
+        },
+        "checking syslog message"
+    );
+
+    POE::Kernel->post(syslog => "shutdown");
+    POE::Kernel->stop;
 }
 
 sub client_error {
     my $message = $_[&ARG0];
-    diag "[client_error] message = $message";
+
+    require Data::Dumper;
+    $Data::Dumper::Indent   = 0;    $Data::Dumper::Indent   = 0;
+    $Data::Dumper::Sortkeys = 1;    $Data::Dumper::Sortkeys = 1;
+    fail "checking syslog message";
+    diag "[client_error] message = ", Data::Dumper::Dumper($message);
+
+    POE::Kernel->post(syslog => "shutdown");
+    POE::Kernel->stop;
 }
 
