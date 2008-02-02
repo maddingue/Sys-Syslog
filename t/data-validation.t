@@ -56,16 +56,6 @@ if ($pid) {
         ErrorState  => \&client_error,
     );
 
-    diag "[POE create session]";
-    POE::Session->create(
-        inline_states => {
-            _start  => \&start, 
-            _stop   => \&stop,
-            _input  => \&client_input,
-            _error  => \&client_error,
-        },
-    );
-
     diag "[POE run]";
     POE::Kernel->run;
 }
@@ -78,20 +68,6 @@ else {
     diag "(syslog)";     syslog(info => $text);
     closelog();
     diag "(child ending)";
-}
-
-
-sub start {
-    diag "[start] session #", $_[&SESSION]->ID;
-    $_[&KERNEL]->call(syslog => register => {
-        InputEvent => '_input', ErrorEvent => '_error'
-    });
-    #$_[&KERNEL]->post(syslog => 'run');
-}
-
-sub stop {
-    diag "[stop]";
-    $_[&KERNEL]->post(syslog => 'shutdown');
 }
 
 sub client_input {
