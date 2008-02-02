@@ -19,7 +19,7 @@ BEGIN {
             @v = ($_[0], "", $port, $_[1]);
         }
 
-        return @v
+        return wantarray ? @v : $port
     }
 }
 
