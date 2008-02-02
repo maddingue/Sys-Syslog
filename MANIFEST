@@ -13,6 +13,7 @@ ppport.h
 eg/syslog.pl
 t/00-load.t
 t/constants.t
+t/data-validation.t
 t/distchk.t
 t/syslog.t
 t/pod.t
