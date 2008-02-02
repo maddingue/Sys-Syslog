@@ -1,61 +1,106 @@
-#!perl -Tw
-use strict;
-use File::Spec;
-use Test::More;
-use Sys::Syslog;
-
-
+#!perl -w
 # --------------------------------------------------------------------
 # The aim of this test is to start a syslog server (TCP or UDP) using 
 # the one available in POE, make Sys::Syslog connect to it by manually 
-# selecting the corresponding mechanism, sending some messages and 
-# inside the POE syslog server, check that these message are correctly
-# crafted. 
-# 
-# However, there is a problem: Sys::Syslog has currently no public way
-# to allow one to manually select the syslog port to connect to, and 
-# it seems that there is no way to override getservbyname() from Perl.
-# A solution is to add a way to Sys::Syslog for selecting the syslog 
-# port, but I'm quite reluctant if it's just for this very test.
+# select the corresponding mechanism, send some messages and, inside 
+# the POE syslog server, check that these message are correctly crafted. 
 # --------------------------------------------------------------------
+use strict;
 
-# first check than POE is available
+my $port;
+BEGIN {
+    # override getservbyname()
+    *CORE::GLOBAL::getservbyname = sub ($$) {
+        my @v = CORE::getservbyname($_[0], $_[1]);
+
+        if (@v) {
+            $v[2] = $port;
+        } else {
+            @v = ($_[0], "", $port, $_[1]);
+        }
+
+        return @v
+    }
+}
+
+use File::Spec;
+use Test::More;
+use Sys::Syslog qw(:DEFAULT setlogsock);
+
+
+# check than POE is available
 plan skip_all => "POE is not available" unless eval "use POE; 1";
 
-# then check than POE::Component::Server::Syslog is available
+# check than POE::Component::Server::Syslog is available
 plan skip_all => "POE::Component::Server::Syslog is not available"
     unless eval "use POE::Component::Server::Syslog; 1";
 
-plan skip_all => "test not written";
-
 plan tests => 1;
 
+   $port    = 5140;
+my $proto   = "tcp";
+my $text    = "Close the world, txEn eht nepO.";
 
-diag "[POE] create";
-POE::Session->create(
-    inline_states => {
-        _start  => \&start, 
-        _stop   => \&stop,
-    },
-);
 
-diag "[POE] run";
-POE::Kernel->run;
+my $pid = fork();
 
-sub start {
-    diag "[POE:start] spawning new Syslog server session ", $_[&SESSION]->ID;
+if ($pid) {
+    # parent: setup a syslog server
+    diag "[POE spawn syslog]";
     POE::Component::Server::Syslog->spawn(
         Alias       => 'syslog',
-        Type        => 'udp', 
+        Type        => $proto, 
         BindAddress => '127.0.0.1',
-        BindPort    => '5140',
-        InputState  => \&input,
+        BindPort    => $port,
+        InputState  => \&client_input,
+        ErrorState  => \&client_error,
     );
 
-    $_[&KERNEL]->post(syslog => 'run');
+    diag "[POE create session]";
+    POE::Session->create(
+        inline_states => {
+            _start  => \&start, 
+            _stop   => \&stop,
+            _input  => \&client_input,
+            _error  => \&client_error,
+        },
+    );
+
+    diag "[POE run]";
+    POE::Kernel->run;
+}
+else {
+    # child: send a message to the syslog server setup in the parent
+    diag "(child started)";
+    sleep 2;
+    diag "(openlog)";    openlog("pocosyslog", "ndelay,pid", "local0");
+    diag "(setlogsock)"; setlogsock($proto);
+    diag "(syslog)";     syslog(info => $text);
+    closelog();
+    diag "(child ending)";
+}
+
+
+sub start {
+    diag "[start] session #", $_[&SESSION]->ID;
+    $_[&KERNEL]->call(syslog => register => {
+        InputEvent => '_input', ErrorEvent => '_error'
+    });
+    #$_[&KERNEL]->post(syslog => 'run');
 }
 
 sub stop {
-    diag "[POE:stop]";
+    diag "[stop]";
     $_[&KERNEL]->post(syslog => 'shutdown');
 }
+
+sub client_input {
+    my $message = $_[&ARG0];
+    diag "[client_input] message = $message";
+}
+
+sub client_error {
+    my $message = $_[&ARG0];
+    diag "[client_error] message = $message";
+}
+
