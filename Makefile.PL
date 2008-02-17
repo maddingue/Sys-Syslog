@@ -76,6 +76,7 @@ push @extra_prereqs, "warnings::compat"  if $] < 5.006;
 WriteMakefile(
     NAME            => 'Sys::Syslog',
     LICENSE         => 'perl',
+    AUTHOR          => 'Sebastien Aperghis-Tramoni <sebastien@aperghis.net>',
     VERSION_FROM    => 'Syslog.pm', 
     ABSTRACT_FROM   => 'Syslog.pm', 
     INSTALLDIRS     => 'perl',
