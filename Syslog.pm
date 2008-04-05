@@ -619,7 +619,7 @@ sub connect_stream {
 	push @$errs, "stream $syslog_path is not writable";
 	return 0;
     }
-    if (!sysopen(SYSLOG, $syslog_path, 0400, O_WRONLY)) {
+    if (!sysopen(SYSLOG, $syslog_path, O_WRONLY, 0400)) {
 	push @$errs, "stream can't open $syslog_path: $!";
 	return 0;
     }
