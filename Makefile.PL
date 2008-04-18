@@ -29,7 +29,8 @@ if ($use_eventlog) {
     print " * Win32::EventLog detected.\n";
     my $name = "PerlLog";
 
-    push @extra_prereqs, "Win32::TieRegistry" => 0, "Win32::EventLog" => 0;
+    push @extra_prereqs, 
+        Win32 => 0,  "Win32::TieRegistry" => 0,  "Win32::EventLog" => 0;
 
     $virtual_path{'win32/Win32.pm'   } = '$(INST_LIBDIR)/Syslog/Win32.pm';
     $virtual_path{'win32/PerlLog.dll'} = '$(INST_ARCHAUTODIR)/PerlLog.dll';
@@ -83,9 +84,18 @@ WriteMakefile(
     XSPROTOARG      => '-noprototypes',
     PM              => \%virtual_path, 
     PREREQ_PM       => {
-        'Test::More' => 0,
-        'XSLoader'   => 0,
+        # run prereqs
+        'Carp'              => 0,
+        'Fcntl'             => 0,
+        'File::Basename'    => 0,
+        'File::Spec'        => 0,
+        'POSIX'             => 0,
+        'Socket'            => 0,
+        'XSLoader'          => 0,
         @extra_prereqs,
+
+        # build/test prereqs
+        'Test::More'        => 0,
     },
     dist            => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean           => { FILES => 'Sys-Syslog-*' }, 
