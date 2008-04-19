@@ -76,6 +76,11 @@ require Exporter;
 # 
 use vars qw($host);             # host to send syslog messages to (see notes at end)
 
+#
+# Prototypes
+#
+sub silent_eval (&);
+
 # 
 # Global variables
 # 
@@ -106,17 +111,12 @@ if ($^O =~ /^(freebsd|linux)$/) {
     @connectMethods = grep { $_ ne 'udp' } @connectMethods;
 }
 
-# And on Win32 system, we try to use the native mechanism for this 
+# And on Win32 systems, we try to use the native mechanism for this 
 # platform, the events logger, available through Win32::EventLog.
 EVENTLOG: {
-    # use EventLog on Win32
     my $is_Win32 = $^O =~ /Win32/i;
 
-    # some applications are trying to be too smart
-    # yes I'm speaking of YOU, SpamAssassin, grr..
-    local($SIG{__DIE__}, $SIG{__WARN__}, $@);
-
-    if (eval "use Sys::Syslog::Win32; 1") {
+    if (can_load("Sys::Syslog::Win32")) {
         unshift @connectMethods, 'eventlog';
     }
     elsif ($is_Win32) {
@@ -252,7 +252,7 @@ sub setlogsock {
         @connectMethods = qw(native);
 
     } elsif (lc $setsock eq 'eventlog') {
-        if (eval "use Win32::EventLog; 1") {
+        if (can_load("Win32::EventLog")) {
             @connectMethods = qw(eventlog);
         } else {
             warnings::warnif "eventlog passed to setlogsock, but no Win32 API available";
@@ -479,14 +479,16 @@ sub _syslog_send_native {
 # private function to translate names to numeric values
 # 
 sub xlate {
-    my($name) = @_;
+    my ($name) = @_;
+
     return $name+0 if $name =~ /^\s*\d+\s*$/;
     $name = uc $name;
     $name = "LOG_$name" unless $name =~ /^LOG_/;
     $name = "Sys::Syslog::$name";
+
     # Can't have just eval { &$name } || -1 because some LOG_XXX may be zero.
-    my $value = eval { no strict 'refs'; &$name };
-    $@ = "";
+    my $value = silent_eval { no strict 'refs'; &$name };
+
     return defined $value ? $value : -1;
 }
 
@@ -561,11 +563,10 @@ sub connect_tcp {
     }
 
     setsockopt(SYSLOG, SOL_SOCKET, SO_KEEPALIVE, 1);
-    if (eval { IPPROTO_TCP() }) {
+    if (silent_eval { IPPROTO_TCP() }) {
         # These constants don't exist in 5.005. They were added in 1999
         setsockopt(SYSLOG, IPPROTO_TCP(), TCP_NODELAY(), 1);
     }
-    $@ = "";
     if (!connect(SYSLOG, $addr)) {
 	push @$errs, "tcp connect: $!";
 	return 0;
@@ -712,7 +713,7 @@ sub connect_native {
         $logopt += xlate($opt) if $options{$opt}
     }
 
-    eval { openlog_xs($ident, $logopt, xlate($facility)) };
+    silent_eval { openlog_xs($ident, $logopt, xlate($facility)) };
     if ($@) {
         push @$errs, $@;
         return 0;
@@ -775,6 +776,25 @@ sub disconnect_log {
 
     return close SYSLOG;
 }
+
+
+#
+# Wrappers around eval() that makes sure that nobody, and I say NOBODY, 
+# ever knows that I wanted to test if something was here or not. 
+# It is needed because some applications are trying to be too smart,
+# do it wrong, and it ends up in EPIC FAIL. 
+# Yes I'm speaking of YOU, SpamAssassin.
+#
+sub silent_eval (&) {
+    local($SIG{__DIE__}, $SIG{__WARN__}, $@);
+    return eval $_[0]
+}
+
+sub can_load {
+    local($SIG{__DIE__}, $SIG{__WARN__}, $@);
+    return eval "use $_[0]; 1"
+}
+
 
 1;
 
