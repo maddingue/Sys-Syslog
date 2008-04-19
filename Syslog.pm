@@ -312,21 +312,21 @@ sub syslog {
     undef $numpri;
     undef $numfac;
 
-    foreach (@words) {
-	$num = xlate($_);		    # Translate word to number.
-	if ($num < 0) {
-	    croak "syslog: invalid level/facility: $_"
-	}
-	elsif ($num <= &LOG_PRIMASK) {
-	    croak "syslog: too many levels given: $_" if defined $numpri;
-	    $numpri = $num;
-	    return 0 unless LOG_MASK($numpri) & $maskpri;
-	}
-	else {
-	    croak "syslog: too many facilities given: $_" if defined $numfac;
-	    $facility = $_;
-	    $numfac = $num;
-	}
+    for my $word (@words) {
+        $num = xlate($word);        # Translate word to number.
+        if ($num < 0) {
+            croak "syslog: invalid level/facility: $word"
+        }
+        elsif ($num <= &LOG_PRIMASK) {
+            croak "syslog: too many levels given: $word" if defined $numpri;
+            $numpri = $num;
+            return 0 unless LOG_MASK($numpri) & $maskpri;
+        }
+        else {
+            croak "syslog: too many facilities given: $word" if defined $numfac;
+            $facility = $word;
+            $numfac = $num;
+        }
     }
 
     croak "syslog: level must be given" unless defined $numpri;
