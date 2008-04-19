@@ -313,7 +313,10 @@ sub syslog {
     undef $numfac;
 
     for my $word (@words) {
+        next if length $word == 0;
+
         $num = xlate($word);        # Translate word to number.
+
         if ($num < 0) {
             croak "syslog: invalid level/facility: $word"
         }
