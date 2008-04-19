@@ -713,12 +713,7 @@ sub connect_native {
         $logopt += xlate($opt) if $options{$opt}
     }
 
-    silent_eval { openlog_xs($ident, $logopt, xlate($facility)) };
-    if ($@) {
-        push @$errs, $@;
-        return 0;
-    }
-
+    openlog_xs($ident, $logopt, xlate($facility));
     $syslog_send = \&_syslog_send_native;
 
     return 1;
