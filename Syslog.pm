@@ -85,6 +85,7 @@ my $syslog_send;                # coderef of the function used to send messages
 my $syslog_path = undef;        # syslog path for "stream" and "unix" mechanisms
 my $syslog_xobj = undef;        # if defined, holds the external object used to send messages
 my $transmit_ok = 0;            # flag to indicate if the last message was transmited
+my $sock_timeout  = 0;          # socket timeout, see below
 my $current_proto = undef;      # current mechanism used to transmit messages
 my $ident = '';                 # identifiant prepended to each message
 $facility = '';                 # current facility
@@ -105,6 +106,8 @@ if ($^O =~ /^(freebsd|linux)$/) {
     @connectMethods = grep { $_ ne 'udp' } @connectMethods;
 }
 
+# And on Win32 system, we try to use the native mechanism for this 
+# platform, the events logger, available through Win32::EventLog.
 EVENTLOG: {
     # use EventLog on Win32
     my $is_Win32 = $^O =~ /Win32/i;
@@ -123,6 +126,18 @@ EVENTLOG: {
 
 my @defaultMethods = @connectMethods;
 my @fallbackMethods = ();
+
+# The timeout in connection_ok() was pushed up to 0.25 sec in 
+# Sys::Syslog v0.19 in order to address a heisenbug on MacOSX:
+# http://london.pm.org/pipermail/london.pm/Week-of-Mon-20061211/005961.html
+# 
+# However, this also had the effect of slowing this test for 
+# all other operating systems, which apparently impacted some 
+# users (cf. CPAN-RT #34753). So, in order to make everybody 
+# happy, the timeout is now zero by default on all systems 
+# except on OSX where it is set to 250 msec, and can be set 
+# with the infamous setlogsock() function.
+$sock_timeout = 0.25 if $^O =~ /darwin/;
 
 # coderef for a nicer handling of errors
 my $err_sub = $options{nofatal} ? \&warnings::warnif : \&croak;
@@ -741,7 +756,7 @@ sub connection_ok {
 
     my $rin = '';
     vec($rin, fileno(SYSLOG), 1) = 1;
-    my $ret = select $rin, undef, $rin, 0.25;
+    my $ret = select $rin, undef, $rin, $sock_timeout;
     return ($ret ? 0 : 1);
 }
 
@@ -964,6 +979,8 @@ Log all messages up to debug:
 =item B<setlogsock($sock_type)>
 
 =item B<setlogsock($sock_type, $stream_location)> (added in Perl 5.004_02)
+
+=item B<setlogsock($sock_type, $stream_location, $sock_timeout)> (XXX)
 
 Sets the socket type to be used for the next call to
 C<openlog()> or C<syslog()> and returns true on success,
