@@ -484,10 +484,7 @@ sub xlate {
     return $name+0 if $name =~ /^\s*\d+\s*$/;
     $name = uc $name;
     $name = "LOG_$name" unless $name =~ /^LOG_/;
-    $name = "Sys::Syslog::$name";
-
-    # Can't have just eval { &$name } || -1 because some LOG_XXX may be zero.
-    my $value = silent_eval { no strict 'refs'; &$name };
+    my $value = constant($name);
 
     return defined $value ? $value : -1;
 }
