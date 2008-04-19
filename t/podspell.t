@@ -1,9 +1,11 @@
 #!perl -w
 use strict;
 use Test::More;
+
 plan skip_all => "Pod spelling: for developer interest only :)" unless -d 'releases';
-eval "use Test::Spelling";
-plan skip_all => "Test::Spelling required for testing POD spell" if $@;
+plan skip_all => "Test::Spelling required for testing POD spell"
+    unless eval "use Test::Spelling; 1";
+
 set_spell_cmd('aspell -l --lang=en');
 add_stopwords(<DATA>);
 all_pod_files_spelling_ok();
