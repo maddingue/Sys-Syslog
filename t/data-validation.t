@@ -45,6 +45,12 @@ my $ident   = "pocosyslog";
 my $text    = "Close the world, txEn eht nepO.";
 
 
+$SIG{ALRM} = sub {
+    ok( 0, "test took too much time to execute" );
+    exit
+};
+alarm 30;
+
 my $pid = fork();
 
 if ($pid) {
