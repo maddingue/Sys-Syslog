@@ -187,8 +187,11 @@ sub setlogmask {
 }
  
 sub setlogsock {
-    my $setsock = shift;
-    $syslog_path = shift;
+    my ($setsock, $setpath, $settime) = @_;
+
+    $syslog_path  = $setpath if defined $setpath;
+    $sock_timeout = $settime if defined $settime;
+
     disconnect_log() if $connected;
     $transmit_ok = 0;
     @fallbackMethods = ();
@@ -263,6 +266,7 @@ sub setlogsock {
     } elsif (lc $setsock eq 'tcp') {
 	if (getservbyname('syslog', 'tcp') || getservbyname('syslogng', 'tcp')) {
             @connectMethods = qw(tcp);
+            $host = $syslog_path;
 	} else {
             warnings::warnif "tcp passed to setlogsock, but tcp service unavailable";
 	    return undef;
@@ -271,6 +275,7 @@ sub setlogsock {
     } elsif (lc $setsock eq 'udp') {
 	if (getservbyname('syslog', 'udp')) {
             @connectMethods = qw(udp);
+            $host = $syslog_path;
 	} else {
             warnings::warnif "udp passed to setlogsock, but udp service unavailable";
 	    return undef;
@@ -997,7 +1002,7 @@ Log all messages up to debug:
 
 =item B<setlogsock($sock_type, $stream_location)> (added in Perl 5.004_02)
 
-=item B<setlogsock($sock_type, $stream_location, $sock_timeout)> (XXX)
+=item B<setlogsock($sock_type, $stream_location, $sock_timeout)> (added in 0.25)
 
 Sets the socket type to be used for the next call to
 C<openlog()> or C<syslog()> and returns true on success,
@@ -1018,15 +1023,18 @@ added in C<Sys::Syslog> 0.19).
 =item *
 
 C<"tcp"> - connect to a TCP socket, on the C<syslog/tcp> or C<syslogng/tcp> 
-service. 
+service. If defined, the second parameter is used as a hostname to connect to.
 
 =item *
 
 C<"udp"> - connect to a UDP socket, on the C<syslog/udp> service.
+If defined, the second parameter is used as a hostname to connect to, 
+and the third parameter as the timeout used to check for UDP response. 
 
 =item *
 
-C<"inet"> - connect to an INET socket, either TCP or UDP, tried in that order. 
+C<"inet"> - connect to an INET socket, either TCP or UDP, tried in that 
+order.  If defined, the second parameter is used as a hostname to connect to.
 
 =item *
 
@@ -1147,8 +1155,7 @@ Example of use of C<%m>:
 
 Log to UDP port on C<$remotehost> instead of logging locally:
 
-    setlogsock('udp');
-    $Sys::Syslog::host = $remotehost;
+    setlogsock("udp", $remotehost);
     openlog($program, 'ndelay', 'user');
     syslog('info', 'something happened over here');
 
