@@ -308,6 +308,7 @@ sub syslog {
     croak "syslog: expecting argument \$priority" unless defined $priority;
     croak "syslog: expecting argument \$format"   unless defined $mask;
 
+    croak "syslog: invalid level/facility: $priority" if $priority =~ /^-\d+$/;
     @words = split(/\W+/, $priority, 2);    # Allow "level" or "level|facility".
     undef $numpri;
     undef $numfac;
