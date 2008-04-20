@@ -115,7 +115,7 @@ SKIP: {
 }
 
 
-BEGIN { $tests += 20 * 8 }
+BEGIN { $tests += 22 * 8 }
 # try to open a syslog using all the available connection methods
 my @passed = ();
 for my $sock_type (qw(native eventlog unix pipe stream inet tcp udp)) {
@@ -150,6 +150,11 @@ for my $sock_type (qw(native eventlog unix pipe stream inet tcp udp)) {
         # syslog() with negative level, should fail
         $r = eval { syslog(-1, "$test_string by connecting to a $sock_type socket") } || 0;
         like( $@, '/^syslog: invalid level\/facility: /', "[$sock_type] syslog() called with level -1" );
+        ok( !$r, "[$sock_type] syslog() should return false: '$r'" );
+
+        # syslog() with invalid level, should fail
+        $r = eval { syslog("plonk", "$test_string by connecting to a $sock_type socket") } || 0;
+        like( $@, '/^syslog: invalid level\/facility: /', "[$sock_type] syslog() called with level plonk" );
         ok( !$r, "[$sock_type] syslog() should return false: '$r'" );
 
         # syslog() with levels "info" and "notice" (as a strings), should fail
