@@ -488,6 +488,7 @@ sub xlate {
     $name = uc $name;
     $name = "LOG_$name" unless $name =~ /^LOG_/;
     my $value = constant($name);
+    $value = -1 if $value =~ /not a valid/;
 
     return defined $value ? $value : -1;
 }
