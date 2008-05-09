@@ -1383,7 +1383,7 @@ GNU C Library documentation on syslog,
 L<http://www.gnu.org/software/libc/manual/html_node/Syslog.html>
 
 Solaris 10 documentation on syslog, 
-L<http://docs.sun.com/app/docs/doc/816-5168/6mbb3hruo?a=view>
+L<http://docs.sun.com/app/docs/doc/816-5168/syslog-3c?a=view>
 
 IRIX 6.4 documentation on syslog,
 L<http://techpubs.sgi.com/library/tpl/cgi-bin/getdoc.cgi?coll=0640&db=man&fname=3c+syslog>
