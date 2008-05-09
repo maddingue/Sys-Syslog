@@ -35,6 +35,8 @@ if ($use_eventlog) {
     $virtual_path{'win32/Win32.pm'   } = '$(INST_LIBDIR)/Syslog/Win32.pm';
     $virtual_path{'win32/PerlLog.dll'} = '$(INST_ARCHAUTODIR)/PerlLog.dll';
 
+    push @extra_params, CCFLAGS => "-Ifallback";
+
     # recreate the DLL from its uuencoded form if it's not here
     if (! -f File::Spec->catfile("win32", "$name.dll")) {
         # read the uuencoded data
