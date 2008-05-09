@@ -1,5 +1,6 @@
 package Sys::Syslog;
 use strict;
+use warnings;
 use warnings::register;
 use Carp;
 use Exporter ();
