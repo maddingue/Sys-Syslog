@@ -10,7 +10,7 @@ use Socket ':all';
 require 5.005;
 
 {   no strict 'vars';
-    $VERSION = '0.24';
+    $VERSION = '0.25';
     @ISA = qw(Exporter);
 
     %EXPORT_TAGS = (
@@ -808,7 +808,7 @@ Sys::Syslog - Perl interface to the UNIX syslog(3) calls
 
 =head1 VERSION
 
-Version 0.24
+Version 0.25
 
 =head1 SYNOPSIS
 
