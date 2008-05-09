@@ -2,12 +2,12 @@ package Sys::Syslog;
 use strict;
 use warnings::register;
 use Carp;
+use Exporter ();
 use Fcntl qw(O_WRONLY);
 use File::Basename;
 use POSIX qw(strftime setlocale LC_TIME);
 use Socket ':all';
 require 5.005;
-require Exporter;
 
 {   no strict 'vars';
     $VERSION = '0.24';
