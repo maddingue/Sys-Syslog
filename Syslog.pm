@@ -1069,7 +1069,8 @@ A reference to an array can also be passed as the first parameter.
 When this calling method is used, the array should contain a list of
 mechanisms which are attempted in order.
 
-The default is to try C<native>, C<tcp>, C<udp>, C<unix>, C<stream>, C<console>.
+The default is to try C<native>, C<tcp>, C<udp>, C<unix>, C<pipe>, C<stream>, 
+C<console>.
 Under systems with the Win32 API, C<eventlog> will be added as the first 
 mechanism to try if C<Win32::EventLog> is available.
 
