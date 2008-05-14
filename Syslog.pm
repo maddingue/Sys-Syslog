@@ -1389,14 +1389,14 @@ L<http://docs.sun.com/app/docs/doc/816-5168/syslog-3c?a=view>
 Mac OS X documentation on syslog,
 L<http://developer.apple.com/documentation/Darwin/Reference/ManPages/man3/syslog.3.html>
 
-IRIX 6.4 documentation on syslog,
-L<http://techpubs.sgi.com/library/tpl/cgi-bin/getdoc.cgi?coll=0640&db=man&fname=3c+syslog>
+IRIX 6.5 documentation on syslog,
+L<http://techpubs.sgi.com/library/tpl/cgi-bin/getdoc.cgi?coll=0650&db=man&fname=3c+syslog>
 
 AIX 5L 5.3 documentation on syslog, 
 L<http://publib.boulder.ibm.com/infocenter/pseries/v5r3/index.jsp?topic=/com.ibm.aix.basetechref/doc/basetrf2/syslog.htm>
 
 HP-UX 11i documentation on syslog, 
-L<http://docs.hp.com/en/B9106-90010/syslog.3C.html>
+L<http://docs.hp.com/en/B2355-60130/syslog.3C.html>
 
 Tru64 5.1 documentation on syslog, 
 L<http://h30097.www3.hp.com/docs/base_doc/DOCUMENTATION/V51_HTML/MAN/MAN3/0193____.HTM>
