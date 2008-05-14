@@ -210,7 +210,7 @@ sub setlogsock {
             }
 
 	    for my $try (@try) {
-        if (-c $try and -w _) {
+		if (-w $try) {
 		    $syslog_path = $try;
 		    last;
 		}
@@ -222,7 +222,7 @@ sub setlogsock {
             }
         }
 
-	if (not (-c $syslog_path and -w _)) {
+	if (not -w $syslog_path) {
             warnings::warnif "stream passed to setlogsock, but $syslog_path is not writable";
 	    return undef;
 	} else {
@@ -639,7 +639,7 @@ sub connect_stream {
     # might want syslog_path to be variable based on syslog.h (if only
     # it were in there!)
     $syslog_path = '/dev/conslog' unless defined $syslog_path; 
-    if (not (-c $syslog_path and -w _)) {
+    if (!-w $syslog_path) {
 	push @$errs, "stream $syslog_path is not writable";
 	return 0;
     }
