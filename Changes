@@ -1,11 +1,12 @@
 Revision history for Sys-Syslog
 
-0.25 -- 2008.xx.xx -- Sebastien Aperghis-Tramoni (SAPER)
+0.25 -- 2008.05.xx -- Sebastien Aperghis-Tramoni (SAPER)
         [BUGFIX] CPAN-RT#34691: Fixed an incorrect call to sysopen() which
         prevented Sys::Syslog from working on some Solaris systems. 
         Thanks to Paul Townsend. 
         [BUGFIX] CPAN-RT#34753: Fixed a slowness introduced in v0.19 (which 
         was to work around OSX syslog own slowness). Thanks to Alex Efros.
+        [BUGFIX] Fixed build on Win32, thanks to Adam Kennedy.
         [FEATURE] setlogsock() now interprets the second argument as the 
         hostname for network mechanisms.
         [DIST] Add AUTHOR to WriteMakefile() in order to fix the META.yml
