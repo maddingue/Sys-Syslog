@@ -126,7 +126,9 @@ setlogmask_xs(mask)
     INPUT:
         int mask
     CODE:
-        setlogmask(mask);
+        RETVAL = setlogmask(mask);
+    OUTPUT:
+        RETVAL
 
 void
 closelog_xs()
