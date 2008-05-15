@@ -9,13 +9,13 @@
 #define HAVE_SYSLOG 1
 #endif
 
-#if defined(I_SYSLOG) || PATCHLEVEL < 6
-#include <syslog.h>
-#endif
-
 #if defined(_WIN32) && !defined(__CYGWIN__)
-#undef HAVE_SYSLOG
-#include "fallback/syslog.h"
+#  undef HAVE_SYSLOG
+#  include "fallback/syslog.h"
+#else
+#  if defined(I_SYSLOG) || PATCHLEVEL < 6
+#    include <syslog.h>
+#  endif
 #endif
 
 static SV *ident_svptr;
