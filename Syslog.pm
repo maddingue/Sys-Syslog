@@ -799,7 +799,7 @@ sub can_load {
 }
 
 
-1;
+"Eighth Rule: read the documentation."
 
 __END__
 
