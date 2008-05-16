@@ -1,6 +1,6 @@
 Revision history for Sys-Syslog
 
-0.25 -- 2008.05.xx -- Sebastien Aperghis-Tramoni (SAPER)
+0.25 -- 2008.05.17 -- Sebastien Aperghis-Tramoni (SAPER)
         [BUGFIX] CPAN-RT#34691: Fixed an incorrect call to sysopen() which
         prevented Sys::Syslog from working on some Solaris systems. 
         Thanks to Paul Townsend. 
