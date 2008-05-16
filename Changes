@@ -6,6 +6,7 @@ Revision history for Sys-Syslog
         Thanks to Paul Townsend. 
         [BUGFIX] CPAN-RT#34753: Fixed a slowness introduced in v0.19 (which 
         was to work around OSX syslog own slowness). Thanks to Alex Efros.
+        [BUGFIX] CPAN-RT#35952: Fixed a bug with the "nofatal" option.
         [BUGFIX] Fixed build on Win32, thanks to Adam Kennedy.
         [FEATURE] setlogsock() now interprets the second argument as the 
         hostname for network mechanisms.

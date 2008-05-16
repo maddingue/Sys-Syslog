@@ -171,7 +171,7 @@ sub openlog {
         $options{$opt} = 1 if exists $options{$opt}
     }
 
-    $err_sub = $options{nofatal} ? \&warnings::warnif : \&croak;
+    $err_sub = delete $options{nofatal} ? \&warnings::warnif : \&croak;
     return 1 unless $options{ndelay};
     connect_log();
 } 
