@@ -1564,6 +1564,9 @@ of a bug in Sys::Syslog back then?
 
 Links
 -----
+Linux Fast-STREAMS
+- L<http://www.openss7.org/streams.html>
+
 II12021: SYSLOGD HOWTO TCPIPINFO (z/OS, OS/390, MVS)
 - L<http://www-1.ibm.com/support/docview.wss?uid=isg1II12021>
 
