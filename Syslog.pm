@@ -494,8 +494,22 @@ sub xlate {
     return $name+0 if $name =~ /^\s*\d+\s*$/;
     $name = uc $name;
     $name = "LOG_$name" unless $name =~ /^LOG_/;
+
+    # ExtUtils::Constant 0.20 introduced a new way to implement
+    # constants, called ProxySubs.  When it was used to generate
+    # the C code, the constant() function no longer returns the 
+    # correct value.  Therefore, we first try a direct call to 
+    # constant(), and if the value is an error we try to call the 
+    # constant by its full name. 
     my $value = constant($name);
-    $value = -1 if $value =~ /not a valid/;
+
+    if (index($value, "not a valid") >= 0) {
+        $name = "Sys::Syslog::$name";
+        $value = eval { no strict "refs"; &$name };
+        $value = $@ unless defined $value;
+    }
+
+    $value = -1 if index($value, "not a valid") >= 0;
 
     return defined $value ? $value : -1;
 }
