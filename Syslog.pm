@@ -804,7 +804,7 @@ sub disconnect_log {
 #
 sub silent_eval (&) {
     local($SIG{__DIE__}, $SIG{__WARN__}, $@);
-    return eval $_[0]
+    return eval { $_[0]->() }
 }
 
 sub can_load {
