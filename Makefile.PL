@@ -99,6 +99,7 @@ WriteMakefile(
         # build/test prereqs
         'Test::More'        => 0,
     },
+    PL_FILES        => {},
     dist            => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean           => { FILES => 'Sys-Syslog-*' }, 
     realclean       => { FILES => 'lib const-c.inc const-xs.inc macros.all '
