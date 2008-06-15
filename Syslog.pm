@@ -190,6 +190,13 @@ sub setlogmask {
 sub setlogsock {
     my ($setsock, $setpath, $settime) = @_;
 
+    # check arguments
+    my $diag_invalid_arg
+        = "Invalid argument passed to setlogsock; must be 'stream', 'pipe', "
+        . "'unix', 'native', 'eventlog', 'tcp', 'udp' or 'inet'";
+    croak $diag_invalid_arg unless defined $setsock;
+    croak "Invalid number of arguments" unless @_ >= 1 and @_ <= 3;
+
     $syslog_path  = $setpath if defined $setpath;
     $sock_timeout = $settime if defined $settime;
 
@@ -289,8 +296,7 @@ sub setlogsock {
 	@connectMethods = qw(console);
 
     } else {
-        croak "Invalid argument passed to setlogsock; must be 'stream', 'pipe', ",
-              "'unix', 'native', 'eventlog', 'tcp', 'udp' or 'inet'"
+        croak $diag_invalid_arg
     }
 
     return 1;
