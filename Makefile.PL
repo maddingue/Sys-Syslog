@@ -74,7 +74,7 @@ else {
 }
 
 # on pre-5.6 Perls, add warnings::compat to the prereq modules
-push @extra_prereqs, "warnings::compat"  if $] < 5.006;
+push @extra_prereqs, "warnings::compat" => "0.06"  if $] < 5.006;
 
 WriteMakefile(
     NAME            => 'Sys::Syslog',
