@@ -2,11 +2,20 @@
 use strict;
 use Test::More;
 
-plan skip_all => "Pod spelling: for developer interest only :)" unless -d 'releases';
-plan skip_all => "Test::Spelling required for testing POD spell"
+plan skip_all => "Pod spelling: for maintainer only" unless -d "releases";
+plan skip_all => "Test::Spelling required for checking Pod spell"
     unless eval "use Test::Spelling; 1";
 
-set_spell_cmd('aspell -l --lang=en');
+if (`type spell 2>/dev/null`) {
+    # default
+}
+elsif (`type aspell 2>/dev/null`) {
+    set_spell_cmd('aspell -l --lang=en');
+}
+else {
+    plan skip_all => "spell(1) command or compatible required for checking Pod spell"
+}
+
 add_stopwords(<DATA>);
 all_pod_files_spelling_ok();
 
