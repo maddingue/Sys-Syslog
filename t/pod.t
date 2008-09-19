@@ -1,10 +1,10 @@
 #!perl -wT
 use strict;
 use Test::More;
-use Pod::Checker;
 
-plan skip_all => "Test::Pod 1.14 required for testing POD"
-    unless eval "use Test::Pod 1.14; 1";
+
+plan skip_all => "Test::Pod and Pod::Checker required for testing POD"
+    unless eval "use Test::Pod 1.14; use Pod::Checker; 1";
 
 all_pod_files_ok();
 
