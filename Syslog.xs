@@ -141,4 +141,31 @@ closelog_xs()
         if (SvREFCNT(ident_svptr))
             SvREFCNT_dec(ident_svptr);
 
+#else  /* HAVE_SYSLOG */
+
+void
+openlog_xs(ident, option, facility)
+    INPUT:
+        SV*   ident
+        int   option
+        int   facility
+    CODE:
+
+void
+syslog_xs(priority, message)
+    INPUT:
+        int   priority
+        const char * message
+    CODE:
+
+int
+setlogmask_xs(mask)
+    INPUT:
+        int mask
+    CODE:
+
+void
+closelog_xs()
+    CODE:
+
 #endif /* HAVE_SYSLOG */
