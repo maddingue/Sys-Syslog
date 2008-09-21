@@ -1,7 +1,7 @@
-Makefile.PL
-META.yml
-Changes
 MANIFEST
+META.yml
+Makefile.PL
+Changes
 README
 README.win32
 Syslog.pm
