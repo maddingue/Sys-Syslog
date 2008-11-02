@@ -1502,7 +1502,7 @@ L<http://cpanratings.perl.org/d/Sys-Syslog>
 
 =item * RT: CPAN's request tracker
 
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Sys-Syslog>
+L<http://rt.cpan.org/Dist/Display.html?Queue=Sys-Syslog>
 
 =item * Search CPAN
 
