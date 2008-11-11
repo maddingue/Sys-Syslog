@@ -829,18 +829,17 @@ Sys::Syslog - Perl interface to the UNIX syslog(3) calls
 
 =head1 VERSION
 
-Version 0.27
+This is the documentation of version 0.27
 
 =head1 SYNOPSIS
 
-    use Sys::Syslog;                          # all except setlogsock(), or:
-    use Sys::Syslog qw(:DEFAULT setlogsock);  # default set, plus setlogsock()
-    use Sys::Syslog qw(:standard :macros);    # standard functions, plus macros
+    use Sys::Syslog;                        # all except setlogsock()
+    use Sys::Syslog qw(:standard :macros);  # standard functions, plus macros
 
-    openlog $ident, $logopt, $facility;       # don't forget this
-    syslog $priority, $format, @args;
-    $oldmask = setlogmask $mask_priority;
-    closelog;
+    openlog($ident, $logopt, $facility);    # don't forget this
+    syslog($priority, $format, @args);
+    $oldmask = setlogmask($mask_priority);
+    closelog();
 
 
 =head1 DESCRIPTION
@@ -971,11 +970,13 @@ C<$format> that ends in a C<":">.
 
 B<Examples>
 
-    syslog("info", $message);           # informational level
-    syslog(LOG_INFO, $message);         # informational level
+    # informational level
+    syslog("info", $message);
+    syslog(LOG_INFO, $message);
 
-    syslog("info|local0", $message);        # information level, Local0 facility
-    syslog(LOG_INFO|LOG_LOCAL0, $message);  # information level, Local0 facility
+    # information level, Local0 facility
+    syslog("info|local0", $message);
+    syslog(LOG_INFO|LOG_LOCAL0, $message);
 
 =over 4
 
@@ -1012,7 +1013,9 @@ Log everything except informational messages:
 
 Log critical messages, errors and warnings: 
 
-    setlogmask( LOG_MASK(LOG_CRIT) | LOG_MASK(LOG_ERR) | LOG_MASK(LOG_WARNING) );
+    setlogmask( LOG_MASK(LOG_CRIT)
+              | LOG_MASK(LOG_ERR)
+              | LOG_MASK(LOG_WARNING) );
 
 Log all messages up to debug: 
 
