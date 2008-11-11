@@ -834,7 +834,7 @@ This is the documentation of version 0.27
 =head1 SYNOPSIS
 
     use Sys::Syslog;                        # all except setlogsock()
-    use Sys::Syslog qw(:standard :macros);  # standard functions, plus macros
+    use Sys::Syslog qw(:standard :macros);  # standard functions & macros
 
     openlog($ident, $logopt, $facility);    # don't forget this
     syslog($priority, $format, @args);
