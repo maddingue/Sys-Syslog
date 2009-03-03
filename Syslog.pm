@@ -118,11 +118,8 @@ if ($^O =~ /^(freebsd|linux)$/) {
 EVENTLOG: {
     my $is_Win32 = $^O =~ /Win32/i;
 
-    if (can_load("Sys::Syslog::Win32")) {
+    if (can_load("Sys::Syslog::Win32", $is_Win32)) {
         unshift @connectMethods, 'eventlog';
-    }
-    elsif ($is_Win32) {
-        warn $@;
     }
 }
 
@@ -815,8 +812,11 @@ sub silent_eval (&) {
 }
 
 sub can_load {
+    my ($module, $verbose) = @_;
     local($SIG{__DIE__}, $SIG{__WARN__}, $@);
-    return eval "use $_[0]; 1"
+    my $loaded = eval "use $module; 1";
+    warn $@ if not $loaded and $verbose;
+    return $loaded
 }
 
 
