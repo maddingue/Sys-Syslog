@@ -3,16 +3,17 @@ use strict;
 use warnings;
 use warnings::register;
 use Carp;
-use Exporter ();
-use Fcntl qw(O_WRONLY);
+use Exporter        ();
+use Fcntl           qw< O_WRONLY >;
 use File::Basename;
-use POSIX qw(strftime setlocale LC_TIME);
-use Socket ':all';
+use POSIX           qw< strftime setlocale LC_TIME >;
+use Socket          qw< :all >;
 require 5.005;
+
 
 {   no strict 'vars';
     $VERSION = '0.27';
-    @ISA = qw(Exporter);
+    @ISA     = qw< Exporter >;
 
     %EXPORT_TAGS = (
         standard => [qw(openlog syslog closelog setlogmask)],
@@ -86,16 +87,16 @@ sub silent_eval (&);
 # Global variables
 # 
 use vars qw($facility);
-my $connected = 0;              # flag to indicate if we're connected or not
+my $connected       = 0;        # flag to indicate if we're connected or not
 my $syslog_send;                # coderef of the function used to send messages
-my $syslog_path = undef;        # syslog path for "stream" and "unix" mechanisms
-my $syslog_xobj = undef;        # if defined, holds the external object used to send messages
-my $transmit_ok = 0;            # flag to indicate if the last message was transmited
-my $sock_timeout  = 0;          # socket timeout, see below
-my $current_proto = undef;      # current mechanism used to transmit messages
-my $ident = '';                 # identifiant prepended to each message
-$facility = '';                 # current facility
-my $maskpri = LOG_UPTO(&LOG_DEBUG);     # current log mask
+my $syslog_path     = undef;    # syslog path for "stream" and "unix" mechanisms
+my $syslog_xobj     = undef;    # if defined, holds the external object used to send messages
+my $transmit_ok     = 0;        # flag to indicate if the last message was transmited
+my $sock_timeout    = 0;        # socket timeout, see below
+my $current_proto   = undef;    # current mechanism used to transmit messages
+my $ident           = '';       # identifiant prepended to each message
+$facility           = '';       # current facility
+my $maskpri         = LOG_UPTO(&LOG_DEBUG);     # current log mask
 
 my %options = (
     ndelay  => 0, 
