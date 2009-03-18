@@ -214,12 +214,7 @@ sub setlogsock {
 		unshift @try, &_PATH_LOG;
             }
 
-	    for my $try (@try) {
-		if (-w $try) {
-		    $syslog_path = $try;
-		    last;
-		}
-	    }
+            ($syslog_path) = grep { -w } @try;
 
             if (not defined $syslog_path) {
                 warnings::warnif "stream passed to setlogsock, but could not find any device";
