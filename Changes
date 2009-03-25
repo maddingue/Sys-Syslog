@@ -1,6 +1,9 @@
 Revision history for Sys-Syslog
 
 0.28 -- 2009.02.xx -- Sebastien Aperghis-Tramoni (SAPER)
+        [CODE] Modify can_load() so it can print the warnings if desired.
+        [CODE] CPAN-RT#44410: Provide fallback macros in Syslog.xs in
+        order to compile on Novell Netware.
         [TESTS] In blead, the distribution was moved from ext/Sys/Syslog
         to ext/Sys-Syslog. t/constants.t had to be fixed (Vincent Pit).
 
