@@ -92,6 +92,7 @@ my $syslog_send;                # coderef of the function used to send messages
 my $syslog_path     = undef;    # syslog path for "stream" and "unix" mechanisms
 my $syslog_xobj     = undef;    # if defined, holds the external object used to send messages
 my $transmit_ok     = 0;        # flag to indicate if the last message was transmited
+my $sock_port       = undef;    # socket port
 my $sock_timeout    = 0;        # socket timeout, see below
 my $current_proto   = undef;    # current mechanism used to transmit messages
 my $ident           = '';       # identifiant prepended to each message
@@ -251,25 +252,55 @@ my %mechanism = (
 );
  
 sub setlogsock {
-    my ($setsock, $setpath, $settime) = @_;
+    my %opt;
 
-    # check arguments
-    my $diag_invalid_arg
-        = "Invalid argument passed to setlogsock; must be one of "
-        . join ", ", map { "'$_'" } sort keys %mechanism;
-    croak $diag_invalid_arg unless defined $setsock;
-    croak "Invalid number of arguments" unless @_ >= 1 and @_ <= 3;
+    # handle arguments
+    # - old API: setlogsock($sock_type, $sock_path, $sock_timeout)
+    # - new API: setlogsock(\%options)
+    croak "setlogsock(): Invalid number of arguments"
+        unless @_ >= 1 and @_ <= 3;
 
-    $syslog_path  = $setpath if defined $setpath;
-    $sock_timeout = $settime if defined $settime;
+    if (my $ref = ref $_[0]) {
+        if ($ref eq "HASH") {
+            %opt = %{ $_[0] };
+            croak "setlogsock(): No argument given" unless keys %opt;
+        }
+        elsif ($ref eq "ARRAY") {
+            @opt{qw< type path timeout >} = @_;
+        }
+        else {
+            croak "setlogsock(): Unexpected \L$ref\E reference"
+        }
+    }
+    else {
+        @opt{qw< type path timeout >} = @_;
+    }
+
+    # check socket type, remove
+    my $diag_invalid_type = "setlogsock(): Invalid type%s; must be one of "
+                          . join ", ", map { "'$_'" } sort keys %mechanism;
+    croak sprintf $diag_invalid_type, "" unless defined $opt{type};
+    my @sock_types = ref $opt{type} eq "ARRAY" ? @{$opt{type}} : ($opt{type});
+    my @tmp;
+
+    for my $sock_type (@sock_types) {
+        carp sprintf $diag_invalid_type, " '$sock_type'" and next
+            unless exists $mechanism{$sock_type};
+        push @tmp, "tcp", "udp" and next  if $sock_type eq "inet";
+        push @tmp, $sock_type;
+    }
+
+    @sock_types = @tmp;
+
+    # set global options
+    $syslog_path  = $opt{path}    if defined $opt{path};
+    $sock_timeout = $opt{timeout} if defined $opt{timeout};
+    $sock_port    = $opt{port}    if defined $opt{port};
 
     disconnect_log() if $connected;
     $transmit_ok = 0;
     @fallbackMethods = ();
     @connectMethods = @defaultMethods;
-
-    my @sock_types = ref $setsock eq "ARRAY" ? @$setsock : ($setsock);
-    @sock_types = map { $_ eq "inet" ? ("tcp", "udp") : $_ } @sock_types;
 
     for my $sock_type (@sock_types) {
         if ( $mechanism{$sock_type}{check}->() ) {
