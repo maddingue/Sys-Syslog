@@ -1,3 +1,10 @@
+/*
+ * Syslog.xs
+ * 
+ * XS wrapper for the syslog(3) facility.
+ * 
+ */
+
 #if defined(_WIN32)
 #  include <windows.h>
 #endif
