@@ -310,8 +310,8 @@ sub setlogsock {
             unshift @connectMethods, $sock_type;
         }
         else {
-            warnings::warnif "setlogsock(): type='$sock_type': ",
-                $mechanism{$sock_type}{err_msg};
+            warnings::warnif "setlogsock(): type='$sock_type': "
+                           . $mechanism{$sock_type}{err_msg};
         }
     }
 
