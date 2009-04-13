@@ -255,8 +255,8 @@ sub setlogsock {
 
     # check arguments
     my $diag_invalid_arg
-        = "Invalid argument passed to setlogsock; must be 'stream', 'pipe', "
-        . "'unix', 'native', 'eventlog', 'tcp', 'udp' or 'inet'";
+        = "Invalid argument passed to setlogsock; must be one of "
+        . join ", ", map { "'$_'" } sort keys %mechanism;
     croak $diag_invalid_arg unless defined $setsock;
     croak "Invalid number of arguments" unless @_ >= 1 and @_ <= 3;
 
