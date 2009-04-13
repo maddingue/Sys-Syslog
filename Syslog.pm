@@ -582,7 +582,7 @@ sub connect_tcp {
 	return 0;
     }
 
-    my $port = getservbyname('syslog', 'tcp');
+    my $port = $sock_port || getservbyname('syslog', 'tcp');
     $port = getservbyname('syslogng', 'tcp') unless defined $port;
     if (!defined $port) {
 	push @$errs, "getservbyname failed for syslog/tcp and syslogng/tcp";
@@ -630,7 +630,7 @@ sub connect_udp {
 	return 0;
     }
 
-    my $port = getservbyname('syslog', 'udp');
+    my $port = $sock_port || getservbyname('syslog', 'udp');
     if (!defined $port) {
 	push @$errs, "getservbyname failed for syslog/udp";
 	return 0;
