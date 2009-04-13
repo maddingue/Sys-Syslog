@@ -110,7 +110,7 @@ my %options = (
 # Default is now to first use the native mechanism, so Perl programs 
 # behave like other normal Unix programs, then try other mechanisms.
 my @connectMethods = qw(native tcp udp unix pipe stream console);
-if ($^O =~ /^(freebsd|linux)$/) {
+if ($^O eq "freebsd" or $^O eq "linux") {
     @connectMethods = grep { $_ ne 'udp' } @connectMethods;
 }
 
