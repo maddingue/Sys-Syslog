@@ -7,6 +7,7 @@ Revision history for Sys-Syslog
         [TESTS] In blead, the distribution was moved from ext/Sys/Syslog
         to ext/Sys-Syslog. t/constants.t had to be fixed (Vincent Pit).
         [DIST] Bleadperl no longer require an empty MAN3PODS (Nicholas Clark).
+        [DIST] Removed unneeded modules in Makefile.PL (Nicholas Clark).
 
 0.27 -- 2008.09.21 -- Sebastien Aperghis-Tramoni (SAPER)
         [BUGFIX] Fixed compilation on Win32, thanks to Serguei Trouchelle.

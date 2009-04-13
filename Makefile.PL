@@ -1,9 +1,7 @@
 use strict;
-use Config;
 use ExtUtils::MakeMaker;
 eval 'use ExtUtils::MakeMaker::Coverage';
 use File::Copy;
-use File::Path;
 use File::Spec;
 require 5.005;
 
