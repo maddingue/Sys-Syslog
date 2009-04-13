@@ -195,6 +195,9 @@ my %mechanism = (
         check   => sub { return can_load("Win32::EventLog") },
         err_msg => "no Win32 API available",
     },
+    inet => {
+        check   => sub { 1 },
+    },
     native => {
         check   => sub { 1 },
     },
