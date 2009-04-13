@@ -184,6 +184,71 @@ sub setlogmask {
     $maskpri = shift unless $_[0] == 0;
     $oldmask;
 }
+
+
+my %mechanism = (
+    console => {
+        check   => sub { 1 },
+    },
+    eventlog => {
+        check   => sub { return can_load("Win32::EventLog") },
+        err_msg => "no Win32 API available",
+    },
+    native => {
+        check   => sub { 1 },
+    },
+    pipe => {
+        check   => sub {
+            ($syslog_path) = grep { defined && length && -p && -w _ }
+                                $syslog_path, &_PATH_LOG, "/dev/log";
+            return $syslog_path ? 1 : 0
+        },
+        err_msg => "path not available",
+    },
+    stream => {
+        check   => sub {
+            if (not defined $syslog_path) {
+                my @try = qw(/dev/log /dev/conslog);
+                unshift @try, &_PATH_LOG  if length &_PATH_LOG;
+                ($syslog_path) = grep { -w } @try;
+            }
+            return defined $syslog_path && -w $syslog_path
+        },
+        err_msg => "could not find any writable device",
+    },
+    tcp => {
+        check   => sub {
+            if (getservbyname('syslog', 'tcp') || getservbyname('syslogng', 'tcp')) {
+                $host = $syslog_path;
+                return 1
+            }
+            else {
+                return
+            }
+        },
+        err_msg => "TCP service unavailable",
+    },
+    udp => {
+        check   => sub {
+            if (getservbyname('syslog', 'udp')) {
+                $host = $syslog_path;
+                return 1
+            }
+            else {
+                return
+            }
+        },
+        err_msg => "UDP service unavailable",
+    },
+    unix => {
+        check   => sub {
+            my @try = ($syslog_path, &_PATH_LOG);
+            ($syslog_path) = grep { defined && length && -w } @try;
+            return defined $syslog_path && -w $syslog_path
+        },
+        err_msg => "path not available",
+    },
+);
  
 sub setlogsock {
     my ($setsock, $setpath, $settime) = @_;
@@ -203,88 +268,17 @@ sub setlogsock {
     @fallbackMethods = ();
     @connectMethods = @defaultMethods;
 
-    if (ref $setsock eq 'ARRAY') {
-	@connectMethods = @$setsock;
+    my @sock_types = ref $setsock eq "ARRAY" ? @$setsock : ($setsock);
+    @sock_types = map { $_ eq "inet" ? ("tcp", "udp") : $_ } @sock_types;
 
-    } elsif (lc $setsock eq 'stream') {
-	if (not defined $syslog_path) {
-	    my @try = qw(/dev/log /dev/conslog);
-
-            if (length &_PATH_LOG) {        # Undefined _PATH_LOG is "".
-		unshift @try, &_PATH_LOG;
-            }
-
-            ($syslog_path) = grep { -w } @try;
-
-            if (not defined $syslog_path) {
-                warnings::warnif "stream passed to setlogsock, but could not find any device";
-                return undef
-            }
+    for my $sock_type (@sock_types) {
+        if ( $mechanism{$sock_type}{check}->() ) {
+            unshift @connectMethods, $sock_type;
         }
-
-	if (not -w $syslog_path) {
-            warnings::warnif "stream passed to setlogsock, but $syslog_path is not writable";
-	    return undef;
-	} else {
-            @connectMethods = qw(stream);
-	}
-
-    } elsif (lc $setsock eq 'unix') {
-        if (length _PATH_LOG() || (defined $syslog_path && -w $syslog_path)) {
-	    $syslog_path = _PATH_LOG() unless defined $syslog_path;
-            @connectMethods = qw(unix);
-        } else {
-            warnings::warnif 'unix passed to setlogsock, but path not available';
-	    return undef;
+        else {
+            warnings::warnif "setlogsock(): type='$sock_type': ",
+                $mechanism{$sock_type}{err_msg};
         }
-
-    } elsif (lc $setsock eq 'pipe') {
-        ($syslog_path) = grep { defined && length && -p && -w }
-                                $syslog_path, &_PATH_LOG, "/dev/log";
-
-        warnings::warnif "pipe passed to setlogsock, but path not available"
-            and return unless $syslog_path;
-
-        @connectMethods = qw(pipe);
-
-    } elsif (lc $setsock eq 'native') {
-        @connectMethods = qw(native);
-
-    } elsif (lc $setsock eq 'eventlog') {
-        if (can_load("Win32::EventLog")) {
-            @connectMethods = qw(eventlog);
-        } else {
-            warnings::warnif "eventlog passed to setlogsock, but no Win32 API available";
-            $@ = "";
-            return undef;
-        }
-
-    } elsif (lc $setsock eq 'tcp') {
-	if (getservbyname('syslog', 'tcp') || getservbyname('syslogng', 'tcp')) {
-            @connectMethods = qw(tcp);
-            $host = $syslog_path;
-	} else {
-            warnings::warnif "tcp passed to setlogsock, but tcp service unavailable";
-	    return undef;
-	}
-
-    } elsif (lc $setsock eq 'udp') {
-	if (getservbyname('syslog', 'udp')) {
-            @connectMethods = qw(udp);
-            $host = $syslog_path;
-	} else {
-            warnings::warnif "udp passed to setlogsock, but udp service unavailable";
-	    return undef;
-	}
-
-    } elsif (lc $setsock eq 'inet') {
-	@connectMethods = ( 'tcp', 'udp' );
-
-    } elsif (lc $setsock eq 'console') {
-	@connectMethods = qw(console);
-
-    } else {
-        croak $diag_invalid_arg
     }
 
     return 1;
