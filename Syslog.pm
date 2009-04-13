@@ -576,15 +576,15 @@ sub connect_log {
 sub connect_tcp {
     my ($errs) = @_;
 
-    my $tcp = getprotobyname('tcp');
-    if (!defined $tcp) {
+    my $proto = getprotobyname('tcp');
+    if (!defined $proto) {
 	push @$errs, "getprotobyname failed for tcp";
 	return 0;
     }
 
-    my $syslog = getservbyname('syslog', 'tcp');
-    $syslog = getservbyname('syslogng', 'tcp') unless defined $syslog;
-    if (!defined $syslog) {
+    my $port = getservbyname('syslog', 'tcp');
+    $port = getservbyname('syslogng', 'tcp') unless defined $port;
+    if (!defined $port) {
 	push @$errs, "getservbyname failed for syslog/tcp and syslogng/tcp";
 	return 0;
     }
@@ -599,9 +599,9 @@ sub connect_tcp {
     } else {
         $addr = INADDR_LOOPBACK;
     }
-    $addr = sockaddr_in($syslog, $addr);
+    $addr = sockaddr_in($port, $addr);
 
-    if (!socket(SYSLOG, AF_INET, SOCK_STREAM, $tcp)) {
+    if (!socket(SYSLOG, AF_INET, SOCK_STREAM, $proto)) {
 	push @$errs, "tcp socket: $!";
 	return 0;
     }
@@ -624,14 +624,14 @@ sub connect_tcp {
 sub connect_udp {
     my ($errs) = @_;
 
-    my $udp = getprotobyname('udp');
-    if (!defined $udp) {
+    my $proto = getprotobyname('udp');
+    if (!defined $proto) {
 	push @$errs, "getprotobyname failed for udp";
 	return 0;
     }
 
-    my $syslog = getservbyname('syslog', 'udp');
-    if (!defined $syslog) {
+    my $port = getservbyname('syslog', 'udp');
+    if (!defined $port) {
 	push @$errs, "getservbyname failed for syslog/udp";
 	return 0;
     }
@@ -646,9 +646,9 @@ sub connect_udp {
     } else {
         $addr = INADDR_LOOPBACK;
     }
-    $addr = sockaddr_in($syslog, $addr);
+    $addr = sockaddr_in($port, $addr);
 
-    if (!socket(SYSLOG, AF_INET, SOCK_DGRAM, $udp)) {
+    if (!socket(SYSLOG, AF_INET, SOCK_DGRAM, $proto)) {
 	push @$errs, "udp socket: $!";
 	return 0;
     }
