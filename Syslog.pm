@@ -239,16 +239,11 @@ sub setlogsock {
         }
 
     } elsif (lc $setsock eq 'pipe') {
-        for my $path ($syslog_path, &_PATH_LOG, "/dev/log") {
-            next unless defined $path and length $path and -p $path and -w _;
-            $syslog_path = $path;
-            last
-        }
+        ($syslog_path) = grep { defined && length && -p && -w }
+                                $syslog_path, &_PATH_LOG, "/dev/log";
 
-        if (not $syslog_path) {
-            warnings::warnif "pipe passed to setlogsock, but path not available";
-            return undef
-        }
+        warnings::warnif "pipe passed to setlogsock, but path not available"
+            and return unless $syslog_path;
 
         @connectMethods = qw(pipe);
 
