@@ -297,6 +297,7 @@ sub setlogsock {
 
     # set global options
     $syslog_path  = $opt{path}    if defined $opt{path};
+    $host         = $opt{host}    if defined $opt{host};
     $sock_timeout = $opt{timeout} if defined $opt{timeout};
     $sock_port    = $opt{port}    if defined $opt{port};
 
@@ -1041,15 +1042,70 @@ Log all messages up to debug:
     setlogmask( LOG_UPTO(LOG_DEBUG) );
 
 
-=item B<setlogsock($sock_type)>
+=item B<setlogsock()>
 
-=item B<setlogsock($sock_type, $stream_location)> (added in Perl 5.004_02)
+Sets the socket type and options to be used for the next call to C<openlog()>
+or C<syslog()>.  Returns true on success, C<undef> on failure.
 
-=item B<setlogsock($sock_type, $stream_location, $sock_timeout)> (added in 0.25)
+Being Perl-specific, this function has evolved along time.  It can currently
+be called as follow:
 
-Sets the socket type to be used for the next call to
-C<openlog()> or C<syslog()> and returns true on success,
-C<undef> on failure. The available mechanisms are: 
+=over
+
+=item *
+
+C<setlogsock($sock_type)>
+
+=item *
+
+C<setlogsock($sock_type, $stream_location)> (added in Perl 5.004_02)
+
+=item *
+
+C<setlogsock($sock_type, $stream_location, $sock_timeout)> (added in
+C<Sys::Syslog> 0.25)
+
+=item *
+
+C<setlogsock(\%options)> (added in C<Sys::Syslog> 0.28)
+
+=back
+
+The available options are:
+
+=over
+
+=item *
+
+C<type> - equivalent to C<$sock_type>, selects the socket type (or
+"mechanism").  An array reference can be passed to specify several
+mechanisms to try, in the given order.
+
+=item *
+
+C<path> - equivalent to C<$stream_location>, sets the stream location.
+Defaults to standard Unix location, or C<_PATH_LOG>.
+
+=item *
+
+C<timeout> - equivalent to C<$sock_timeout>, sets the socket timeout
+in seconds.  Defaults to 0 on all systems except S<Mac OS X> where it
+is set to 0.25 sec.
+
+=item *
+
+C<host> - sets the hostname to send the messages to.  Defaults to 
+the local host.
+
+=item *
+
+C<port> - sets the TCP or UDP port to connect to.  Defaults to the
+first standard syslog port available on the system.
+
+=back
+
+
+The available mechanisms are: 
 
 =over
 
@@ -1066,39 +1122,38 @@ added in C<Sys::Syslog> 0.19).
 =item *
 
 C<"tcp"> - connect to a TCP socket, on the C<syslog/tcp> or C<syslogng/tcp> 
-service. If defined, the second parameter is used as a hostname to connect to.
+service.  See also the C<host>, C<port> and C<timeout> options.
 
 =item *
 
 C<"udp"> - connect to a UDP socket, on the C<syslog/udp> service.
-If defined, the second parameter is used as a hostname to connect to, 
-and the third parameter as the timeout used to check for UDP response. 
+See also the C<host>, C<port> and C<timeout> options.
 
 =item *
 
 C<"inet"> - connect to an INET socket, either TCP or UDP, tried in that 
-order.  If defined, the second parameter is used as a hostname to connect to.
+order.  See also the C<host>, C<port> and C<timeout> options.
 
 =item *
 
 C<"unix"> - connect to a UNIX domain socket (in some systems a character 
-special device).  The name of that socket is the second parameter or, if 
-you omit the second parameter, the value returned by the C<_PATH_LOG> macro 
-(if your system defines it), or F</dev/log> or F</dev/conslog>, whatever is 
-writable.  
+special device).  The name of that socket is given by the C<path> option
+or, if omitted, the value returned by the C<_PATH_LOG> macro (if your
+system defines it), F</dev/log> or F</dev/conslog>, whichever is writable.
 
 =item *
 
-C<"stream"> - connect to the stream indicated by the pathname provided as 
-the optional second parameter, or, if omitted, to F</dev/conslog>. 
-For example Solaris and IRIX system may prefer C<"stream"> instead of C<"unix">. 
+C<"stream"> - connect to the stream indicated by the C<path> option, or,
+if omitted, the value returned by the C<_PATH_LOG> macro (if your system
+defines it), F</dev/log> or F</dev/conslog>, whichever is writable.  For
+example Solaris and IRIX system may prefer C<"stream"> instead of C<"unix">. 
 
 =item *
 
-C<"pipe"> - connect to the named pipe indicated by the pathname provided as 
-the optional second parameter, or, if omitted, to the value returned by 
-the C<_PATH_LOG> macro (if your system defines it), or F</dev/log>
-(added in C<Sys::Syslog> 0.21).
+C<"pipe"> - connect to the named pipe indicated by the C<path> option,
+or, if omitted, to the value returned by the C<_PATH_LOG> macro (if your
+system defines it), or F</dev/log> (added in C<Sys::Syslog> 0.21).
+HP-UX is a system which uses such a named pipe.
 
 =item *
 
@@ -1106,10 +1161,6 @@ C<"console"> - send messages directly to the console, as for the C<"cons">
 option of C<openlog()>.
 
 =back
-
-A reference to an array can also be passed as the first parameter.
-When this calling method is used, the array should contain a list of
-mechanisms which are attempted in order.
 
 The default is to try C<native>, C<tcp>, C<udp>, C<unix>, C<pipe>, C<stream>, 
 C<console>.
@@ -1120,11 +1171,19 @@ Giving an invalid value for C<$sock_type> will C<croak>.
 
 B<Examples>
 
-Select the UDP socket mechanism: 
+Select the UDP socket mechanism:
 
     setlogsock("udp");
 
-Select the native, UDP socket then UNIX domain socket mechanisms: 
+Send messages using the TCP socket mechanism on a custom port:
+
+    setlogsock({ type => "tcp", port => 2486 });
+
+Send messages to a remote host using the TCP socket mechanism:
+
+    setlogsock({ type => "tcp", host => $loghost });
+
+Try the native, UDP socket then UNIX domain socket mechanisms: 
 
     setlogsock(["native", "udp", "unix"]);
 
