@@ -382,7 +382,7 @@ sub syslog {
     $message = @_ ? sprintf($mask, @_) : $mask;
 
     # See CPAN-RT#24431. Opened on Apple Radar as bug #4944407 on 2007.01.21
-    # Supposedly resolved on Leopard.
+    # Supposedly resolved on Leopard (Mac OS X.5).
     chomp $message if $^O =~ /darwin/;
 
     if ($current_proto eq 'native') {
