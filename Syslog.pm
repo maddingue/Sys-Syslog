@@ -981,7 +981,7 @@ C<"$!"> (the latest error message).
 C<$priority> can specify a level, or a level and a facility.  Levels and 
 facilities can be given as strings or as macros.  When using the C<eventlog>
 mechanism, priorities C<DEBUG> and C<INFO> are mapped to event type 
-C<informational>, C<NOTICE> and C<WARNIN> to C<warning> and C<ERR> to 
+C<informational>, C<NOTICE> and C<WARNING> to C<warning> and C<ERR> to 
 C<EMERG> to C<error>.
 
 If you didn't use C<openlog()> before using C<syslog()>, C<syslog()> will 
