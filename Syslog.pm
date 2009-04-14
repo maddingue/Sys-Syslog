@@ -951,7 +951,7 @@ process, so this option has no effect on Linux.)
 =item *
 
 C<perror> - Write the message to standard error output as well to the
-system log.
+system log (added in C<Sys::Syslo> 0.22).
 
 =item *
 
