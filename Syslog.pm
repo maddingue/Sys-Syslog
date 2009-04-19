@@ -1473,6 +1473,29 @@ was unable to find an appropriate an appropriate device.
 =back
 
 
+=head1 HISTORY
+
+C<Sys::Syslog> is a core module, part of the standard Perl distribution
+since 1990.  At this time, modules as we know them didn't exist, the
+Perl library was a collection of F<.pl> files, and the one for sending
+syslog messages with was simply F<lib/syslog.pl>, included with Perl 3.0.
+It was converted as a module with Perl 5.0, but had a version number
+only starting with Perl 5.6.  Here is a small table with the matching
+Perl and C<Sys::Syslog> versions.
+
+    Sys::Syslog     Perl
+    -----------     ----
+       undef        5.0.x -- 5.5.x
+       0.01         5.6.0, 5.6.1, 5.6.2
+       0.03         5.8.0
+       0.04         5.8.1, 5.8.2, 5.8.3
+       0.05         5.8.4, 5.8.5, 5.8.6
+       0.06         5.8.7
+       0.13         5.8.8
+       0.22         5.10.0
+       0.27         5.8.9
+
+
 =head1 SEE ALSO
 
 =head2 Manual Pages
