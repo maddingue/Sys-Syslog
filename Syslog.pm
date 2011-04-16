@@ -12,7 +12,7 @@ require 5.005;
 
 
 {   no strict 'vars';
-    $VERSION = '0.27';
+    $VERSION = '0.28';
     @ISA     = qw< Exporter >;
 
     %EXPORT_TAGS = (
@@ -855,7 +855,7 @@ Sys::Syslog - Perl interface to the UNIX syslog(3) calls
 
 =head1 VERSION
 
-This is the documentation of version 0.27
+This is the documentation of version 0.28
 
 =head1 SYNOPSIS
 

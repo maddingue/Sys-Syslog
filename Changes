@@ -1,6 +1,6 @@
 Revision history for Sys-Syslog
 
-0.28 -- 2009.02.xx -- Sebastien Aperghis-Tramoni (SAPER)
+0.28 -- 2011.04.16 -- Sebastien Aperghis-Tramoni (SAPER)
         [BUGFIX] CPAN-RT#56084: Reset connection tracking vars (Vladimir Marek).
         [BUGFIX] CPAN-RT#56826: Avoid memory corruption when closelog() is
         called twice (Andreas Jaekel).
