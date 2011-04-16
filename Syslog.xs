@@ -121,10 +121,18 @@ setlogmask_xs(mask)
 
 void
 closelog_xs()
+    PREINIT:
+        U32 refcnt;
     CODE:
+        if (!ident_svptr)
+            return;
         closelog();
-        if (SvREFCNT(ident_svptr))
+        refcnt = SvREFCNT(ident_svptr);
+        if (refcnt) {
             SvREFCNT_dec(ident_svptr);
+            if (refcnt == 1)
+                ident_svptr = NULL;
+        }
 
 #else  /* HAVE_SYSLOG */
 

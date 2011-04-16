@@ -808,10 +808,14 @@ sub disconnect_log {
 
     if (defined $current_proto and $current_proto eq 'native') {
         closelog_xs();
+        unshift @fallbackMethods, $current_proto;
+        $current_proto = undef;
         return 1;
     }
     elsif (defined $current_proto and $current_proto eq 'eventlog') {
         $syslog_xobj->Close();
+        unshift @fallbackMethods, $current_proto;
+        $current_proto = undef;
         return 1;
     }
 

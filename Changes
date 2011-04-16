@@ -2,6 +2,8 @@ Revision history for Sys-Syslog
 
 0.28 -- 2009.02.xx -- Sebastien Aperghis-Tramoni (SAPER)
         [BUGFIX] CPAN-RT#56084: Reset connection tracking vars (Vladimir Marek).
+        [BUGFIX] CPAN-RT#56826: Avoid memory corruption when closelog() is
+        called twice (Andreas Jaekel).
         [FEATURE] New API for setlogsock(), in order to allow the setting
         of new options. Thanks to Jake Scott for the idea.
         [CODE] Modify can_load() so it can print the warnings if desired.
