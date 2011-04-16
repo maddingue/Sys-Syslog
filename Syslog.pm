@@ -399,7 +399,7 @@ sub syslog {
         $sum = $numpri + $numfac;
         my $oldlocale = setlocale(LC_TIME);
         setlocale(LC_TIME, 'C');
-        my $timestamp = strftime "%b %e %T", localtime;
+        my $timestamp = strftime "%b %e %H:%M:%S", localtime;
         setlocale(LC_TIME, $oldlocale);
         $buf = "<$sum>$timestamp $whoami: $message\0";
     }
