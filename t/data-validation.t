@@ -36,7 +36,7 @@ plan skip_all => "POE is not available" unless eval "use POE; 1";
 plan skip_all => "POE::Component::Server::Syslog is not available"
     unless eval "use POE::Component::Server::Syslog; 1";
 plan skip_all => "POE::Component::Server::Syslog is too old"
-    if POE::Component::Server::Syslog->VERSION < 1.18;
+    if POE::Component::Server::Syslog->VERSION < 1.14;
 
 plan tests => 1;
 
