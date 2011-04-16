@@ -1668,7 +1668,6 @@ but also has this strange piece of code:
 I don't know what bug the author referred to.
 
 - L<http://www.tpc.int/>
-- L<ftp://ftp.tpc.int/tpc/server/UNIX/>
 - L<ftp://ftp-usa.tpc.int/pub/tpc/server/UNIX/>
 
 

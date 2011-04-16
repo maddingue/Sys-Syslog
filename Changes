@@ -13,6 +13,7 @@ Revision history for Sys-Syslog
         [DIST] Removed unneeded modules in Makefile.PL (Nicholas Clark).
         [DOC] Recreated Sys::Syslog history from the unified git repository.
         [DOC] Added a section to list the matching Perl and Sys::Syslog version.
+        [DOC] CPAN-RT#49859: Removed a dead link (Leon Brocard).
 
 0.27 -- 2008.09.21 -- Sebastien Aperghis-Tramoni (SAPER)
         [BUGFIX] Fixed compilation on Win32, thanks to Serguei Trouchelle.
