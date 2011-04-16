@@ -32,9 +32,11 @@ use Sys::Syslog qw(:standard :extended :macros);
 # check than POE is available
 plan skip_all => "POE is not available" unless eval "use POE; 1";
 
-# check than POE::Component::Server::Syslog is available
+# check than POE::Component::Server::Syslog is available and recent enough
 plan skip_all => "POE::Component::Server::Syslog is not available"
     unless eval "use POE::Component::Server::Syslog; 1";
+plan skip_all => "POE::Component::Server::Syslog is too old"
+    if POE::Component::Server::Syslog->VERSION < 1.18;
 
 plan tests => 1;
 

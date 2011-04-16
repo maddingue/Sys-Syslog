@@ -9,6 +9,8 @@ Revision history for Sys-Syslog
         order to compile on Novell Netware.
         [TESTS] In blead, the distribution was moved from ext/Sys/Syslog
         to ext/Sys-Syslog. t/constants.t had to be fixed (Vincent Pit).
+        [TESTS] CPAN-RT#64716: Skip t/data-validation.t if the available
+        version of POE::Component::Server::Syslog is too old.
         [DIST] Bleadperl no longer require an empty MAN3PODS (Nicholas Clark).
         [DIST] Removed unneeded modules in Makefile.PL (Nicholas Clark).
         [DOC] Recreated Sys::Syslog history from the unified git repository.
