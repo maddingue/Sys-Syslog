@@ -83,7 +83,6 @@ else {
 sub client_input {
     my $message = $_[&ARG0];
     delete $message->{'time'};  # too hazardous to test
-    my $nl = $^O =~ /darwin/ ? "" : "\n";
 
     is_deeply(
         $message,
@@ -92,7 +91,7 @@ sub client_input {
             pri      => &LOG_LOCAL0 + &LOG_INFO,
             facility => &LOG_LOCAL0 >> 3,
             severity => &LOG_INFO,
-            msg      => "$ident\[$pid]: $text$nl\0",
+            msg      => "$ident\[$pid]: $text\n\0",
         },
         "checking syslog message"
     );
