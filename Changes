@@ -6,6 +6,7 @@ Revision history for Sys-Syslog
         [BUGFIX] CPAN-RT#50928: Convert Win32 files to Unix EOLs (Steve Hay).
         [BUGFIX] CPAN-RT#50534: Unwanted space at the end of syslog message
         (Eugene V. Lyubimkin).
+        [BUGFIX] CPAN-RT#49877: Options not reset after closelog() (Herbert Brezina).
         [BUGFIX] CPAN-RT#48386: Add Win32::EventLog as a prerequisite (kmx and
         Laurent Dami).
         [FEATURE] CPAN-RT#50534: Added options noeol and nonul.

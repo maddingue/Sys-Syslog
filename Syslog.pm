@@ -179,6 +179,7 @@ sub openlog {
 
 sub closelog {
     disconnect_log() if $connected;
+    $options{$_} = 0 for keys %options;
     $facility = $ident = "";
     $connected = 0;
     return 1
