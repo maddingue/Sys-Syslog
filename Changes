@@ -1,7 +1,11 @@
 Revision history for Sys-Syslog
 
 0.29 -- 2011.04.18 -- Sebastien Aperghis-Tramoni (SAPER) #PerlQA2011
-        [BUGFIX] CPAN-RT#55151: Allow temporary facility with native mechanism.
+        [BUGFIX] CPAN-RT#55151: Allow temporary facility with native mechanism
+        (Tim Jenkins).
+        [BUGFIX] CPAN-RT#50534: Unwanted space at the end of syslog message
+        (Eugene V. Lyubimkin).
+        [FEATURE] CPAN-RT#50534: Added options noeol and nonul.
 
 0.28 -- 2011.04.16 -- Sebastien Aperghis-Tramoni (SAPER) #PerlQA2011
         [BUGFIX] CPAN-RT#56084: Reset connection tracking vars (Vladimir Marek).

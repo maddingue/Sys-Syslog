@@ -101,7 +101,9 @@ my $maskpri         = LOG_UPTO(&LOG_DEBUG);     # current log mask
 
 my %options = (
     ndelay  => 0, 
+    noeol   => 0,
     nofatal => 0, 
+    nonul   => 0,
     nowait  => 0, 
     perror  => 0, 
     pid     => 0, 
@@ -396,10 +398,6 @@ sub syslog {
     $mask .= "\n" unless $mask =~ /\n$/;
     $message = @_ ? sprintf($mask, @_) : $mask;
 
-    # See CPAN-RT#24431. Opened on Apple Radar as bug #4944407 on 2007.01.21
-    # Supposedly resolved on Leopard (Mac OS X.5).
-    chomp $message if $^O =~ /darwin/;
-
     if ($current_proto eq 'native') {
         $buf = $message;
     }
@@ -415,13 +413,20 @@ sub syslog {
         setlocale(LC_TIME, 'C');
         my $timestamp = strftime "%b %e %H:%M:%S", localtime;
         setlocale(LC_TIME, $oldlocale);
-        $buf = "<$sum>$timestamp $whoami: $message\0";
+
+        # construct the stream that will be transmitted
+        $buf = "<$sum>$timestamp $whoami: $message";
+
+        # add (or not) a newline
+        $buf .= "\n" if !$options{noeol} and rindex($buf, "\n") == -1;
+
+        # add (or not) a NUL character
+        $buf .= "\0" if !$options{nonul};
     }
 
     # handle PERROR option
     # "native" mechanism already handles it by itself
     if ($options{perror} and $current_proto ne 'native') {
-        chomp $message;
         my $whoami = $ident;
         $whoami .= "[$$]" if $options{pid};
         print STDERR "$whoami: $message\n";
@@ -468,7 +473,7 @@ sub syslog {
 
 sub _syslog_send_console {
     my ($buf) = @_;
-    chop($buf); # delete the NUL from the end
+
     # The console print is a method which could block
     # so we do it in a child process and always return success
     # to the caller.
@@ -957,9 +962,19 @@ opened when the first message is logged).
 
 =item *
 
+C<noeol> - When set to true, no end of line character (C<\n>) will be
+appended to the message. This can be useful for some buggy syslog daemons.
+
+=item *
+
 C<nofatal> - When set to true, C<openlog()> and C<syslog()> will only 
 emit warnings instead of dying if the connection to the syslog can't 
 be established. 
+
+=item *
+
+C<nonul> - When set to true, no C<NUL> character (C<\0>) will be
+appended to the message. This can be useful for some buggy syslog daemons.
 
 =item *
 
