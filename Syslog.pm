@@ -339,29 +339,42 @@ sub syslog {
     croak "syslog: expecting argument \$priority" unless defined $priority;
     croak "syslog: expecting argument \$format"   unless defined $mask;
 
-    croak "syslog: invalid level/facility: $priority" if $priority =~ /^-\d+$/;
-    @words = split(/\W+/, $priority, 2);    # Allow "level" or "level|facility".
-    undef $numpri;
-    undef $numfac;
+    if ($priority =~ /^\d+$/) {
+        $numpri = LOG_PRI($priority);
+        $numfac = LOG_FAC($priority);
+    }
+    elsif ($priority =~ /^\w+/) {
+        # Allow "level" or "level|facility".
+        @words = split /\W+/, $priority, 2;
 
-    for my $word (@words) {
-        next if length $word == 0;
+        undef $numpri;
+        undef $numfac;
 
-        $num = xlate($word);        # Translate word to number.
+        for my $word (@words) {
+            next if length $word == 0;
 
-        if ($num < 0) {
-            croak "syslog: invalid level/facility: $word"
+            # Translate word to number.
+            $num = xlate($word);
+
+            if ($num < 0) {
+                croak "syslog: invalid level/facility: $word"
+            }
+            elsif (my $pri = LOG_PRI($num)) {
+                croak "syslog: too many levels given: $word"
+                    if defined $numpri;
+                $numpri = $num;
+                return 0 unless LOG_MASK($numpri) & $maskpri;
+            }
+            else {
+                croak "syslog: too many facilities given: $word"
+                    if defined $numfac;
+                $facility = $word if $word =~ /^[A-Za-z]/;
+                $numfac = LOG_FAC($num);
+            }
         }
-        elsif ($num <= &LOG_PRIMASK) {
-            croak "syslog: too many levels given: $word" if defined $numpri;
-            $numpri = $num;
-            return 0 unless LOG_MASK($numpri) & $maskpri;
-        }
-        else {
-            croak "syslog: too many facilities given: $word" if defined $numfac;
-            $facility = $word;
-            $numfac = $num;
-        }
+    }
+    else {
+        croak "syslog: invalid level/facility: $priority"
     }
 
     croak "syslog: level must be given" unless defined $numpri;
@@ -503,8 +516,8 @@ sub _syslog_send_socket {
 }
 
 sub _syslog_send_native {
-    my ($buf, $numpri) = @_;
-    syslog_xs($numpri, $buf);
+    my ($buf, $numpri, $numfac) = @_;
+    syslog_xs($numpri|$numfac, $buf);
     return 1;
 }
 
