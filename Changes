@@ -12,6 +12,7 @@ Revision history for Sys-Syslog
         [BUGFIX] CPAN-RT#48386: Add Win32::EventLog as a prerequisite (kmx and
         Laurent Dami).
         [FEATURE] CPAN-RT#50534: Added options noeol and nonul.
+        [DIST] Set INSTALLDIRS to "site" when installed on Perl 5.11+
 
 0.28 -- 2011.04.16 -- Sebastien Aperghis-Tramoni (SAPER) #PerlQA2011
         [BUGFIX] CPAN-RT#56084: Reset connection tracking vars (Vladimir Marek).

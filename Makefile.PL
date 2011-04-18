@@ -61,13 +61,18 @@ if (not grep { $_ eq 'PERL_CORE=1' } @ARGV) {
 # on pre-5.6 Perls, add warnings::compat to the prereq modules
 push @extra_prereqs, "warnings::compat" => "0.06"  if $] < 5.006;
 
+# starting with Perl 5.11, "site" and "vendor" directories finally are
+# before "perl" (core) in @INC, thus allowing dual-life modules to be
+# updated without the need to overwrite the old version
+my $installdirs = $] < 5.011 ? "perl" : "site";
+
 WriteMakefile(
     NAME            => 'Sys::Syslog',
     LICENSE         => 'perl',
     AUTHOR          => 'Sebastien Aperghis-Tramoni <sebastien@aperghis.net>',
     VERSION_FROM    => 'Syslog.pm', 
     ABSTRACT_FROM   => 'Syslog.pm', 
-    INSTALLDIRS     => 'perl',
+    INSTALLDIRS     => $installdirs,
     XSPROTOARG      => '-noprototypes',
     PM              => \%virtual_path, 
     PREREQ_PM       => {
