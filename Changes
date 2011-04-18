@@ -1,6 +1,8 @@
 Revision history for Sys-Syslog
 
 0.29 -- 2011.04.18 -- Sebastien Aperghis-Tramoni (SAPER) #PerlQA2011
+        [BUGFIX] CPAN-RT#55215: Sys::Syslog might call exit which triggers
+        DESTROY (Alexander Berger).
         [BUGFIX] CPAN-RT#55151: Allow temporary facility with native mechanism
         (Tim Jenkins).
         [BUGFIX] CPAN-RT#50928: Convert Win32 files to Unix EOLs (Steve Hay).
