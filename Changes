@@ -3,6 +3,7 @@ Revision history for Sys-Syslog
 0.29 -- 2011.04.18 -- Sebastien Aperghis-Tramoni (SAPER) #PerlQA2011
         [BUGFIX] CPAN-RT#55151: Allow temporary facility with native mechanism
         (Tim Jenkins).
+        [BUGFIX] CPAN-RT#50928: Convert Win32 files to Unix EOLs (Steve Hay).
         [BUGFIX] CPAN-RT#50534: Unwanted space at the end of syslog message
         (Eugene V. Lyubimkin).
         [FEATURE] CPAN-RT#50534: Added options noeol and nonul.
