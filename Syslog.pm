@@ -412,7 +412,7 @@ sub syslog {
         $sum = $numpri + $numfac;
         my $oldlocale = setlocale(LC_TIME);
         setlocale(LC_TIME, 'C');
-        my $timestamp = strftime "%b %e %H:%M:%S", localtime;
+        my $timestamp = strftime "%b %d %H:%M:%S", localtime;
         setlocale(LC_TIME, $oldlocale);
 
         # construct the stream that will be transmitted
