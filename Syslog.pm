@@ -1661,7 +1661,7 @@ L<http://perldoc.perl.org/Sys/Syslog.html>
 
 =head1 COPYRIGHT
 
-Copyright (C) 1990-2009 by Larry Wall and others.
+Copyright (C) 1990-2012 by Larry Wall and others.
 
 
 =head1 LICENSE
