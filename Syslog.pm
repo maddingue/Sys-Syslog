@@ -227,6 +227,8 @@ my %mechanism = (
     },
     tcp => {
         check   => sub {
+            return 1 if defined $sock_port;
+
             if (getservbyname('syslog', 'tcp') || getservbyname('syslogng', 'tcp')) {
                 $host = $syslog_path;
                 return 1
@@ -239,6 +241,8 @@ my %mechanism = (
     },
     udp => {
         check   => sub {
+            return 1 if defined $sock_port;
+
             if (getservbyname('syslog', 'udp')) {
                 $host = $syslog_path;
                 return 1
