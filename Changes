@@ -1,5 +1,8 @@
 Revision history for Sys-Syslog
 
+0.30 -- 2012.08.14 -- Sebastien Aperghis-Tramoni (SAPER)
+        [TESTS] t/syslog.t no longer needs to chdir under PERL_CORE.
+
 0.29 -- 2011.04.18 -- Sebastien Aperghis-Tramoni (SAPER) #PerlQA2011
         [BUGFIX] CPAN-RT#55215: Sys::Syslog might call exit which triggers
         DESTROY (Alexander Berger).
