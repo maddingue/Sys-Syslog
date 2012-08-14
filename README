@@ -41,8 +41,8 @@ SUPPORT AND DOCUMENTATION
         Search CPAN
             http://search.cpan.org/dist/Sys-Syslog/
 
-        Kobes' CPAN Search
-            http://cpan.uwinnipeg.ca/dist/Sys-Syslog
+        MetaCPAN
+            https://metacpan.org/module/Sys::Syslog
 
         CPAN Request Tracker:
             http://rt.cpan.org/NoAuth/Bugs.html?Dist=Sys-Syslog

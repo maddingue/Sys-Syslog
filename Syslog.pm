@@ -1648,9 +1648,9 @@ L<http://rt.cpan.org/Dist/Display.html?Queue=Sys-Syslog>
 
 L<http://search.cpan.org/dist/Sys-Syslog/>
 
-=item * Kobes' CPAN Search
+=item * MetaCPAN
 
-L<http://cpan.uwinnipeg.ca/dist/Sys-Syslog>
+L<https://metacpan.org/module/Sys::Syslog>
 
 =item * Perl Documentation
 
