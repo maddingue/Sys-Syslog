@@ -1,5 +1,7 @@
 Revision history for Sys-Syslog
 
+        [BUGFIX] CPAN-RT#69986: setlogsock() doesn't return undef on failure
+        (Niko Tyni).
         [BUGFIX] CPAN-RT#75827: syslog() logging everything regardless of log
         mask when using using numeric LOG_* macros (Bryan Thale).
         [DOC] Don't highlight "the Rules of Sys::Syslog" from the Description.

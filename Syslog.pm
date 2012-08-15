@@ -288,7 +288,7 @@ sub setlogsock {
         @opt{qw< type path timeout >} = @_;
     }
 
-    # check socket type, remove
+    # check socket type, remove invalid ones
     my $diag_invalid_type = "setlogsock(): Invalid type%s; must be one of "
                           . join ", ", map { "'$_'" } sort keys %mechanism;
     croak sprintf $diag_invalid_type, "" unless defined $opt{type};
@@ -314,10 +314,12 @@ sub setlogsock {
     $transmit_ok = 0;
     @fallbackMethods = ();
     @connectMethods = @defaultMethods;
+    my $found = 0;
 
     for my $sock_type (@sock_types) {
         if ( $mechanism{$sock_type}{check}->() ) {
             unshift @connectMethods, $sock_type;
+            $found = 1;
         }
         else {
             warnings::warnif "setlogsock(): type='$sock_type': "
@@ -325,7 +327,7 @@ sub setlogsock {
         }
     }
 
-    return 1;
+    return $found;
 }
 
 sub syslog {
