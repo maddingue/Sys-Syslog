@@ -900,9 +900,6 @@ C<Sys::Syslog> is an interface to the UNIX C<syslog(3)> program.
 Call C<syslog()> with a string priority and a list of C<printf()> args
 just like C<syslog(3)>.
 
-You can find a kind of FAQ in L<"THE RULES OF SYS::SYSLOG">.  Please read 
-it before coding, and again before asking questions. 
-
 
 =head1 EXPORTS
 
