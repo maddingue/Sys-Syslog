@@ -283,7 +283,7 @@ ok( !$r, "setlogsock failed correctly with a nonexistent stream path");
 is( $@, '', "setlogsock didn't croak");
 
 SKIP: {
-    my $service = getservbyname("syslog", "tcp") || getservbyname("syslog-ng", "tcp");
+    my $service = getservbyname("syslog", "tcp") || getservbyname("syslogng", "tcp");
     skip "can't test setlogsock() tcp failure", 2 if $service;
     eval { $r = setlogsock("tcp") };
     ok( !$r, "setlogsock failed correctly when tcp services can't be resolved");
