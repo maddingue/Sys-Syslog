@@ -31,8 +31,6 @@
 
 static SV *ident_svptr;
 
-#include "const-c.inc"
-
 
 #ifndef LOG_FAC
 #define LOG_FACMASK     0x03f8
@@ -58,6 +56,8 @@ static SV *ident_svptr;
 #ifndef LOG_UPTO
 #define	LOG_UPTO(pri)	((1 << ((pri)+1)) - 1)
 #endif
+
+#include "const-c.inc"
 
 
 MODULE = Sys::Syslog		PACKAGE = Sys::Syslog		
