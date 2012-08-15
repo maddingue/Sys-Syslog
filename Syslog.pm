@@ -370,7 +370,6 @@ sub syslog {
                 croak "syslog: too many levels given: $word"
                     if defined $numpri;
                 $numpri = $num;
-                return 0 unless LOG_MASK($numpri) & $maskpri;
             }
             else {
                 croak "syslog: too many facilities given: $word"
@@ -385,6 +384,9 @@ sub syslog {
     }
 
     croak "syslog: level must be given" unless defined $numpri;
+
+    # don't log if priority is below mask level
+    return 0 unless LOG_MASK($numpri) & $maskpri;
 
     if (not defined $numfac) {  # Facility not specified in this call.
 	$facility = 'user' unless $facility;
