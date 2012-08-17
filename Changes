@@ -7,6 +7,7 @@ Revision history for Sys-Syslog
         [BUGFIX] CPAN-RT#75827: syslog() logging everything regardless of log
         mask when using using numeric LOG_* macros (Bryan Thale).
         [DOC] Don't highlight "the Rules of Sys::Syslog" from the Description.
+        [DIST] Add meta-information in Makefile.PL
 
 0.30 -- 2012.08.15 -- Sebastien Aperghis-Tramoni (SAPER)
         [BUGFIX] CPAN-RT#69310: Avoid a POSIX::strftime issue on Windows
