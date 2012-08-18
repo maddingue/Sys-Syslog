@@ -278,16 +278,20 @@ BEGIN { $tests += 3 + 4 * 3 }
 }
 
 BEGIN { $tests += 4 }
-eval { $r = setlogsock("stream", "foo/bar") };
-ok( !$r, "setlogsock failed correctly with a nonexistent stream path");
-is( $@, '', "setlogsock didn't croak");
-
 SKIP: {
+    # case: test the return value of setlogsock()
+
+    # setlogsock("stream") on a non-existent file must fail
+    eval { $r = setlogsock("stream", "plonk/log") };
+    is( $@, '', "setlogsock() didn't croak");
+    ok( !$r, "setlogsock() correctly failed with a non-existent stream path");
+
+    # setlogsock("tcp") must fail if the service is not declared
     my $service = getservbyname("syslog", "tcp") || getservbyname("syslogng", "tcp");
     skip "can't test setlogsock() tcp failure", 2 if $service;
     eval { $r = setlogsock("tcp") };
-    ok( !$r, "setlogsock failed correctly when tcp services can't be resolved");
-    is( $@, '', "setlogsock didn't croak");
+    is( $@, '', "setlogsock() didn't croak");
+    ok( !$r, "setlogsock() correctly failed when tcp services can't be resolved");
 }
 
 BEGIN { $tests += 3 }
