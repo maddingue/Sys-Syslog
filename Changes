@@ -1,5 +1,7 @@
 Revision history for Sys-Syslog
 
+        [BUGFIX] CPAN-RT#69992: Make setlogsock() only use the requested mechanism,
+        restoring way it worked in v0.27 and before (Niko Tyni).
         [BUGFIX] CPAN-RT#69986: setlogsock() doesn't return undef on failure
         (Niko Tyni).
         [BUGFIX] CPAN-RT#69997: Use the default UDP socket timeout on GNU/kFreeBSD

@@ -289,3 +289,27 @@ SKIP: {
     ok( !$r, "setlogsock failed correctly when tcp services can't be resolved");
     is( $@, '', "setlogsock didn't croak");
 }
+
+BEGIN { $tests += 3 }
+SKIP: {
+    # case: configure Sys::Syslog to use the stream mechanism on a
+    #       given file, but remove the file before openlog() is called,
+    #       so it fails.
+
+    # create the log file
+    my $log = "t/stream";
+    open my $fh, ">$log" or skip "can't write file '$log': $!", 3;
+    close $fh;
+
+    # configure Sys::Syslog to use it
+    $r = eval { setlogsock("stream", $log) };
+    is( $@, "", "setlogsock('stream', '$log') -> $r" );
+    skip "can't test openlog() failure with a missing stream", 2 if !$r;
+
+    # remove the log and check that openlog() fails
+    unlink $log;
+    $r = eval { openlog('perl', 'ndelay', 'local0') };
+    ok( !$r, "openlog() correctly failed with a non-existent stream" );
+    like( $@, '/not writable/', "openlog() correctly croaked with a non-existent stream" );
+}
+

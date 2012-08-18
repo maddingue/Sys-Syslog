@@ -319,12 +319,13 @@ sub setlogsock {
     disconnect_log() if $connected;
     $transmit_ok = 0;
     @fallbackMethods = ();
-    @connectMethods = @defaultMethods;
+    @connectMethods = ();
     my $found = 0;
 
+    # check each given mechanism and test if it can be used on the current system
     for my $sock_type (@sock_types) {
         if ( $mechanism{$sock_type}{check}->() ) {
-            unshift @connectMethods, $sock_type;
+            push @connectMethods, $sock_type;
             $found = 1;
         }
         else {
@@ -332,6 +333,9 @@ sub setlogsock {
                            . $mechanism{$sock_type}{err_msg};
         }
     }
+
+    # if no mechanism worked from the given ones, use the default ones
+    @connectMethods = @defaultMethods unless @connectMethods;
 
     return $found;
 }
