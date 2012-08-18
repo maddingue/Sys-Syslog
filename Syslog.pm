@@ -91,7 +91,7 @@ my $connected       = 0;        # flag to indicate if we're connected or not
 my $syslog_send;                # coderef of the function used to send messages
 my $syslog_path     = undef;    # syslog path for "stream" and "unix" mechanisms
 my $syslog_xobj     = undef;    # if defined, holds the external object used to send messages
-my $transmit_ok     = 0;        # flag to indicate if the last message was transmited
+my $transmit_ok     = 0;        # flag to indicate if the last message was transmitted
 my $sock_port       = undef;    # socket port
 my $sock_timeout    = 0;        # socket timeout, see below
 my $current_proto   = undef;    # current mechanism used to transmit messages
