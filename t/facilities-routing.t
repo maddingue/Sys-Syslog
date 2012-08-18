@@ -23,7 +23,7 @@ plan skip_all => "POE::Component::Server::Syslog is too old"
 
 my $host    = "127.0.0.1";
 my $port    = 5140;
-my $proto   = "tcp";
+my $proto   = "udp";
 my $ident   = "pocosyslog";
 
 my @levels = qw< emerg alert crit err warning notice info debug >;
@@ -32,14 +32,11 @@ my @facilities = qw<
     local0 local1 local2 local3 local4 local5 local6 local7
 >;
 
+my %received;
 my $parent_pid = $$;
 my $child_pid  = fork();
 
 if ($child_pid) {
-    plan tests => @facilities * @levels * 2;
-
-    POE::Kernel->has_forked;
-
     # parent: setup a syslog server
     POE::Component::Server::Syslog->spawn(
         Alias       => 'syslog',
@@ -51,13 +48,20 @@ if ($child_pid) {
         ErrorState  => \&client_error,
     );
 
+    # signal handlers
+    POE::Kernel->sig_child($child_pid, sub { wait() });
     $SIG{TERM} = sub {
         POE::Kernel->post(syslog => "shutdown");
         POE::Kernel->stop;
     };
 
-    POE::Kernel->sig_child($child_pid, sub { wait() });
+    # run everything
+    plan tests => @facilities * @levels * 2;
     POE::Kernel->run;
+
+    # check if some messages are missing
+    my @miss = grep { $received{$_} < 2 } keys %received;
+    diag "@miss" if @miss;
 }
 else {
     # child: send messages to the syslog server
@@ -71,7 +75,6 @@ else {
         for my $level (@levels) {
             eval { syslog($level => "<$facility\:$level>") }
                 or warn "error: syslog($level => '<$facility\:$level>'): $@";
-            select(undef, undef, undef, 0.001);
         }
     }
 
@@ -83,7 +86,6 @@ else {
         for my $level (@levels) {
             eval { syslog("$facility.$level" => "<$facility\:$level>") }
                 or warn "error: syslog('$facility.$level' => '<$facility\:$level>'): $@";
-            select(undef, undef, undef, 0.001);
         }
     }
 
@@ -96,17 +98,17 @@ else {
 
 sub client_input {
     my $message = $_[&ARG0];
-    #delete $message->{'time'};  # too hazardous to test
 
     # extract the sent facility and level from the message text
     my ($sent_facility, $sent_level) = $message->{msg} =~ /<(\w+):(\w+)>/;
+    $received{"$sent_facility\:$sent_level"}++;
 
     # resolve their numeric values
     my ($sent_fac_num, $sent_lev_num);
     {
         no strict "refs";
         $sent_fac_num = eval { my $n = uc "LOG_$sent_facility"; &$n } >> 3;
-        $sent_lev_num    = eval { my $n = uc "LOG_$sent_level";    &$n };
+        $sent_lev_num = eval { my $n = uc "LOG_$sent_level";    &$n };
     }
 
     is_deeply(
