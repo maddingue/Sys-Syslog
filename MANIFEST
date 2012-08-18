@@ -14,6 +14,7 @@ t/00-load.t
 t/constants.t
 t/data-validation.t
 t/distchk.t
+t/facilities-routing.t
 t/syslog.t
 t/pod.t
 t/podcover.t

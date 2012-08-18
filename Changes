@@ -11,6 +11,7 @@ Revision history for Sys-Syslog
         as well, and lower it to a more sensible value (Niko Tyni).
         [BUGFIX] CPAN-RT#75827: syslog() logging everything regardless of log
         mask when using using numeric LOG_* macros (Bryan Thale).
+        [TESTS] Added t/facilities-routing.t
         [DOC] Don't highlight "the Rules of Sys::Syslog" from the Description.
         [DIST] Add meta-information in Makefile.PL
 
