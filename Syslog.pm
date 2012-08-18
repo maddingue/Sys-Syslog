@@ -378,7 +378,7 @@ sub syslog {
             if ($num < 0) {
                 croak "syslog: invalid level/facility: $word"
             }
-            elsif (my $pri = LOG_PRI($num)) {
+            elsif ($num <= LOG_PRIMASK()) {
                 croak "syslog: too many levels given: $word"
                     if defined $numpri;
                 $numpri = $num;

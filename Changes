@@ -1,5 +1,6 @@
 Revision history for Sys-Syslog
 
+        [BUGFIX] Level 'emerg' could not be used since v0.29.
         [BUGFIX] CPAN-RT#69992: Make setlogsock() only use the requested mechanism,
         restoring way it worked in v0.27 and before (Niko Tyni).
         [BUGFIX] CPAN-RT#69986: setlogsock() doesn't return undef on failure
