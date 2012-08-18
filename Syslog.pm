@@ -360,7 +360,7 @@ sub syslog {
 
     if ($priority =~ /^\d+$/) {
         $numpri = LOG_PRI($priority);
-        $numfac = LOG_FAC($priority);
+        $numfac = LOG_FAC($priority) << 3;
     }
     elsif ($priority =~ /^\w+/) {
         # Allow "level" or "level|facility".
@@ -387,7 +387,7 @@ sub syslog {
                 croak "syslog: too many facilities given: $word"
                     if defined $numfac;
                 $facility = $word if $word =~ /^[A-Za-z]/;
-                $numfac = LOG_FAC($num);
+                $numfac = $num;
             }
         }
     }
