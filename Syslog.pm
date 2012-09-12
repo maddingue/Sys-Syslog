@@ -341,8 +341,7 @@ sub setlogsock {
 }
 
 sub syslog {
-    my $priority = shift;
-    my $mask = shift;
+    my ($priority, $mask, @args) = @_;
     my ($message, $buf);
     my (@words, $num, $numpri, $numfac, $sum);
     my $failed = undef;
@@ -409,13 +408,13 @@ sub syslog {
 
     if ($mask =~ /%m/) {
         # escape percent signs for sprintf()
-        $error =~ s/%/%%/g if @_;
+        $error =~ s/%/%%/g if @args;
         # replace %m with $error, if preceded by an even number of percent signs
         $mask =~ s/(?<!%)((?:%%)*)%m/$1$error/g;
     }
 
     $mask .= "\n" unless $mask =~ /\n$/;
-    $message = @_ ? sprintf($mask, @_) : $mask;
+    $message = @args ? sprintf($mask, @args) : $mask;
 
     if ($current_proto eq 'native') {
         $buf = $message;
