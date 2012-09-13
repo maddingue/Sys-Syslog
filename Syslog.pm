@@ -147,6 +147,14 @@ my @fallbackMethods = ();
 
 $sock_timeout = 0.001 if $^O =~ /darwin|gnukfreebsd/;
 
+
+# Perl 5.6.0's warnings.pm doesn't have warnings::warnif()
+if (not defined &warnings::warnif) {
+    *warnings::warnif = sub {
+        goto &warnings::warn if warnings::enabled(__PACKAGE__)
+    }
+}
+
 # coderef for a nicer handling of errors
 my $err_sub = $options{nofatal} ? \&warnings::warnif : \&croak;
 
@@ -329,8 +337,8 @@ sub setlogsock {
             $found = 1;
         }
         else {
-            warnings::warnif "setlogsock(): type='$sock_type': "
-                           . $mechanism{$sock_type}{err_msg};
+            warnings::warnif("setlogsock(): type='$sock_type': "
+                           . $mechanism{$sock_type}{err_msg});
         }
     }
 
