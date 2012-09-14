@@ -1,5 +1,6 @@
 Revision history for Sys-Syslog
 
+0.32 -- 2012.09.14 -- Sebastien Aperghis-Tramoni (SAPER)
         [BUGFIX] CPAN-RT#69040: Don't modify @_ in syslog().
         [BUGFIX] Restore compatibility with Perl 5.6.0.
         [DOC] Perl-RT#81858: Fix some spelling errors (Peter J. Acklam).
