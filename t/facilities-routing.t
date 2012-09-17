@@ -60,7 +60,7 @@ if ($child_pid) {
     POE::Kernel->run;
 
     # check if some messages are missing
-    my @miss = grep { $received{$_} < 2 } keys %received;
+    my @miss = sort grep { $received{$_} < 2 } keys %received;
     diag "@miss" if @miss;
 }
 else {
