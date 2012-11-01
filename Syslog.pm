@@ -1557,6 +1557,14 @@ Perl and C<Sys::Syslog> versions.
 
 =head1 SEE ALSO
 
+=head2 Other modules
+
+L<Log::Log4perl> - Perl implementation of the Log4j API
+
+L<Log::Dispatch> - Dispatches messages to one or more outputs
+
+L<Log::Report> - Report a problem, with exceptions and language support
+
 =head2 Manual Pages
 
 L<syslog(3)>
