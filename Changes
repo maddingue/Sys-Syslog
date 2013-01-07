@@ -1,5 +1,6 @@
 Revision history for Sys-Syslog
 
+        [BUGFIX] CPAN-RT#82531: Invalid usage of POSIX::_exit (Alexander Berger).
         [DOC] Add links to other logging modules.
         [DOC] CPAN-RT#80398: Typo spotted by alfirth@gmail.com
         [TEST] CPAN-RT#79683: Added delays in t/facilities-routing.t

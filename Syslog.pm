@@ -519,11 +519,11 @@ sub _syslog_send_console {
     } else {
         if (open(CONS, ">/dev/console")) {
 	    my $ret = print CONS $buf . "\r";  # XXX: should this be \x0A ?
-	    POSIX::_exit $ret if defined $pid;
+	    POSIX::_exit(0) $ret if defined $pid;
 	    close CONS;
 	}
 
-	POSIX::_exit if defined $pid;
+	POSIX::_exit(0) if defined $pid;
     }
 }
 
