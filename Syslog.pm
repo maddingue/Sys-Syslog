@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use warnings::register;
 use Carp;
-use Exporter        ();
+use Exporter        qw< import >;
 use File::Basename;
 use POSIX           qw< strftime setlocale LC_TIME >;
 use Socket          qw< :all >;
@@ -12,7 +12,6 @@ require 5.005;
 
 {   no strict 'vars';
     $VERSION = '0.32';
-    @ISA     = qw< Exporter >;
 
     %EXPORT_TAGS = (
         standard => [qw(openlog syslog closelog setlogmask)],
