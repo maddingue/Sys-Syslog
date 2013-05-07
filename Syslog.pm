@@ -4,7 +4,6 @@ use warnings;
 use warnings::register;
 use Carp;
 use Exporter        ();
-use Fcntl           qw< O_WRONLY >;
 use File::Basename;
 use POSIX           qw< strftime setlocale LC_TIME >;
 use Socket          qw< :all >;
@@ -723,15 +722,21 @@ sub connect_stream {
     # might want syslog_path to be variable based on syslog.h (if only
     # it were in there!)
     $syslog_path = '/dev/conslog' unless defined $syslog_path; 
+
     if (!-w $syslog_path) {
 	push @$errs, "stream $syslog_path is not writable";
 	return 0;
     }
-    if (!sysopen(SYSLOG, $syslog_path, O_WRONLY, 0400)) {
+
+    require Fcntl;
+
+    if (!sysopen(SYSLOG, $syslog_path, Fcntl::O_WRONLY(), 0400)) {
 	push @$errs, "stream can't open $syslog_path: $!";
 	return 0;
     }
+
     $syslog_send = \&_syslog_send_stream;
+
     return 1;
 }
 
