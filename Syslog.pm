@@ -1253,7 +1253,7 @@ Now that the "native" mechanism is supported by C<Sys::Syslog> and selected
 by default, the use of the C<setlogsock()> function is discouraged because 
 other mechanisms are less portable across operating systems.  Authors of 
 modules and programs that use this function, especially its cargo-cult form 
-C<setlogsock("unix")>, are advised to remove any occurence of it unless they 
+C<setlogsock("unix")>, are advised to remove any occurrence of it unless they 
 specifically want to use a given mechanism (like TCP or UDP to connect to 
 a remote host).
 
