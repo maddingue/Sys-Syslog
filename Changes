@@ -1,5 +1,6 @@
 Revision history for Sys-Syslog
 
+0.33 -- 2013.05.24 -- Sebastien Aperghis-Tramoni (SAPER)
         [BUGFIX] CPAN-RT#82531: Invalid usage of POSIX::_exit (Alexander Berger).
         [OPTIM] No longer inherit from Exporter.
         [OPTIM] Load Fcntl only when necessary.
