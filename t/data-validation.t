@@ -67,6 +67,7 @@ if ($pid) {
     );
 
     $SIG{CHLD} = sub { wait() };
+    POE::Kernel->sig_child($pid);
 
     POE::Kernel->run;
 }
