@@ -366,6 +366,7 @@ sub syslog {
     if ($priority =~ /^\d+$/) {
         $numpri = LOG_PRI($priority);
         $numfac = LOG_FAC($priority) << 3;
+        undef $numfac if $numfac == 0;  # no facility given => use default
     }
     elsif ($priority =~ /^\w+/) {
         # Allow "level" or "level|facility".
