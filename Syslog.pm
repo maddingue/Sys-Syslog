@@ -241,7 +241,9 @@ my %mechanism = (
         check   => sub {
             return 1 if defined $sock_port;
 
-            if (getservbyname('syslog', 'tcp') || getservbyname('syslogng', 'tcp')) {
+            if (eval { local $SIG{__DIE__};
+                getservbyname('syslog','tcp') || getservbyname('syslogng','tcp')
+            }) {
                 $host = $syslog_path;
                 return 1
             }
@@ -255,7 +257,7 @@ my %mechanism = (
         check   => sub {
             return 1 if defined $sock_port;
 
-            if (getservbyname('syslog', 'udp')) {
+            if (eval { local $SIG{__DIE__}; getservbyname('syslog', 'udp') }) {
                 $host = $syslog_path;
                 return 1
             }
@@ -623,14 +625,15 @@ sub connect_log {
 sub connect_tcp {
     my ($errs) = @_;
 
-    my $proto = getprotobyname('tcp');
+    my $proto = eval { local $SIG{__DIE__}; getprotobyname('tcp') };
     if (!defined $proto) {
 	push @$errs, "getprotobyname failed for tcp";
 	return 0;
     }
 
-    my $port = $sock_port || getservbyname('syslog', 'tcp');
-    $port = getservbyname('syslogng', 'tcp') unless defined $port;
+    my $port = $sock_port
+            || eval { local $SIG{__DIE__}; getservbyname('syslog',   'tcp') }
+            || eval { local $SIG{__DIE__}; getservbyname('syslogng', 'tcp') };
     if (!defined $port) {
 	push @$errs, "getservbyname failed for syslog/tcp and syslogng/tcp";
 	return 0;
@@ -671,13 +674,14 @@ sub connect_tcp {
 sub connect_udp {
     my ($errs) = @_;
 
-    my $proto = getprotobyname('udp');
+    my $proto = eval { local $SIG{__DIE__}; getprotobyname('udp') };
     if (!defined $proto) {
 	push @$errs, "getprotobyname failed for udp";
 	return 0;
     }
 
-    my $port = $sock_port || getservbyname('syslog', 'udp');
+    my $port = $sock_port
+            || eval { local $SIG{__DIE__}; getservbyname('syslog', 'udp') };
     if (!defined $port) {
 	push @$errs, "getservbyname failed for syslog/udp";
 	return 0;
