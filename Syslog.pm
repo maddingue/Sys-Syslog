@@ -454,7 +454,7 @@ sub syslog {
     if ($options{perror} and $current_proto ne 'native') {
         my $whoami = $ident;
         $whoami .= "[$$]" if $options{pid};
-        print STDERR "$whoami: $message\n";
+        print STDERR "$whoami: $message";
     }
 
     # it's possible that we'll get an error from sending
