@@ -1,5 +1,8 @@
 #!/usr/bin/perl
+
 use strict;
+use warnings;
+
 use Sys::Syslog;
 
 die "usage: $0 facility/priority message\n" unless @ARGV;
