@@ -1,5 +1,7 @@
 Revision history for Sys-Syslog
 
+        [BUGFIX] CPAN-RT#105117: use %e where available, fall back to %d and
+        a regexp where not (Markus Laker).
         [BUGFIX] CPAN-RT#98446: trailing new line with perror (Alexander Bluhm).
         [BUGFIX] CPAN-RT#105152: the noeol option was ignored (Markus Laker).
         [PORT] CPAN-RT#104710: loadable library and perl binaries are mismatched,

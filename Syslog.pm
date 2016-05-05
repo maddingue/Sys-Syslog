@@ -442,7 +442,16 @@ sub syslog {
         $sum = $numpri + $numfac;
         my $oldlocale = setlocale(LC_TIME);
         setlocale(LC_TIME, 'C');
-        my $timestamp = strftime "%b %d %H:%M:%S", localtime;
+
+        # %e format isn't available on all systems (Win32, cf. CPAN RT #69310)
+        my $day = strftime "%e", localtime;
+
+        if (index($day, "%") == 0) {
+            $day = strftime "%d", localtime;
+            $day =~ s/^0/ /;
+        }
+
+        my $timestamp = strftime "%b $day %H:%M:%S", localtime;
         setlocale(LC_TIME, $oldlocale);
 
         # construct the stream that will be transmitted
