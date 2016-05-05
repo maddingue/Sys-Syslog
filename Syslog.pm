@@ -3,11 +3,14 @@ use strict;
 use warnings;
 use warnings::register;
 use Carp;
-use Exporter        qw< import >;
+use Exporter        ();
 use File::Basename;
 use POSIX           qw< strftime setlocale LC_TIME >;
 use Socket          qw< :all >;
 require 5.005;
+
+
+*import = \&Exporter::import;
 
 
 {   no strict 'vars';

@@ -1,5 +1,6 @@
 Revision history for Sys-Syslog
 
+        [PORT] No longer inheriting from Exporter doesn't work before Perl 5.8.3.
         [BUGFIX] CPAN-RT#90538: facility from openlog() is not used (Anton Yuzhaninov).
         [PORT] CPAN-RT#90212: Support non-Windows platforms where syslog.h
         is not defined (Brian Fraser).
