@@ -15,7 +15,7 @@ require 5.005;
 
 
 {   no strict 'vars';
-    $VERSION = '0.33';
+    $VERSION = '0.34';
 
     %EXPORT_TAGS = (
         standard => [qw(openlog syslog closelog setlogmask)],
@@ -934,7 +934,7 @@ Sys::Syslog - Perl interface to the UNIX syslog(3) calls
 
 =head1 VERSION
 
-This is the documentation of version 0.33
+This is the documentation of version 0.34
 
 =head1 SYNOPSIS
 

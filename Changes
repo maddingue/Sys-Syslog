@@ -1,5 +1,6 @@
 Revision history for Sys-Syslog
 
+0.34 -- 2016.05.06 -- Sebastien Aperghis-Tramoni (SAPER)
         [BUGFIX] CPAN-RT#105117: use %e where available, fall back to %d and
         a regexp where not (Markus Laker).
         [BUGFIX] CPAN-RT#98446: trailing new line with perror (Alexander Bluhm).
