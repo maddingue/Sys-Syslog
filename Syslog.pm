@@ -425,7 +425,8 @@ sub syslog {
         $mask =~ s/(?<!%)((?:%%)*)%m/$1$error/g;
     }
 
-    $mask .= "\n" unless $mask =~ /\n$/;
+    # add (or not) a newline
+    $mask .= "\n" if !$options{noeol} and rindex($mask, "\n") == -1;
     $message = @args ? sprintf($mask, @args) : $mask;
 
     if ($current_proto eq 'native') {
@@ -446,9 +447,6 @@ sub syslog {
 
         # construct the stream that will be transmitted
         $buf = "<$sum>$timestamp $whoami: $message";
-
-        # add (or not) a newline
-        $buf .= "\n" if !$options{noeol} and rindex($buf, "\n") == -1;
 
         # add (or not) a NUL character
         $buf .= "\0" if !$options{nonul};
