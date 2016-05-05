@@ -78,9 +78,24 @@ require 5.005;
 #
 # Constants
 #
-use constant {
-    HAVE_SETLOCALE          => $Config::Config{d_setlocale},
-};
+use constant HAVE_GETPROTOBYNAME     => $Config::Config{d_getpbyname};
+use constant HAVE_GETPROTOBYNUMBER   => $Config::Config{d_getpbynumber};
+use constant HAVE_SETLOCALE          => $Config::Config{d_setlocale};
+use constant HAVE_IPPROTO_TCP        => defined &Socket::IPPROTO_TCP ? 1 : 0;
+use constant HAVE_IPPROTO_UDP        => defined &Socket::IPPROTO_UDP ? 1 : 0;
+use constant HAVE_TCP_NODELAY        => defined &Socket::TCP_NODELAY ? 1 : 0;
+
+use constant SOCKET_IPPROTO_TCP =>
+      HAVE_IPPROTO_TCP      ? Socket::IPPROTO_TCP
+    : HAVE_GETPROTOBYNAME   ? scalar getprotobyname("tcp")
+    : 6;
+
+use constant SOCKET_IPPROTO_UDP =>
+      HAVE_IPPROTO_UDP      ? Socket::IPPROTO_UDP
+    : HAVE_GETPROTOBYNAME   ? scalar getprotobyname("udp")
+    : 17;
+
+use constant SOCKET_TCP_NODELAY => HAVE_TCP_NODELAY ? Socket::TCP_NODELAY : 1;
 
 
 # 
@@ -649,12 +664,6 @@ sub connect_log {
 sub connect_tcp {
     my ($errs) = @_;
 
-    my $proto = eval { local $SIG{__DIE__}; getprotobyname('tcp') };
-    if (!defined $proto) {
-	push @$errs, "getprotobyname failed for tcp";
-	return 0;
-    }
-
     my $port = $sock_port
             || eval { local $SIG{__DIE__}; getservbyname('syslog',   'tcp') }
             || eval { local $SIG{__DIE__}; getservbyname('syslogng', 'tcp') };
@@ -675,16 +684,14 @@ sub connect_tcp {
     }
     $addr = sockaddr_in($port, $addr);
 
-    if (!socket(SYSLOG, AF_INET, SOCK_STREAM, $proto)) {
+    if (!socket(SYSLOG, AF_INET, SOCK_STREAM, SOCKET_IPPROTO_TCP)) {
 	push @$errs, "tcp socket: $!";
 	return 0;
     }
 
     setsockopt(SYSLOG, SOL_SOCKET, SO_KEEPALIVE, 1);
-    if (silent_eval { IPPROTO_TCP() }) {
-        # These constants don't exist in 5.005. They were added in 1999
-        setsockopt(SYSLOG, IPPROTO_TCP(), TCP_NODELAY(), 1);
-    }
+    setsockopt(SYSLOG, SOCKET_IPPROTO_TCP, SOCKET_TCP_NODELAY, 1);
+
     if (!connect(SYSLOG, $addr)) {
 	push @$errs, "tcp connect: $!";
 	return 0;
@@ -697,12 +704,6 @@ sub connect_tcp {
 
 sub connect_udp {
     my ($errs) = @_;
-
-    my $proto = eval { local $SIG{__DIE__}; getprotobyname('udp') };
-    if (!defined $proto) {
-	push @$errs, "getprotobyname failed for udp";
-	return 0;
-    }
 
     my $port = $sock_port
             || eval { local $SIG{__DIE__}; getservbyname('syslog', 'udp') };
@@ -723,7 +724,7 @@ sub connect_udp {
     }
     $addr = sockaddr_in($port, $addr);
 
-    if (!socket(SYSLOG, AF_INET, SOCK_DGRAM, $proto)) {
+    if (!socket(SYSLOG, AF_INET, SOCK_DGRAM, SOCKET_IPPROTO_UDP)) {
 	push @$errs, "udp socket: $!";
 	return 0;
     }
