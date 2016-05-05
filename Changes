@@ -1,5 +1,7 @@
 Revision history for Sys-Syslog
 
+        [PORT] CPAN-RT#104710: loadable library and perl binaries are mismatched,
+        because of missing CCFLAGS (CHORNY, KMX).
         [PORT] No longer inheriting from Exporter doesn't work before Perl 5.8.3.
         [BUGFIX] CPAN-RT#90538: facility from openlog() is not used (Anton Yuzhaninov).
         [PORT] CPAN-RT#90212: Support non-Windows platforms where syslog.h
