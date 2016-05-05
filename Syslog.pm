@@ -3,6 +3,7 @@ use strict;
 use warnings;
 use warnings::register;
 use Carp;
+use Config;
 use Exporter        ();
 use File::Basename;
 use POSIX           qw< strftime setlocale LC_TIME >;
@@ -72,6 +73,14 @@ require 5.005;
         bootstrap Sys::Syslog $VERSION;
     };
 }
+
+
+#
+# Constants
+#
+use constant {
+    HAVE_SETLOCALE          => $Config::Config{d_setlocale},
+};
 
 
 # 
@@ -440,8 +449,12 @@ sub syslog {
         $whoami .= "[$$]" if $options{pid};
 
         $sum = $numpri + $numfac;
-        my $oldlocale = setlocale(LC_TIME);
-        setlocale(LC_TIME, 'C');
+
+        my $oldlocale;
+        if (HAVE_SETLOCALE) {
+            $oldlocale = setlocale(LC_TIME);
+            setlocale(LC_TIME, 'C');
+        }
 
         # %e format isn't available on all systems (Win32, cf. CPAN RT #69310)
         my $day = strftime "%e", localtime;
@@ -452,7 +465,7 @@ sub syslog {
         }
 
         my $timestamp = strftime "%b $day %H:%M:%S", localtime;
-        setlocale(LC_TIME, $oldlocale);
+        setlocale(LC_TIME, $oldlocale) if HAVE_SETLOCALE;
 
         # construct the stream that will be transmitted
         $buf = "<$sum>$timestamp $whoami: $message";

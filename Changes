@@ -10,6 +10,8 @@ Revision history for Sys-Syslog
         [BUGFIX] CPAN-RT#90538: facility from openlog() is not used (Anton Yuzhaninov).
         [PORT] CPAN-RT#90212: Support non-Windows platforms where syslog.h
         is not defined (Brian Fraser).
+        [PORT] CPAN-RT#90224: setlocale() is not available everywhere, for
+        example on Android (Brian Fraser).
         [PORT] CPAN-RT#90218: getproto*() and getserv*() functions are not
         available everywhere (Brian Fraser).
         [DOC] CPAN-RT#102058: mention the repository in the documentation.
