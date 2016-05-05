@@ -1672,7 +1672,19 @@ You can find documentation for this module with the perldoc command.
 
 You can also look for information at:
 
-=over 4
+=over
+
+=item * Perl Documentation
+
+L<http://perldoc.perl.org/Sys/Syslog.html>
+
+=item * MetaCPAN
+
+L<https://metacpan.org/module/Sys::Syslog>
+
+=item * Search CPAN
+
+L<http://search.cpan.org/dist/Sys-Syslog/>
 
 =item * AnnoCPAN: Annotated CPAN documentation
 
@@ -1686,19 +1698,10 @@ L<http://cpanratings.perl.org/d/Sys-Syslog>
 
 L<http://rt.cpan.org/Dist/Display.html?Queue=Sys-Syslog>
 
-=item * Search CPAN
-
-L<http://search.cpan.org/dist/Sys-Syslog/>
-
-=item * MetaCPAN
-
-L<https://metacpan.org/module/Sys::Syslog>
-
-=item * Perl Documentation
-
-L<http://perldoc.perl.org/Sys/Syslog.html>
-
 =back
+
+The source code is available on Git Hub:
+L<https://github.com/maddingue/Sys-Syslog/>
 
 
 =head1 COPYRIGHT

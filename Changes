@@ -10,6 +10,7 @@ Revision history for Sys-Syslog
         is not defined (Brian Fraser).
         [PORT] CPAN-RT#90218: getproto*() and getserv*() functions are not
         available everywhere (Brian Fraser).
+        [DOC] CPAN-RT#102058: mention the repository in the documentation.
 
 0.33 -- 2013.05.24 -- Sebastien Aperghis-Tramoni (SAPER)
         [BUGFIX] CPAN-RT#82531: Invalid usage of POSIX::_exit (Alexander Berger).
