@@ -24,7 +24,7 @@ Revision history for Sys-Syslog
         [DOC] Add links to other logging modules.
         [DOC] CPAN-RT#80398: Typo spotted by alfirth@gmail.com
         [DOC] Typo spotted by David Steinbrunner.
-        [TEST] CPAN-RT#79683: Added delays in t/facilities-routing.t
+        [TEST] CPAN-RT#79683: Added delays in t/facilities-routing.t (Jerome Quelin).
 
 0.32 -- 2012.09.14 -- Sebastien Aperghis-Tramoni (SAPER)
         [BUGFIX] CPAN-RT#69040: Don't modify @_ in syslog().
