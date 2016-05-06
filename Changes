@@ -1,5 +1,11 @@
 Revision history for Sys-Syslog
 
+(next)
+
+  [Documentation]
+  - openlog() options: mention the version of Sys::Syslog they were added.
+
+
 0.34 -- 2016-05-06 -- Sebastien Aperghis-Tramoni (SAPER)
 
   [Bugfixes]

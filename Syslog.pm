@@ -1021,18 +1021,20 @@ opened when the first message is logged).
 =item *
 
 C<noeol> - When set to true, no end of line character (C<\n>) will be
-appended to the message. This can be useful for some buggy syslog daemons.
+appended to the message. This can be useful for some syslog daemons.
+Added in C<Sys::Syslog> 0.29.
 
 =item *
 
 C<nofatal> - When set to true, C<openlog()> and C<syslog()> will only 
 emit warnings instead of dying if the connection to the syslog can't 
-be established. 
+be established. Added in C<Sys::Syslog> 0.15.
 
 =item *
 
 C<nonul> - When set to true, no C<NUL> character (C<\0>) will be
-appended to the message. This can be useful for some buggy syslog daemons.
+appended to the message. This can be useful for some syslog daemons.
+Added in C<Sys::Syslog> 0.29.
 
 =item *
 
@@ -1043,7 +1045,7 @@ process, so this option has no effect on Linux.)
 =item *
 
 C<perror> - Write the message to standard error output as well to the
-system log (added in C<Sys::Syslog> 0.22).
+system log. Added in C<Sys::Syslog> 0.22.
 
 =item *
 
