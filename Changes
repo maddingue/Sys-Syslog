@@ -8,7 +8,7 @@ Revision history for Sys-Syslog
   - Update some broken links.
 
   [Distribution]
-  - Converted the Change file to CPAN::Changes::Spec format
+  - Converted the Changes file to CPAN::Changes::Spec format.
   - Improved a bit the readability of the ticket numbers.
 
 
