@@ -7,35 +7,39 @@ Revision history for Sys-Syslog
   - Update HISTORY.
   - Update some broken links.
 
+  [Distribution]
+  - Converted the Change file to CPAN::Changes::Spec format
+  - Improved a bit the readability of the ticket numbers.
+
 
 0.34 -- 2016-05-06 -- Sebastien Aperghis-Tramoni (SAPER)
 
   [Bugfixes]
-  - CPAN-RT#105117: use %e where available, fall back to %d and a regexp
+  - CPAN RT #105117: use %e where available, fall back to %d and a regexp
     where not (Markus Laker).
-  - CPAN-RT#105152: the noeol option was ignored (Markus Laker).
-  - CPAN-RT#98446: trailing new line with perror (Alexander Bluhm).
-  - CPAN-RT#90538: facility from openlog() is not used (Anton Yuzhaninov).
+  - CPAN RT #105152: the noeol option was ignored (Markus Laker).
+  - CPAN RT #98446: trailing new line with perror (Alexander Bluhm).
+  - CPAN RT #90538: facility from openlog() is not used (Anton Yuzhaninov).
 
   [Portability]
-  - CPAN-RT#104710: loadable library and perl binaries are mismatched,
+  - CPAN RT #104710: loadable library and perl binaries are mismatched,
     because of missing CCFLAGS (CHORNY, KMX).
   - No longer inheriting from Exporter doesn't work before Perl 5.8.3.
-  - CPAN-RT#90212: Support non-Windows platforms where syslog.h is not
+  - CPAN RT #90212: Support non-Windows platforms where syslog.h is not
     defined (Brian Fraser).
-  - CPAN-RT#90224: setlocale() is not available everywhere, for example on
+  - CPAN RT #90224: setlocale() is not available everywhere, for example on
     Android (Brian Fraser).
-  - CPAN-RT#90218: getproto*() and getserv*() functions are not available
+  - CPAN RT #90218: getproto*() and getserv*() functions are not available
     everywhere (Brian Fraser).
 
   [Documentation]
-  - CPAN-RT#102058: mention the repository in the documentation.
+  - CPAN RT #102058: mention the repository in the documentation.
 
 
 0.33 -- 2013-05-24 -- Sebastien Aperghis-Tramoni (SAPER)
 
   [Bugfixes]
-  - CPAN-RT#82531: Invalid usage of POSIX::_exit (Alexander Berger).
+  - CPAN RT #82531: Invalid usage of POSIX::_exit (Alexander Berger).
 
   [Optimizations]
   - No longer inherit from Exporter.
@@ -43,21 +47,21 @@ Revision history for Sys-Syslog
 
   [Documentation]
   - Add links to other logging modules.
-  - CPAN-RT#80398: Typo spotted by alfirth@gmail.com
+  - CPAN RT #80398: Typo spotted by alfirth@gmail.com
   - Typo spotted by David Steinbrunner.
 
   [Tests]
-  - CPAN-RT#79683: Added delays in t/facilities-routing.t (Jerome Quelin).
+  - CPAN RT #79683: Added delays in t/facilities-routing.t (Jerome Quelin).
 
 
 0.32 -- 2012-09-14 -- Sebastien Aperghis-Tramoni (SAPER)
 
   [Bugfixes]
-  - CPAN-RT#69040: Don't modify @_ in syslog().
+  - CPAN RT #69040: Don't modify @_ in syslog().
   - Restore compatibility with Perl 5.6.0.
 
   [Documentation]
-  - Perl-RT#81858: Fix some spelling errors (Peter J. Acklam).
+  - Perl RT #81858: Fix some spelling errors (Peter J. Acklam).
 
 
 0.31 -- 2012-08-18 -- Sebastien Aperghis-Tramoni (SAPER)
@@ -66,12 +70,12 @@ Revision history for Sys-Syslog
   - Level 'emerg' could not be used since v0.29.
   - Setting a message facility with syslog() was broken since v0.29
     (Noel Butler).
-  - CPAN-RT#69992: Make setlogsock() only use the requested mechanism,
+  - CPAN RT #69992: Make setlogsock() only use the requested mechanism,
     restoring way it worked in v0.27 and before (Niko Tyni).
-  - CPAN-RT#69986: setlogsock() doesn't return undef on failure (Niko Tyni).
-  - CPAN-RT#69997: Use the default UDP socket timeout on GNU/kFreeBSD as well,
+  - CPAN RT #69986: setlogsock() doesn't return undef on failure (Niko Tyni).
+  - CPAN RT #69997: Use the default UDP socket timeout on GNU/kFreeBSD as well,
     and lower it to a more sensible value (Niko Tyni).
-  - CPAN-RT#75827: syslog() logging everything regardless of log mask when
+  - CPAN RT #75827: syslog() logging everything regardless of log mask when
     using using numeric LOG_* macros (Bryan Thale).
 
   [Documentation]
@@ -87,10 +91,10 @@ Revision history for Sys-Syslog
 0.30 -- 2012-08-15 -- Sebastien Aperghis-Tramoni (SAPER)
 
   [Bugfixes]
-  - CPAN-RT#69310: Avoid a POSIX::strftime issue on Windows (Michael Ludwig).
-  - CPAN-RT#77577: Build on Haiku-OS (Tony Cook).
-  - CPAN-RT#77578: Silence a compilation warning (Tony Cook).
-  - CPAN-RT#78044: Don't call getservbyname() when the port is specified
+  - CPAN RT #69310: Avoid a POSIX::strftime issue on Windows (Michael Ludwig).
+  - CPAN RT #77577: Build on Haiku-OS (Tony Cook).
+  - CPAN RT #77578: Silence a compilation warning (Tony Cook).
+  - CPAN RT #78044: Don't call getservbyname() when the port is specified
     (Chan Wilson).
 
   [Tests]
@@ -100,17 +104,17 @@ Revision history for Sys-Syslog
 0.29 -- 2011-04-18 -- Sebastien Aperghis-Tramoni (SAPER) #PerlQA2011
 
   [Bugfixes]
-  - CPAN-RT#55215: Sys::Syslog might call exit which triggers DESTROY
+  - CPAN RT #55215: Sys::Syslog might call exit which triggers DESTROY
     (Alexander Berger).
-  - CPAN-RT#55151: Allow temporary facility with native mechanism (Tim Jenkins).
-  - CPAN-RT#50928: Convert Win32 files to Unix EOLs (Steve Hay).
-  - CPAN-RT#50534: Unwanted space at the end of syslog message
+  - CPAN RT #55151: Allow temporary facility with native mechanism (Tim Jenkins).
+  - CPAN RT #50928: Convert Win32 files to Unix EOLs (Steve Hay).
+  - CPAN RT #50534: Unwanted space at the end of syslog message
     (Eugene V. Lyubimkin).
-  - CPAN-RT#49877: Options not reset after closelog() (Herbert Brezina).
-  - CPAN-RT#48386: Add Win32::EventLog as a prerequisite (kmx and Laurent Dami).
+  - CPAN RT #49877: Options not reset after closelog() (Herbert Brezina).
+  - CPAN RT #48386: Add Win32::EventLog as a prerequisite (kmx and Laurent Dami).
 
   [New features]
-  - CPAN-RT#50534: Added options noeol and nonul.
+  - CPAN RT #50534: Added options noeol and nonul.
 
   [Distribution]
   - Set INSTALLDIRS to "site" when installed on Perl 5.11+
@@ -119,17 +123,17 @@ Revision history for Sys-Syslog
 0.28 -- 2011-04-16 -- Sebastien Aperghis-Tramoni (SAPER) #PerlQA2011
 
   [Bugfixes]
-  - CPAN-RT#56084: Reset connection tracking vars (Vladimir Marek).
-  - CPAN-RT#56826: Avoid memory corruption when closelog() is called twice
+  - CPAN RT #56084: Reset connection tracking vars (Vladimir Marek).
+  - CPAN RT #56826: Avoid memory corruption when closelog() is called twice
     (Andreas Jaekel).
-  - CPAN-RT#64287: Make strftime() Windows-compatible (Dave Stafford).
+  - CPAN RT #64287: Make strftime() Windows-compatible (Dave Stafford).
 
   [New features]
   - New API for setlogsock(), in order to allow the setting of new options.
     Thanks to Jake Scott for the idea.
 
   [Portability]
-  - CPAN-RT#44410: Provide fallback macros in Syslog.xs in order to compile
+  - CPAN RT #44410: Provide fallback macros in Syslog.xs in order to compile
     on Novell Netware.
 
   [Internal changes]
@@ -138,9 +142,9 @@ Revision history for Sys-Syslog
   [Tests]
   - In blead, the distribution was moved from ext/Sys/Syslog to ext/Sys-Syslog.
     t/constants.t had to be fixed (Vincent Pit).
-  - CPAN-RT#53317: In core, Sys-Syslog was moved to cpan/, thus making
+  - CPAN RT #53317: In core, Sys-Syslog was moved to cpan/, thus making
     t/constants.t unable to find macros.all (David Mitchell).
-  - CPAN-RT#64716: Skip t/data-validation.t if the available version of
+  - CPAN RT #64716: Skip t/data-validation.t if the available version of
     POE::Component::Server::Syslog is too old.
 
   [Distribution]
@@ -150,7 +154,7 @@ Revision history for Sys-Syslog
   [Documentation]
   - Recreated Sys::Syslog history from the unified git repository.
   - Added a section to list the matching Perl and Sys::Syslog version.
-  - CPAN-RT#49859: Removed a dead link (Leon Brocard).
+  - CPAN RT #49859: Removed a dead link (Leon Brocard).
 
 
 0.27 -- 2008-09-21 -- Sebastien Aperghis-Tramoni (SAPER)
@@ -176,12 +180,12 @@ Revision history for Sys-Syslog
 0.25 -- 2008-05-17 -- Sebastien Aperghis-Tramoni (SAPER)
 
   [Bugfixes]
-  - CPAN-RT#34691: Fixed an incorrect call to sysopen() which prevented
+  - CPAN RT #34691: Fixed an incorrect call to sysopen() which prevented
     Sys::Syslog from working on some Solaris systems. Thanks to Paul Townsend. 
-  - CPAN-RT#34753: Fixed a slowness introduced in v0.19 (which was to work
+  - CPAN RT #34753: Fixed a slowness introduced in v0.19 (which was to work
     around OSX syslog own slowness). Thanks to Alex Efros.
-  - CPAN-RT#35952: Fixed a bug with the "nofatal" option.
-  - CPAN-RT#35189: Fixed a bug in xlate().
+  - CPAN RT #35952: Fixed a bug with the "nofatal" option.
+  - CPAN RT #35189: Fixed a bug in xlate().
   - Fixed build on Win32, thanks to Adam Kennedy.
 
   [New features]
@@ -199,7 +203,7 @@ Revision history for Sys-Syslog
 0.24 -- 2007-12-31 -- Sebastien Aperghis-Tramoni (SAPER)
 
   [Bugfixes]
-  - CPANT-RT#32001: Skip the setlogsock('stream') tests when /dev/log is
+  - CPANT RT #32001: Skip the setlogsock('stream') tests when /dev/log is
     unavailable (Brendan O'Dea).
 
 
@@ -219,7 +223,7 @@ Revision history for Sys-Syslog
 0.22 -- 2007-11-08 -- Sebastien Aperghis-Tramoni (SAPER)
 
   [Bugfixes]
-  - CPAN-RT#29875: Added workaround SpamAssassin overzealous logging features.
+  - CPAN RT #29875: Added workaround SpamAssassin overzealous logging features.
 
   [New features]
   - Added support for PERROR option.
@@ -227,10 +231,10 @@ Revision history for Sys-Syslog
 
   [Internal changes]
   - Prevent $@ from being visible outside the module, in trying to address
-    the problem reported in CPAN-RT#29875.
+    the problem reported in CPAN RT #29875.
 
   [Documentation]
-  - CPAN-RT#29451: Add Copyright notice. Thanks to Allison Randal for her
+  - CPAN RT #29451: Add Copyright notice. Thanks to Allison Randal for her
     advice.
   - New speaking about Win32 API instead of Win32 operating system.
 
@@ -239,7 +243,7 @@ Revision history for Sys-Syslog
 
   [Bugfixes]
   - setlogsock(eventlog) returned true even when it shouldn't have.
-  - CPAN-RT#24431: Added workaround for Mac OS X syslogd.
+  - CPAN RT #24431: Added workaround for Mac OS X syslogd.
 
   [New features]
   - Added "pipe" mechanism in order to support HP-UX named pipe. Thanks
@@ -258,14 +262,14 @@ Revision history for Sys-Syslog
 0.19 -- 2007-09-05 -- Sebastien Aperghis-Tramoni (SAPER)
 
   [Bugfixes]
-  - CPAN-RT#20635: Fix tests to avoid problems related to the "stream"
+  - CPAN RT #20635: Fix tests to avoid problems related to the "stream"
     mechanism which occured on Debian and Cygwin.
-  - CPAN-RT#20780: Facility could not be temporarily changed. Also fixes
+  - CPAN RT #20780: Facility could not be temporarily changed. Also fixes
     the syslog() before openlog() bug.
-  - CPAN-RT#21333: Makefile.PL now creates a typemap for Perl 5.6.1
-  - CPAN-RT#21516: disconnect_log() now correctly calls closelog_xs().
-  - CPAN-RT#21866: Silence warnings in openlog().
-  - CPAN-RT#25488: Silence warnings in disconnect_log().  via syslog().
+  - CPAN RT #21333: Makefile.PL now creates a typemap for Perl 5.6.1
+  - CPAN RT #21516: disconnect_log() now correctly calls closelog_xs().
+  - CPAN RT #21866: Silence warnings in openlog().
+  - CPAN RT #25488: Silence warnings in disconnect_log().  via syslog().
   - Rewrote the constants generation code in order to provide fallback value
     for non-standard macros.
   - Mark Blackman and Edmund von der Burg identified and fixed the random
@@ -283,10 +287,10 @@ Revision history for Sys-Syslog
   [Tests]
   - t/syslog.t now generates a more detailed TAP output.
   - Merged change blead@29176: suppress taint mode from t/constants.t
-  - Added regression tests for CPAN-RT#21866 and #25488.
+  - Added regression tests for CPAN RT #21866 and #25488.
 
   [Documentation]
-  - CPAN-RT#26097: man pages were not installed.
+  - CPAN RT #26097: man pages were not installed.
   - Added the Sys::Syslog Rules.
   - Added example script eg/syslog.pl
 
@@ -297,7 +301,7 @@ Revision history for Sys-Syslog
   - Rewrote the way the default identifiant is constructed.
 
   [Tests]
-  - CPAN-RT#20946: Removed the console mechanism from the main test loop
+  - CPAN RT #20946: Removed the console mechanism from the main test loop
     because writing to the console hangs on several systems.
 
   [Documentation]
@@ -307,7 +311,7 @@ Revision history for Sys-Syslog
 0.17 -- 2006-07-23 -- Sebastien Aperghis-Tramoni (SAPER)
 
   [Bugfixes]
-  - CPAN-RT#20622, #20164: Fixed path handling in connect_unix().
+  - CPAN RT #20622, #20164: Fixed path handling in connect_unix().
 
   [Internal changes]
   - Renamed some variables ($that is not a valid name), and removed some
@@ -316,16 +320,16 @@ Revision history for Sys-Syslog
     version.
 
   [Documentation]
-  - CPAN-RT#20545: Rewrote the documentation about setlogsock().
+  - CPAN RT #20545: Rewrote the documentation about setlogsock().
 
 
 0.16 -- 2006-06-20 -- Sebastien Aperghis-Tramoni (SAPER)
 
   [Bugfixes]
-  - Perl-RT#20557: Save errno before trying to connect.
+  - Perl RT #20557: Save errno before trying to connect.
 
   [New features]
-  - Perl-RT#35406: Applied the patch proposed by Keisuke Hirata for a more
+  - Perl RT #35406: Applied the patch proposed by Keisuke Hirata for a more
     lax handling of "stream" or "unix" path.
   - Now try the "native" mechanism first.
 
@@ -340,7 +344,7 @@ Revision history for Sys-Syslog
 0.15 -- 2006-06-10 -- Sebastien Aperghis-Tramoni (SAPER)
 
   [New features]
-  - CPAN-RT#17316: Added a "nofatal" option to openlog().
+  - CPAN RT #17316: Added a "nofatal" option to openlog().
   - Sys::Syslog warnings can now be controlled by the warnings category
     of the same name.
   - Added support for using the native C syslog(3) functions.
@@ -353,7 +357,7 @@ Revision history for Sys-Syslog
 0.14 -- 2006-05-25 -- Sebastien Aperghis-Tramoni (SAPER)
 
   [Bugfixes]
-  - CPAN-RT#19259, #17518: Now allowing all levels and facilities.
+  - CPAN RT #19259, #17518: Now allowing all levels and facilities.
 
   [Internal changes]
   - Removed useless "&".
@@ -365,7 +369,7 @@ Revision history for Sys-Syslog
   - Added more tests in order to increase coverage.
 
   [Documentation]
-  - CPAN-RT#19085: Corrected errors in the documentation for setlogmask().
+  - CPAN RT #19085: Corrected errors in the documentation for setlogmask().
   - Added several links to online manual pages, RFCs and articles.
   - Corrected minor things in Changes.
 
@@ -383,9 +387,9 @@ Revision history for Sys-Syslog
   - Merged blead@26773: check that $syslog_path is a socket.
 
   [Tests]
-  - CPAN-RT#16980: Sys::Syslog blows up rather spectacularly on Solaris.
+  - CPAN RT #16980: Sys::Syslog blows up rather spectacularly on Solaris.
     Corrected by previous patches. 
-  - CPAN-RT#16974: Failed test in t/podspell. This test is now skipped.
+  - CPAN RT #16974: Failed test in t/podspell. This test is now skipped.
 
 
 0.12 -- 2006-01-07 -- Sebastien Aperghis-Tramoni (SAPER)
@@ -413,7 +417,7 @@ Revision history for Sys-Syslog
 
   [Internal changes]
   - No longer "use"s Sys::Hostname as it was "require"d where needed.
-  - CPAN-RT#16604: Use local timestamp.
+  - CPAN RT #16604: Use local timestamp.
 
   [Distribution]
   - Merged blead@26343: Fix realclean target.
@@ -505,7 +509,7 @@ Revision history for Sys-Syslog
 
   [Bugfixes]
   - Do not use "udp" on some platforms (Slaven Rezic).
-  - Perl-RT#18180: Fixed a problem with Sys:Syslog on Solaris 8 with
+  - Perl RT #18180: Fixed a problem with Sys:Syslog on Solaris 8 with
     perl 5.8.0 (Joost van Baal).
   - Fixed some warnings (Jarkko Hietaniemi).
   - Better error messages (Jari Aalto).
