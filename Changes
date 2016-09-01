@@ -1,6 +1,6 @@
 Revision history for Sys-Syslog
 
-(next)
+0.35 -- 2016-09-01 -- Sebastien Aperghis-Tramoni (SAPER)
 
   [Security]
   - CPAN RT #116543: CVE-2016-1238: avoid loading optional modules from
