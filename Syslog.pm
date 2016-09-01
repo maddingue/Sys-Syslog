@@ -904,11 +904,11 @@ sub disconnect_log {
 
 
 #
-# Wrappers around eval() that makes sure that nobody, and I say NOBODY, 
-# ever knows that I wanted to test if something was here or not. 
-# It is needed because some applications are trying to be too smart,
-# do it wrong, and it ends up in EPIC FAIL. 
-# Yes I'm speaking of YOU, SpamAssassin.
+# Wrappers around eval() that makes sure that nobody, ever knows that
+# we wanted to poke & test if something was here or not. This is needed
+# because some applications are trying to be too smart, install their
+# own __DIE__ handler, and mysteriously, things are starting to fail
+# when they shouldn't. SpamAssassin among them.
 #
 sub silent_eval (&) {
     local($SIG{__DIE__}, $SIG{__WARN__}, $@);
