@@ -11,6 +11,9 @@ Revision history for Sys-Syslog
   - Converted the Changes file to CPAN::Changes::Spec format.
   - Improved a bit the readability of the ticket numbers.
 
+  [Tests]
+  - GitHub PR #4: use lexical instead of global filehandles (Alex Balhatchet).
+
 
 0.34 -- 2016-05-06 -- Sebastien Aperghis-Tramoni (SAPER)
 
