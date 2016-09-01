@@ -144,9 +144,9 @@ if ($^O eq "freebsd" or $^O eq "linux") {
 # And on Win32 systems, we try to use the native mechanism for this 
 # platform, the events logger, available through Win32::EventLog.
 EVENTLOG: {
-    my $is_Win32 = $^O =~ /Win32/i;
+    my $verbose_if_Win32 = $^O =~ /Win32/i;
 
-    if (can_load_sys_syslog_win32($is_Win32)) {
+    if (can_load_sys_syslog_win32($verbose_if_Win32)) {
         unshift @connectMethods, 'eventlog';
     }
 }
