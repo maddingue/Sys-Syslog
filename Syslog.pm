@@ -146,7 +146,7 @@ if ($^O eq "freebsd" or $^O eq "linux") {
 EVENTLOG: {
     my $is_Win32 = $^O =~ /Win32/i;
 
-    if (can_load("Sys::Syslog::Win32", $is_Win32)) {
+    if (can_load_sys_syslog_win32($is_Win32)) {
         unshift @connectMethods, 'eventlog';
     }
 }
@@ -236,7 +236,7 @@ my %mechanism = (
         check   => sub { 1 },
     },
     eventlog => {
-        check   => sub { return can_load("Win32::EventLog") },
+        check   => sub { return can_load_sys_syslog_win32() },
         err_msg => "no Win32 API available",
     },
     inet => {
@@ -915,12 +915,11 @@ sub silent_eval (&) {
     return eval { $_[0]->() }
 }
 
-sub can_load {
-    my ($module, $verbose) = @_;
+sub can_load_sys_syslog_win32 {
+    my ($verbose) = @_;
     local($SIG{__DIE__}, $SIG{__WARN__}, $@);
-    local @INC = @INC;
-    pop @INC if $INC[-1] eq '.';
-    my $loaded = eval "use $module; 1";
+    (my $module_path = __FILE__) =~ s:Syslog.pm$:Syslog/Win32.pm:;
+    my $loaded = eval { require $module_path } ? 1 : 0;
     warn $@ if not $loaded and $verbose;
     return $loaded
 }

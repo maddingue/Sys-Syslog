@@ -2,6 +2,10 @@ Revision history for Sys-Syslog
 
 (next)
 
+  [Security]
+  - CPAN RT #116543: CVE-2016-1238: avoid loading optional modules from
+    default . (Tony Cook). Patch rewrote to no longer depend upon @INC.
+
   [Documentation]
   - openlog() options: mention the version of Sys::Syslog they were added.
   - Update HISTORY.
