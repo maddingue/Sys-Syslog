@@ -40,10 +40,6 @@ You can also look for information at:
 
 =over
 
-=item * Search CPAN
-
-L<http://search.cpan.org/dist/Sys-Syslog/>
-
 =item * MetaCPAN
 
 L<https://metacpan.org/module/Sys::Syslog>

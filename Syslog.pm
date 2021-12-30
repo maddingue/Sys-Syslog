@@ -1714,10 +1714,6 @@ L<http://perldoc.perl.org/Sys/Syslog.html>
 
 L<https://metacpan.org/module/Sys::Syslog>
 
-=item * Search CPAN
-
-L<http://search.cpan.org/dist/Sys-Syslog/>
-
 =item * AnnoCPAN: Annotated CPAN documentation
 
 L<http://annocpan.org/dist/Sys-Syslog>
