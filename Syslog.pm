@@ -1641,11 +1641,11 @@ L<http://stratadoc.stratus.com/vos/15.1.1/r502-01/wwhelp/wwhimpl/js/html/wwhelp.
 
 =head2 RFCs
 
-I<RFC 3164 - The BSD syslog Protocol>, L<http://www.faqs.org/rfcs/rfc3164.html>
+I<RFC 3164 - The BSD syslog Protocol>, L<https://tools.ietf.org/html/rfc3164>
 -- Please note that this is an informational RFC, and therefore does not 
 specify a standard of any kind.
 
-I<RFC 3195 - Reliable Delivery for syslog>, L<http://www.faqs.org/rfcs/rfc3195.html>
+I<RFC 3195 - Reliable Delivery for syslog>, L<https://tools.ietf.org/html/rfc3195>
 
 =head2 Articles
 
