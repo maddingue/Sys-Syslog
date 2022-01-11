@@ -38,17 +38,11 @@ SUPPORT AND DOCUMENTATION
 
     You can also look for information at:
 
-        Search CPAN
-            http://search.cpan.org/dist/Sys-Syslog/
-
         MetaCPAN
             https://metacpan.org/module/Sys::Syslog
 
         CPAN Request Tracker:
             http://rt.cpan.org/NoAuth/Bugs.html?Dist=Sys-Syslog
-
-        AnnoCPAN, annotated CPAN documentation:
-            http://annocpan.org/dist/Sys-Syslog
 
         CPAN Ratings:
             http://cpanratings.perl.org/d/Sys-Syslog

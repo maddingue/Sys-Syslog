@@ -40,10 +40,6 @@ You can also look for information at:
 
 =over
 
-=item * Search CPAN
-
-L<http://search.cpan.org/dist/Sys-Syslog/>
-
 =item * MetaCPAN
 
 L<https://metacpan.org/module/Sys::Syslog>
@@ -51,10 +47,6 @@ L<https://metacpan.org/module/Sys::Syslog>
 =item * Perl Documentation
 
 L<http://perldoc.perl.org/Sys/Syslog.html>
-
-=item * AnnoCPAN: Annotated CPAN documentation
-
-L<http://annocpan.org/dist/Sys-Syslog>
 
 =item * CPAN Ratings
 
